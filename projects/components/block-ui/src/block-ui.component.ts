@@ -1,5 +1,4 @@
-import { ViewEncapsulation } from '@angular/compiler/src/core';
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'ps-block-ui',
