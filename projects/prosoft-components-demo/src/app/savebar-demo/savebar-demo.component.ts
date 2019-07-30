@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-form-field-demo',
+  selector: 'app-savebar-demo',
   template: `
     <ps-savebar
       [form]="form"
