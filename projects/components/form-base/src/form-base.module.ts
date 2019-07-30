@@ -1,11 +1,7 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { PsFormService } from './form.service';
 
-@NgModule({
-  imports: [],
-  declarations: [],
-  exports: [],
-})
+@NgModule({})
 export class PsFormBaseModule {
   public static forRoot(formsServiceType: any): ModuleWithProviders {
     return {
