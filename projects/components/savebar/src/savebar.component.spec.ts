@@ -483,10 +483,6 @@ describe('PsSavebarComponent', () => {
       [Validators.pattern('test')]
     );
     fixture.detectChanges();
-    fixture.detectChanges();
-    fixture.detectChanges();
-    fixture.detectChanges();
-
     fixture.whenStable().then(() => {
       // wait for the async data
       fixture.detectChanges(); // refresh the template
