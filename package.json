@@ -27,6 +27,8 @@
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
     "ngx-mat-select-search": "^1.7.6",
+    "nouislider": "^14.0.2",
+    "@types/nouislider": "9.0.5",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
@@ -61,6 +63,7 @@
     "ts-node": "~7.0.0",
     "tsickle": "^0.35.0",
     "tslint": "~5.15.0",
+    "tslint-no-focused-test": "^0.5.0",
     "typescript": "~3.4.3"
   },
   "lint-staged": {
