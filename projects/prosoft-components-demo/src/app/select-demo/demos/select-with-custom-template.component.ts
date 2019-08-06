@@ -7,6 +7,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     <mat-form-field>
       <mat-label>select</mat-label>
       <ps-select [(ngModel)]="ngModelValue" [dataSource]="items">
+        <ng-container *psSelectTriggerTemplate="let item">
+          color: <span [style.color]="item.value" class="asdf">{{ item.viewValue }}</span>
+        </ng-container>
         <ng-container *psSelectOptionTemplate="let item">
           <span [style.color]="item.value" class="asdf">{{ item.label }}</span>
         </ng-container>
