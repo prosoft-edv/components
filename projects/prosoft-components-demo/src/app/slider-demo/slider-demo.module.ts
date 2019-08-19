@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule } from '@angular/material';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { RouterModule } from '@angular/router';
 import { BasePsFormService, IPsFormError, IPsFormErrorData, PsFormBaseModule } from '@prosoft/components/form-base';
@@ -38,6 +39,11 @@ export class DemoPsFormsService extends BasePsFormService {
     PsSliderModule,
     FormsModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule,
+    PsFormFieldModule,
     RouterModule.forChild([
       {
         path: '',

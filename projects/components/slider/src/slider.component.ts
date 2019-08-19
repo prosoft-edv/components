@@ -13,11 +13,15 @@ import {
   Self,
   SimpleChanges,
   ViewEncapsulation,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import * as noUiSlider from 'nouislider';
+import { coerceNumberProperty } from '@angular/cdk/coercion';
+
+declare type PsSliderConnect = 'lower' | 'upper' | boolean | ('lower' | 'upper' | boolean)[];
 
 export class DefaultFormatter {
   public to(value: number): string {
@@ -50,32 +54,77 @@ export const _PsSliderMixinBase: CanUpdateErrorStateCtor & typeof PsSliderBase =
   styleUrls: ['./slider.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: MatFormFieldControl, useExisting: PsSliderComponent }],
+  // tslint:disable-next-line: no-host-metadata-property
+  host: {
+    '[attr.id]': 'id',
+    '[class.ps-slider-invalid]': 'errorState',
+    '[attr.aria-describedby]': '_ariaDescribedby || null',
+    '[attr.aria-invalid]': 'errorState',
+    '[attr.aria-required]': 'required.toString()',
+  },
 })
 export class PsSliderComponent extends _PsSliderMixinBase
   implements ControlValueAccessor, MatFormFieldControl<number | number[]>, OnInit, OnChanges, DoCheck {
   public static nextId = 0;
 
-  @Input() public min: number;
-  @Input() public max: number;
   @Input() public stepSize = 1;
   @Input() public isRange = false;
   @Input() public showTooltips = false;
-  @Input() public pageSteps = 10;
-  @Input() public connect: any[];
+  @Input() public connect: PsSliderConnect;
 
-  @Output() public valueChange: EventEmitter<any> = new EventEmitter(true);
-
-  @HostBinding() public id = `ps-select-${PsSliderComponent.nextId++}`;
-
-  public placeholder: string;
-  public focused = false;
-  public controlType = 'ps-slider';
-  public autofilled?: boolean;
-  public slider: any;
+  /**
+   * Implemented as part of PsFormFieldControl.
+   * @docs-private
+   */
   public shouldLabelFloat = true;
-  public noUnderline = true;
-  public handles: any[];
 
+  /**
+   * Implemented as part of PsFormFieldControl.
+   * @docs-private
+   */
+  public noUnderline = true;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  @Input()
+  get id(): string {
+    return this._id;
+  }
+  set id(value: string) {
+    this._id = value || this._uid;
+  }
+  protected _id: string;
+  protected _uid = `ps-slider-${PsSliderComponent.nextId++}`;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  public placeholder: string;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  public focused = false;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  public controlType = 'ps-slider';
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  public autofilled?: boolean;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   @Input()
   public set required(required: boolean) {
     this._required = !!required;
@@ -84,28 +133,96 @@ export class PsSliderComponent extends _PsSliderMixinBase
   public get required() {
     return this._required;
   }
+  private _required = false;
 
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   @Input()
   public set disabled(disabled: boolean) {
     this._disabled = !!disabled;
+    this.setDisabledState(this.disabled);
     this.stateChanges.next();
   }
   public get disabled() {
     return this._disabled;
   }
+  private _disabled = false;
 
+  /** The maximum value that the slider can have. */
+  @Input()
+  get max(): number {
+    return this._max;
+  }
+  set max(v: number) {
+    this._max = coerceNumberProperty(v, this._max);
+  }
+  private _max = 100;
+
+  /** The minimum value that the slider can have. */
+  @Input()
+  get min(): number {
+    return this._min;
+  }
+  set min(v: number) {
+    this._min = coerceNumberProperty(v, this._min);
+
+    // If the value wasn't explicitly set by the user, set it to the min.
+    if (this._value === null) {
+      this.value = this._min;
+    }
+  }
+  private _min = 0;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  @Input()
+  get value(): number | number[] | null {
+    // If the value needs to be read and it is still uninitialized, initialize it to the min.
+    if (this._value === null) {
+      this.value = this.isRange ? [this.min, this.max] : this.min;
+    }
+    return this._value;
+  }
+  set value(v: number | number[] | null) {
+    this._rawProvidedValue = v;
+    if (v !== this._value) {
+      if (this.isRange) {
+        const range = [0, 0];
+        if (Array.isArray(v)) {
+          range[0] = coerceNumberProperty(v[0], this.min);
+          range[1] = coerceNumberProperty(v[1], this.max);
+        }
+        this._value = range;
+      } else {
+        this._value = coerceNumberProperty(v);
+      }
+      if (this._slider) {
+        this._slider.set(this._value);
+      }
+    }
+  }
+  private _value: number | number[];
+  private _rawProvidedValue: any = null;
+
+  @Output() public valueChange = new EventEmitter<number | number[]>();
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
   public get empty() {
     return !this.value;
   }
 
-  public get value(): number | number[] {
-    return this._value;
-  }
+  /** The aria-describedby attribute on the input for improved a11y. */
+  public _ariaDescribedby: string;
 
   private _formatter = new DefaultFormatter();
-  private _required = false;
-  private _disabled = false;
-  private _value: number | number[];
+  private _slider: noUiSlider.noUiSlider;
 
   constructor(
     @Optional() _parentForm: NgForm,
@@ -113,7 +230,8 @@ export class PsSliderComponent extends _PsSliderMixinBase
     @Optional() @Self() public ngControl: NgControl,
     _defaultErrorStateMatcher: ErrorStateMatcher,
     private el: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private cd: ChangeDetectorRef
   ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
@@ -123,45 +241,38 @@ export class PsSliderComponent extends _PsSliderMixinBase
   }
 
   public ngOnInit(): void {
-    const getStartFnc = () => {
-      const defaultValue = this.isRange ? [this.min, this.max] : this.min;
-
-      const sliderStart = this.ngControl && this.ngControl.value ? this.ngControl.value : defaultValue;
-      if (!this._value) {
-        this._value = sliderStart;
-      }
-
-      if (this.ngControl && !this.ngControl.value) {
-        this.ngControl.reset(defaultValue);
-      }
-
-      return sliderStart;
-    };
-
-    const inputsConfig = {
-      start: getStartFnc(),
+    const inputsConfig: noUiSlider.Options = {
+      start: this.value,
       step: this.stepSize,
       range: { min: this.min, max: this.max },
       tooltips: this.showTooltips,
-      pageSteps: this.pageSteps,
       format: this._formatter,
-      connect: this.connect || (this.isRange ? true : null),
+      connect: <any>this.connect || (this.isRange ? true : false),
     };
 
-    this.slider = noUiSlider.create(this.el.nativeElement.querySelector('div'), inputsConfig);
-    this.configureHandles();
+    this._slider = noUiSlider.create(this.el.nativeElement.querySelector('div'), inputsConfig);
+    this._slider.on('change', () => {
+      const value = this._slider.get();
+      this.value = Array.isArray(value) ? value.map(Number) : +value;
+      this._emitChangeEvent();
+      this._onTouchedFnc();
+      this.cd.markForCheck();
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (this.slider && (changes.min || changes.max || changes.stepSize || changes.showTooltips || changes.pageSteps || changes.connect)) {
-      setTimeout(() => {
-        this.slider.updateOptions({
-          step: this.stepSize,
-          range: { min: this.min, max: this.max },
-          tooltips: this.showTooltips,
-          pageSteps: this.pageSteps,
-          connect: this.connect,
-        });
+    if (changes.isRange) {
+      // when value was set before the @Inputs were set, then isRange wasn't known and the value could be wrong.
+      // So we set the _rawProvidedValue here again to fix that
+      this.value = this._rawProvidedValue;
+    }
+    if (this._slider && (changes.isRange || changes.min || changes.max || changes.stepSize || changes.showTooltips || changes.connect)) {
+      this._slider.updateOptions(<any>{
+        start: this.value,
+        step: this.stepSize,
+        range: { min: this.min, max: this.max },
+        tooltips: this.showTooltips,
+        connect: this.connect,
       });
     }
   }
@@ -172,13 +283,8 @@ export class PsSliderComponent extends _PsSliderMixinBase
     }
   }
 
-  public writeValue(obj: any): void {
-    if (this.slider) {
-      setTimeout(() => {
-        this.slider.set(obj);
-        this._value = obj;
-      });
-    }
+  public writeValue(obj: number | number[] | null): void {
+    this.value = obj;
   }
 
   public registerOnChange(fn: any): void {
@@ -189,76 +295,32 @@ export class PsSliderComponent extends _PsSliderMixinBase
     this._onTouchedFnc = fn;
   }
 
-  public setDisabledState?(isDisabled: boolean): void {
+  public setDisabledState(isDisabled: boolean): void {
+    this._disabled = isDisabled;
     const slider = this.el.nativeElement.childNodes[0];
-    isDisabled ? this.renderer.setAttribute(slider, 'disabled', 'true') : this.renderer.removeAttribute(slider, 'disabled');
-  }
-
-  public setDescribedByIds(_: string[]): void {}
-  public onContainerClick(_: MouseEvent): void {}
-
-  private toValues(values: string[]): any | any[] {
-    const v = values.map(this._formatter.from);
-    return v.length === 1 ? v[0] : v;
-  }
-
-  private configureHandles() {
-    this.handles = [].slice.call(this.el.nativeElement.querySelectorAll('.noUi-handle'));
-    for (const handle of this.handles) {
-      handle.setAttribute('tabindex', 0);
-      handle.addEventListener('click', () => handle.focus());
-      handle.addEventListener('keydown', this.keyHandler);
-    }
-
-    this.slider.on('slide', (values: string[], _: number, __: number[]) => {
-      const v = this.toValues(values);
-      this._onChangeFnc(v);
-      this.valueChange.emit(v);
-    });
-  }
-
-  private keyHandler = (e: KeyboardEvent) => {
-    const stepSize: any[] = this.slider.steps();
-    const index = parseInt((<HTMLElement>e.target).getAttribute('data-handle'), 10);
-    let sign = 1;
-    let multiplier = 1;
-    let step = 0;
-    let delta = 0;
-
-    switch (e.code) {
-      case '34': // PageDown
-        multiplier = this.pageSteps;
-        break;
-      case '40': // ArrowDown
-      case '37': // ArrowLeft
-        sign = -1;
-        step = stepSize[index][0];
-        e.preventDefault();
-        break;
-
-      case '33': // PageUp
-        multiplier = this.pageSteps;
-        break;
-      case '38': // ArrowUp
-      case '39': // ArrowRight
-        step = stepSize[index][1];
-        e.preventDefault();
-        break;
-    }
-
-    delta = sign * multiplier * step;
-    let newValue: number | number[];
-
-    if (Array.isArray(this.value)) {
-      newValue = [].concat(this.value);
-      newValue[index] = newValue[index] + delta;
+    if (isDisabled) {
+      this.renderer.setAttribute(slider, 'disabled', 'true');
     } else {
-      newValue = this.value + delta;
+      this.renderer.removeAttribute(slider, 'disabled');
     }
+  }
 
-    this.slider.set(newValue);
-  };
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  setDescribedByIds(ids: string[]) {
+    this._ariaDescribedby = ids.join(' ');
+  }
+
+  public onContainerClick(_: MouseEvent): void {}
 
   private _onChangeFnc: (value: any) => void = () => {};
   private _onTouchedFnc: () => void = () => {};
+
+  /** Emits a change event if the current value is different from the last emitted value. */
+  private _emitChangeEvent() {
+    this._onChangeFnc(this.value);
+    this.valueChange.emit(this.value);
+  }
 }

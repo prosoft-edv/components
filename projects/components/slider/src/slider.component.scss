@@ -1,84 +1,62 @@
-@import '~nouislider/distribute/nouislider.min.css';
+@import '~nouislider/distribute/nouislider.css';
 
-:host {
-  display: block;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
+ps-slider {
+  .noUi-target {
+    height: 20px;
+    border: none;
+    box-shadow: none;
+    background: linear-gradient(to bottom, transparent 40%, #d3d3d3d3 40%, #d3d3d3d3 60%, transparent 60%);
+    margin: 0 0.7em;
 
-ps-slider .noUi-handle {
-  &::before {
-    content: unset;
-  }
-
-  height: 1.2em !important;
-  width: 1.2em !important;
-  border-radius: 50%;
-  border-color: var(--ps-primary);
-  border-width: 1.2px;
-  background: #ffffff;
-  box-shadow: none;
-  transform: translate(-50%, 30%);
-
-  &::after {
-    content: unset;
-  }
-
-  &:active {
-    background: var(--ps-primary);
-  }
-  &:focus {
-    outline: unset;
-  }
-}
-
-ps-slider .noUi-horizontal[disabled] {
-  &:active {
-    .noUi-handle {
-      background: #ffffff;
+    &[disabled] {
+      .noUi-handle {
+        border-color: #d3d3d3d3;
+      }
     }
   }
 
   .noUi-handle {
-    border-color: #d3d3d3d3;
-    &:active {
-      background: #ffffff;
+    &::before {
+      content: unset;
     }
-  }
-}
 
-ps-slider .noUi-connect {
-  height: 4px;
-  top: calc(50% - 2px);
-  background: var(--ps-accent);
-}
+    height: 20px !important;
+    width: 20px !important;
+    border-radius: 50%;
+    border-color: var(--ps-primary);
+    box-shadow: none;
+    transform: translate(-50%, 30%);
 
-.mat-form-field-invalid ps-slider .noUi-horizontal {
-  background: linear-gradient(to bottom, transparent 40%, var(--ps-error) 40%, var(--ps-error) 60%, transparent 60%);
-}
+    &::after {
+      content: unset;
+    }
 
-.mat-form-field-invalid ps-slider .noUi-handle {
-  border-color: var(--ps-error);
-}
-
-ps-slider .noUi-horizontal {
-  height: 20px;
-  border: none;
-  box-shadow: none;
-  background: linear-gradient(to bottom, transparent 40%, #d3d3d3d3 40%, #d3d3d3d3 60%, transparent 60%);
-  margin: 0 0.7em;
-
-  &:active {
-    .noUi-handle {
+    &:focus,
+    &:active {
       background: var(--ps-primary);
     }
   }
-}
 
-ps-slider .noUi-tooltip {
-  display: none;
-}
+  .noUi-connect {
+    height: 4px;
+    top: calc(50% - 2px);
+    background: var(--ps-accent);
+  }
 
-ps-slider .noUi-active .noUi-tooltip {
-  display: block;
+  .noUi-tooltip {
+    display: none;
+  }
+
+  .noUi-active .noUi-tooltip {
+    display: block;
+  }
+
+  &.ps-slider-invalid {
+    .noUi-target {
+      background: linear-gradient(to bottom, transparent 40%, var(--ps-error) 40%, var(--ps-error) 60%, transparent 60%);
+    }
+    .noUi-handle {
+      border-color: var(--ps-error);
+    }
+  }
 }

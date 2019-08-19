@@ -1,146 +1,303 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, NgModel } from '@angular/forms';
 import { PsSliderComponent } from './slider.component';
 import { PsSliderModule } from './slider.module';
+import { timingSafeEqual } from 'crypto';
+import { By } from '@angular/platform-browser';
 
 @Component({
   selector: 'ps-slider-test-blank-implemented',
   template: `
-    <ps-slider [min]="0" [max]="15"></ps-slider>
+    <ps-slider [min]="min" [max]="max" [stepSize]="stepSize" [(value)]="testValue" [isRange]="isRange" [disabled]="disabled"></ps-slider>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderNgModelBlankImplementedComponent {
   @ViewChild(PsSliderComponent, { static: true }) slider: PsSliderComponent;
+  public testValue: number | number[] = 0;
+  public disabled = false;
+  public stepSize = 1;
+  public min = 0;
+  public max = 15;
+  public isRange = false;
 }
 
 @Component({
   selector: 'ps-slider-test-ngmodel',
   template: `
-    <ps-slider [min]="0" [max]="15" [(ngModel)]="someNumber"></ps-slider>
+    <ps-slider [min]="0" [max]="15" [(ngModel)]="testValue"></ps-slider>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderNgModelTestComponent {
   @ViewChild(PsSliderComponent, { static: true }) slider: PsSliderComponent;
-  public someNumber = 5;
+  public testValue = 0;
 }
 
 @Component({
   selector: 'ps-slider-test-reactive-form',
   template: `
     <form [formGroup]="form">
-      <ps-slider [min]="0" [max]="15" [formControlName]="'someFormNumber'"></ps-slider>
+      <ps-slider [min]="0" [max]="15" [formControlName]="'control'"></ps-slider>
     </form>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderReactiveFormTestComponent {
   @ViewChild(PsSliderComponent, { static: false }) slider: PsSliderComponent;
 
-  public someForm = new FormGroup({
-    someFormNumber: new FormControl(5),
+  public formControl = new FormControl(null);
+  public form = new FormGroup({
+    control: this.formControl,
   });
 }
 
 describe('PsSlider', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [PsSliderModule],
-      declarations: [SliderNgModelBlankImplementedComponent],
+  describe('no form', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [PsSliderModule],
+        declarations: [SliderNgModelBlankImplementedComponent],
+      });
+    }));
+
+    describe('range mode', () => {
+      it('should not throw for null value', async(() => {
+        const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+        const component = fixture.componentInstance;
+
+        component.isRange = true;
+        component.testValue = null;
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(component.slider.value).toEqual([0, 0]);
+          expect(getNoUiSlider(component.slider).get()).toEqual(['0', '0']);
+        });
+      }));
+
+      it('should work with keyboard', async(() => {
+        const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+        const component = fixture.componentInstance;
+
+        component.isRange = true;
+        component.testValue = [5, 10];
+        fixture.detectChanges();
+
+        const handleEls = getHandles(fixture);
+        handleEls[0].dispatchEvent(createArrowLeftEvent());
+        handleEls[1].dispatchEvent(createArrowRightEvent());
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(component.slider.value).toEqual([4, 11]);
+          expect(getNoUiSlider(component.slider).get()).toEqual(['4', '11']);
+        });
+      }));
+
+      it('should not allow crossing handles', async(() => {
+        const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+        const component = fixture.componentInstance;
+
+        component.isRange = true;
+        component.testValue = [5, 5];
+        fixture.detectChanges();
+
+        const handleEls = getHandles(fixture);
+        handleEls[0].dispatchEvent(createArrowRightEvent());
+        handleEls[1].dispatchEvent(createArrowLeftEvent());
+        fixture.detectChanges();
+
+        fixture.whenStable().then(() => {
+          expect(component.slider.value).toEqual([5, 5]);
+          expect(getNoUiSlider(component.slider).get()).toEqual(['5', '5']);
+        });
+      }));
     });
-  }));
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(PsSliderComponent);
-    const component = fixture.componentInstance;
+    it('should create with given values', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+      const component = fixture.componentInstance;
 
-    expect(component).toBeDefined();
+      component.testValue = 5;
+      fixture.detectChanges();
+
+      expect(component.slider.min).toEqual(0);
+      expect(component.slider.max).toEqual(15);
+      expect(component.slider.value).toEqual(5);
+      expect(getNoUiSlider(component.slider).get()).toEqual('5');
+    }));
+
+    it('should respect min when sliding with the keyboard', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+      const component = fixture.componentInstance;
+
+      component.testValue = 5;
+      component.min = 5;
+      fixture.detectChanges();
+
+      const handleEl = getHandle(fixture);
+      handleEl.dispatchEvent(createArrowLeftEvent());
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(component.slider.value).toEqual(5);
+        expect(getNoUiSlider(component.slider).get()).toEqual('5');
+      });
+    }));
+
+    it('should respect max when sliding with the keyboard', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+      const component = fixture.componentInstance;
+
+      component.testValue = 5;
+      component.max = 5;
+      fixture.detectChanges();
+
+      const handleEl = getHandle(fixture);
+      handleEl.dispatchEvent(createArrowRightEvent());
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(component.slider.value).toEqual(5);
+        expect(getNoUiSlider(component.slider).get()).toEqual('5');
+      });
+    }));
+
+    it('should respect step size when sliding with the keyboard', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+      const component = fixture.componentInstance;
+
+      component.testValue = 6;
+      component.stepSize = 2;
+      fixture.detectChanges();
+
+      const handleEl = getHandle(fixture);
+      handleEl.dispatchEvent(createArrowLeftEvent());
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(component.slider.value).toEqual(4);
+        expect(getNoUiSlider(component.slider).get()).toEqual('4');
+      });
+    }));
+
+    it('should block value changes from user when disabled', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
+      const component = fixture.componentInstance;
+
+      component.testValue = 5;
+      component.disabled = true;
+      fixture.detectChanges();
+
+      const handleEl = getHandle(fixture);
+      handleEl.dispatchEvent(createArrowLeftEvent());
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(component.slider.value).toEqual(5);
+        expect(getNoUiSlider(component.slider).get()).toEqual('5');
+      });
+    }));
   });
 
-  it('should create when implemented', () => {
-    const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
-    const component = fixture.componentInstance;
+  describe('NgModel', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [CommonModule, FormsModule, PsSliderModule, FormsModule],
+        declarations: [SliderNgModelTestComponent],
+      });
+    }));
 
-    expect(component).toBeDefined();
-    expect(component.slider).toBeDefined();
+    it('should update internal value when ngmodel changes', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelTestComponent);
+      const component = fixture.componentInstance;
+
+      component.testValue = 5;
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(component.slider.value).toEqual(5);
+        expect(getNoUiSlider(component.slider).get()).toEqual('5');
+
+        component.testValue = 10;
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          expect(component.slider.value).toEqual(10);
+          expect(getNoUiSlider(component.slider).get()).toEqual('10');
+        });
+      });
+    }));
+
+    it('should update ngmodel when slider changes', async(() => {
+      const fixture = TestBed.createComponent(SliderNgModelTestComponent);
+      const component = fixture.componentInstance;
+      component.testValue = 5;
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        const handleEl = getHandle(fixture);
+        handleEl.dispatchEvent(createArrowLeftEvent());
+        fixture.detectChanges();
+        fixture.whenStable().then(() => {
+          expect(component.testValue).toEqual(4);
+        });
+      });
+    }));
   });
 
-  it('should create with given values', fakeAsync(() => {
-    const fixture = TestBed.createComponent(SliderNgModelBlankImplementedComponent);
-    const component = fixture.componentInstance;
-
-    fixture.detectChanges();
-
-    expect(component.slider.min).toEqual(0);
-    expect(component.slider.max).toEqual(15);
-    expect(component.slider.value).toEqual(0);
-  }));
-});
-
-xdescribe('PsSlider with NgModel', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [CommonModule, FormsModule, PsSliderModule],
-      declarations: [SliderNgModelTestComponent],
+  describe('FormControl', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [CommonModule, ReactiveFormsModule, PsSliderModule],
+        declarations: [SliderReactiveFormTestComponent],
+      });
     });
-  }));
 
-  it('should update when implementer updates', fakeAsync(() => {
-    const fixture = TestBed.createComponent(SliderNgModelTestComponent);
-    fixture.autoDetectChanges(true);
-    fixture.detectChanges();
+    it('should update internal value when form changes', async(() => {
+      const fixture = TestBed.createComponent(SliderReactiveFormTestComponent);
+      const component = fixture.componentInstance;
 
-    const component = fixture.componentInstance;
-    expect(component.slider.value).toEqual(5);
-    fixture.detectChanges();
+      component.formControl.patchValue(5);
+      fixture.detectChanges();
+      expect(component.slider.value).toEqual(5);
+      expect(getNoUiSlider(component.slider).get()).toEqual('5');
 
-    component.someNumber = 10;
-    fixture.detectChanges();
+      component.formControl.patchValue(10);
+      fixture.detectChanges();
+      expect(component.slider.value).toEqual(10);
+      expect(getNoUiSlider(component.slider).get()).toEqual('10');
+    }));
 
-    const changedModel = fixture.debugElement.children[0].injector.get<NgModel>(NgModel);
-    fixture.detectChanges();
-    expect(changedModel.value).toEqual(10);
-  }));
+    it('should update form when slider changes', async(() => {
+      const fixture = TestBed.createComponent(SliderReactiveFormTestComponent);
+      const component = fixture.componentInstance;
+      component.formControl.patchValue(5);
+      fixture.detectChanges();
 
-  it('implementer should update when slider changes', fakeAsync(() => {
-    const fixture = TestBed.createComponent(SliderNgModelTestComponent);
-    const component = fixture.componentInstance;
-
-    const handleEl: HTMLElement = component.slider.handles[0];
-    handleEl.dispatchEvent(new KeyboardEvent('keydown', { code: '39' }));
-
-    expect(component.someNumber).toEqual(6);
-  }));
-});
-
-xdescribe('PsSlider with ReactiveForm', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [CommonModule, ReactiveFormsModule, PsSliderModule],
-      declarations: [SliderReactiveFormTestComponent],
-    });
+      const handleEl = getHandle(fixture);
+      handleEl.dispatchEvent(createArrowLeftEvent());
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(component.formControl.value).toEqual(4);
+      });
+    }));
   });
-
-  it('should update when implementer updates', fakeAsync(() => {
-    const fixture = TestBed.createComponent(SliderReactiveFormTestComponent);
-    const component = fixture.componentInstance;
-
-    expect(component.slider.slider.value).toEqual(5);
-    component.someForm.getRawValue().someFormNumber = 10;
-
-    expect(component.slider.value).toEqual(10);
-  }));
-
-  it('implementer should update when slider changes', fakeAsync(() => {
-    const fixture = TestBed.createComponent(SliderReactiveFormTestComponent);
-    const component = fixture.componentInstance;
-
-    const handleEl: HTMLElement = component.slider.handles[0];
-    handleEl.dispatchEvent(new KeyboardEvent('keydown', { code: '39' }));
-
-    expect(component.someForm.getRawValue().someFormNumber).toEqual(6);
-  }));
 });
+
+function getNoUiSlider(psSlider: PsSliderComponent): noUiSlider.noUiSlider {
+  return (psSlider as any)._slider;
+}
+
+function getHandle<T>(fixture: ComponentFixture<T>): HTMLElement {
+  return (fixture.debugElement.nativeElement as HTMLElement).querySelector('.noUi-handle');
+}
+
+function getHandles<T>(fixture: ComponentFixture<T>): NodeListOf<HTMLElement> {
+  return (fixture.debugElement.nativeElement as HTMLElement).querySelectorAll('.noUi-handle');
+}
+
+function createArrowLeftEvent() {
+  return new KeyboardEvent('keydown', { key: 'ArrowLeft' });
+}
+
+function createArrowRightEvent() {
+  return new KeyboardEvent('keydown', { key: 'ArrowRight' });
+}
