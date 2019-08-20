@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { async, fakeAsync, TestBed, tick, ComponentFixture } from '@angular/core/testing';
-import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, NgModel } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PsSliderComponent } from './slider.component';
 import { PsSliderModule } from './slider.module';
-import { timingSafeEqual } from 'crypto';
-import { By } from '@angular/platform-browser';
 
 @Component({
   selector: 'ps-slider-test-blank-implemented',

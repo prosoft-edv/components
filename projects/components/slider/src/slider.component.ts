@@ -1,9 +1,10 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import {
+  ChangeDetectorRef,
   Component,
   DoCheck,
   ElementRef,
   EventEmitter,
-  HostBinding,
   Input,
   OnChanges,
   OnInit,
@@ -13,13 +14,11 @@ import {
   Self,
   SimpleChanges,
   ViewEncapsulation,
-  ChangeDetectorRef,
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import * as noUiSlider from 'nouislider';
-import { coerceNumberProperty } from '@angular/cdk/coercion';
 
 declare type PsSliderConnect = 'lower' | 'upper' | boolean | ('lower' | 'upper' | boolean)[];
 

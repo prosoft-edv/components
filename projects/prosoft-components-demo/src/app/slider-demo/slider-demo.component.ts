@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
