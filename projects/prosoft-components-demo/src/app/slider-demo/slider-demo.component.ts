@@ -10,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
     <div class="app-slider-demo__settings">
       <div class="app-slider-demo__checkboxes">
         <mat-checkbox [(ngModel)]="disabled" (change)="onDisabledChanged()">disabled</mat-checkbox>
-        <mat-checkbox [(ngModel)]="showTooltips">Tooltips</mat-checkbox>
+        <mat-checkbox [(ngModel)]="showTooltip">Tooltip</mat-checkbox>
         <mat-checkbox [(ngModel)]="isRange" (change)="onIsRangeChange()">Range</mat-checkbox>
         <mat-checkbox [(ngModel)]="validatorRequired" (change)="onValidatorChange()">required validator</mat-checkbox>
       </div>
@@ -57,7 +57,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
             [max]="max"
             [stepSize]="stepSize"
             [connect]="connect"
-            [showTooltips]="showTooltips"
+            [showTooltip]="showTooltip"
             [(value)]="value"
             [disabled]="disabled"
           ></ps-slider>
@@ -76,7 +76,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
             [max]="max"
             [stepSize]="stepSize"
             [connect]="connect"
-            [showTooltips]="showTooltips"
+            [showTooltip]="showTooltip"
             [(ngModel)]="model"
             [disabled]="disabled"
           ></ps-slider>
@@ -95,7 +95,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
             [max]="max"
             [stepSize]="stepSize"
             [connect]="connect"
-            [showTooltips]="showTooltips"
+            [showTooltip]="showTooltip"
             formControlName="control"
           ></ps-slider>
           <mat-hint>Value: {{ form.get('control').value }}</mat-hint>
@@ -138,7 +138,7 @@ export class SliderDemoComponent {
 
   public disabled = false;
   public isRange = false;
-  public showTooltips = false;
+  public showTooltip = false;
   public min = 0;
   public max = 20;
   public stepSize = 1;
@@ -195,7 +195,7 @@ export class SliderDemoComponent {
     }
     return `<ps-slider [isRange]="${this.isRange}" [min]="${this.min}" [max]="${this.max}" [stepSize]="${
       this.stepSize
-    }" [connect]="${JSON.stringify(this.connect)}" [showTooltips]="${this.showTooltips}" [disabled]="${
+    }" [connect]="${JSON.stringify(this.connect)}" [showTooltip]="${this.showTooltip}" [disabled]="${
       this.disabled
     }" ${valueBinding}></ps-slider>`;
   }

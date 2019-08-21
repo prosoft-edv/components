@@ -1,4 +1,4 @@
-import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { coerceNumberProperty, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Component,
@@ -19,18 +19,9 @@ import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@an
 import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import * as noUiSlider from 'nouislider';
+import { DefaultFormatter } from './formatter';
 
-declare type PsSliderConnect = 'lower' | 'upper' | boolean | ('lower' | 'upper' | boolean)[];
-
-export class DefaultFormatter {
-  public to(value: number): string {
-    return String(parseFloat(parseFloat(String(value)).toFixed(2)));
-  }
-
-  public from(value: string): number {
-    return parseFloat(value);
-  }
-}
+declare type PsSliderConnect = boolean | boolean[];
 
 // Boilerplate for applying mixins to PsSlider.
 /** @docs-private */
@@ -66,9 +57,31 @@ export class PsSliderComponent extends _PsSliderMixinBase
   implements ControlValueAccessor, MatFormFieldControl<number | number[]>, OnInit, OnChanges, DoCheck {
   public static nextId = 0;
 
+  /**
+   * Defines the step size when sliding the handle
+   */
   @Input() public stepSize = 1;
-  @Input() public isRange = false;
-  @Input() public showTooltips = false;
+
+  /**
+   * When true, two handles are shown
+   */
+  @Input()
+  public get isRange(): boolean {
+    return this._isRange;
+  }
+  public set isRange(v: boolean) {
+    this._isRange = coerceBooleanProperty(v);
+  }
+  private _isRange = false;
+
+  /**
+   * When true, a tooltip is shown while sliding the handle
+   */
+  @Input() public showTooltip = false;
+
+  /**
+   * Defines if and how the slider handle should be connected to the sides or the other handle
+   */
   @Input() public connect: PsSliderConnect;
 
   /**
@@ -244,9 +257,9 @@ export class PsSliderComponent extends _PsSliderMixinBase
       start: this.value,
       step: this.stepSize,
       range: { min: this.min, max: this.max },
-      tooltips: this.showTooltips,
+      tooltips: this.showTooltip,
       format: this._formatter,
-      connect: <any>this.connect || (this.isRange ? true : false),
+      connect: this.connect || !!this.isRange,
     };
 
     this._slider = noUiSlider.create(this.el.nativeElement.querySelector('div'), inputsConfig);
@@ -265,12 +278,12 @@ export class PsSliderComponent extends _PsSliderMixinBase
       // So we set the _rawProvidedValue here again to fix that
       this.value = this._rawProvidedValue;
     }
-    if (this._slider && (changes.isRange || changes.min || changes.max || changes.stepSize || changes.showTooltips || changes.connect)) {
-      this._slider.updateOptions(<any>{
+    if (this._slider && (changes.isRange || changes.min || changes.max || changes.stepSize || changes.showTooltip || changes.connect)) {
+      this._slider.updateOptions({
         start: this.value,
         step: this.stepSize,
         range: { min: this.min, max: this.max },
-        tooltips: this.showTooltips,
+        tooltips: this.showTooltip,
         connect: this.connect,
       });
     }
