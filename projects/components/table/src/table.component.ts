@@ -22,7 +22,7 @@ import {
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PsFlipContainerComponent } from '@prosoft/flip-container';
+import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { IPsTableUpdateDataInfo, PsTableDataSource } from './data/table-data-source';
@@ -183,7 +183,7 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['dataSource'] && this._initialized) {
+    if (changes.dataSource && this._initialized) {
       this.dataSource.updateData();
 
       if (this._dataSourceChangesSub) {

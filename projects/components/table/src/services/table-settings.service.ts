@@ -17,8 +17,6 @@ export class PsTableSettingsService {
   public pageSizeOptions = [5, 10, 25, 50];
 
   public save(_: string, __: IPsTableSetting): Observable<void> {
-    return throwError(
-      new Error('Settings could not be saved, you must inherit from PsTableSettingsService and implement your own Save-logic')
-    );
+    return of(null);
   }
 }

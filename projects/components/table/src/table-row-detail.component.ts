@@ -9,14 +9,14 @@ import { PsTableRowDetailDirective } from './directives/table.directives';
     <div
       class="ps-table-row-detail__container"
       [@detailExpand]="animationState"
-      (@detailExpand.start)="rowDetailToggleStart(element)"
-      (@detailExpand.done)="rowDetailToggleEnd(element)"
+      (@detailExpand.start)="rowDetailToggleStart()"
+      (@detailExpand.done)="rowDetailToggleEnd()"
     >
       <!--
                 ps-iframe autoheight funktioniert nur, wenn das iframe beim Initialisieren sichtbar ist.
                 Deshalb sorgen wir hier mit ngIf dafür, das es erst beim Aufklappen initialisiert wird.
             -->
-      <div *ngIf="visibleExpandedItems.has(element)">
+      <div *ngIf="visible">
         <ng-template [ngTemplateOutlet]="rowDetail.template" [ngTemplateOutletContext]="{ $implicit: element }"> </ng-template>
       </div>
     </div>
@@ -48,17 +48,17 @@ export class TableRowDetailComponent {
   }
 
   /** Expanded Items, die sichtbar sind (wird beim Start der Aufklapp-Animation und am Ende der Zuklapp-Animation gesetzt) */
-  public visibleExpandedItems = new WeakSet();
+  public visible = false;
 
-  public rowDetailToggleStart(item: any) {
+  public rowDetailToggleStart() {
     if (this.show) {
-      this.visibleExpandedItems.add(item);
+      this.visible = true;
     }
   }
 
-  public rowDetailToggleEnd(item: any) {
+  public rowDetailToggleEnd() {
     if (!this.show) {
-      this.visibleExpandedItems.delete(item);
+      this.visible = false;
     }
   }
 }
