@@ -1,0 +1,134 @@
+ps-table {
+  display: block;
+  margin-bottom: 1em;
+
+  .ps-table__table {
+    width: 100%;
+  }
+
+  td.mat-cell,
+  td.mat-footer-cell,
+  th.mat-header-cell {
+    padding: 0 0.25em;
+  }
+
+  &.ps-table--striped:not(.ps-table--row-detail) tbody tr:nth-child(even),
+  &.ps-table--striped.ps-table--row-detail tbody tr:nth-child(4n + 3),
+  &.ps-table--striped.ps-table--row-detail tbody tr:nth-child(4n + 4) {
+    background-color: #f4f4f4;
+  }
+
+  .ps-table__paginator {
+    width: 100%;
+  }
+
+  .ps-table__loading-spinner {
+    margin: 1em auto;
+  }
+
+  .ps-table__header {
+    padding: 0 15px 0 24px;
+  }
+
+  .ps-table__form-field-layout {
+    margin-top: 12px;
+    padding: 0;
+  }
+
+  .ps-table__button-inactive {
+    background-color: transparent !important;
+    color: black !important;
+  }
+
+  .ps-table__smaller-mini-fab {
+    width: 28px;
+    height: 28px;
+
+    .mat-button-wrapper {
+      line-height: 14px;
+      padding: 0;
+
+      .mat-icon {
+        padding-bottom: 30px;
+      }
+    }
+  }
+
+  .ps-table__searchbox-button {
+    color: black;
+    position: absolute;
+    top: 4px;
+    right: 0px;
+    z-index: 2;
+  }
+
+  .ps-table__no-entries-text,
+  .ps-table__error-text,
+  .ps-table__loading-container {
+    font-size: large;
+    background-color: white;
+    padding: 1em 0;
+  }
+
+  .ps-table__error-text {
+    color: red;
+  }
+
+  .ps-table__flex-0-0-25 {
+    flex: 0 0 25px;
+  }
+
+  .ps-table__flex-0-0-300 {
+    flex: 0 0 300px;
+  }
+
+  .ps-table__flex-1-1-320 {
+    flex: 1 1 320px;
+  }
+
+  .ps-table__header-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+
+  .ps-table__top-button-section-container {
+    flex: 1 0 auto;
+    margin: 0.3em 8px 1em;
+    text-align: end;
+    align-self: flex-end;
+  }
+
+  .ps-table__width-25-percent {
+    width: 25%;
+  }
+
+  th.ps-table__options-column-header {
+    color: black;
+    text-align: right;
+  }
+
+  tr.ps-table__detail-row {
+    min-height: 0;
+    height: auto;
+
+    & > td {
+      padding: 0;
+    }
+  }
+
+  .ps-table__detail-row--collapsed > td {
+    border-bottom: none;
+  }
+
+  .ps-table__settings-sort-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .ps-table__settings-sort-button-container {
+    margin-left: 1em;
+    margin-bottom: 1.25em;
+    flex: 1 0 auto;
+  }
+}

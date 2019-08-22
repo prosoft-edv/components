@@ -1,0 +1,198 @@
+<ps-flip-container>
+  <div *psFlipContainerFront>
+    <div>
+      <div class="ps-table__header">
+        <h2 *ngIf="caption">{{ caption }}</h2>
+        <div
+          [style.padding-top]="!caption && (showSorting || filterable || topButtonSection) ? '1em' : '0'"
+          class="ps-table__header-container"
+        >
+          <ng-container [ngTemplateOutlet]="customHeader"></ng-container>
+          <ng-container *ngIf="showSorting">
+            <mat-form-field class="ps-table__flex-0-0-25">
+              <mat-select [placeholder]="tableIntl.sortLabel" [value]="sortColumn" (selectionChange)="sortPropChanged($event)">
+                <mat-option *ngFor="let sortDefinition of sortDefinitions" [value]="sortDefinition.prop">{{
+                  sortDefinition.displayName
+                }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="ps-table__form-field-layout ps-table__settings-sort-button-container">
+              <button
+                mat-mini-fab
+                type="button"
+                (click)="sortDirChanged('desc')"
+                class="ps-table__smaller-mini-fab"
+                [ngClass]="{ 'ps-table__button-inactive': sortDirection === 'asc' }"
+              >
+                <mat-icon>arrow_downward</mat-icon>
+              </button>
+              <button
+                mat-mini-fab
+                type="button"
+                (click)="sortDirChanged('asc')"
+                class="ps-table__smaller-mini-fab"
+                [ngClass]="{ 'ps-table__button-inactive': sortDirection === 'desc' }"
+              >
+                <mat-icon>arrow_upward</mat-icon>
+              </button>
+            </div>
+          </ng-container>
+          <mat-form-field *ngIf="filterable" class="ps-table__flex-1-1-320">
+            <input
+              [ngModel]="filterText"
+              type="text"
+              matInput
+              [placeholder]="tableIntl.searchLabel"
+              autocomplete="off"
+              (keyup)="search($event.key, $event.target.value)"
+            />
+            <a *ngIf="filterText" class="ps-table__searchbox-button" href="javascript:void(0)" (click)="search('escape', null)">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+          <div *ngIf="topButtonSection" class="ps-table__top-button-section-container">
+            <ng-container
+              [ngTemplateOutlet]="topButtonSection"
+              [ngTemplateOutletContext]="{ $implicit: dataSource.selectionModel.selected }"
+            ></ng-container>
+          </div>
+        </div>
+      </div>
+      <table mat-table multiTemplateDataRows class="ps-table__table" [class.mat-elevation-z3]="cardLayout" [dataSource]="dataSource">
+        <!-- Checkbox Column -->
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef>
+            <mat-checkbox
+              (change)="$event ? dataSource.toggleVisibleRowSelection() : null"
+              [checked]="dataSource.selectionModel.hasValue() && dataSource.allVisibleRowsSelected"
+              [indeterminate]="dataSource.selectionModel.hasValue() && !dataSource.allVisibleRowsSelected"
+            >
+            </mat-checkbox>
+          </th>
+          <td mat-cell *matCellDef="let row" style="width: 55px;">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? dataSource.selectionModel.toggle(row) : null"
+              [checked]="dataSource.selectionModel.isSelected(row)"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <!-- Row Detail Expander Column-->
+        <ng-container matColumnDef="rowDetailExpander">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" style="width: 70px;">
+            <button mat-icon-button color="primary" type="button" (click)="toggleRowDetail(row)">
+              <mat-icon *ngIf="!rowDetail.isExpanded(row)">chevron_right</mat-icon>
+              <mat-icon *ngIf="rowDetail.isExpanded(row)">expand_more</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Dynamic Columns -->
+        <ng-container *ngFor="let columnDef of columnDefs">
+          <ng-container [matColumnDef]="columnDef.property">
+            <th mat-header-cell *matHeaderCellDef [ngStyle]="columnDef.headerStyles" [style.width]="columnDef.width">
+              <ng-container *ngIf="!columnDef.headerTemplate">
+                {{ columnDef.header }}
+              </ng-container>
+              <ng-template *ngIf="columnDef.headerTemplate" [ngTemplateOutlet]="columnDef.headerTemplate"></ng-template>
+            </th>
+            <td mat-cell *matCellDef="let element" [ngStyle]="columnDef.columnStyles">
+              <ng-container *ngIf="!columnDef.columnTemplate">
+                {{ element[columnDef.property] }}
+              </ng-container>
+              <ng-template
+                *ngIf="columnDef.columnTemplate"
+                [ngTemplateOutlet]="columnDef.columnTemplate"
+                [ngTemplateOutletContext]="{ $implicit: element, expanded: rowDetail?.isExpanded(element) || false }"
+              >
+              </ng-template>
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <!--Option Column-->
+        <ng-container matColumnDef="options">
+          <th class="ps-table__options-column-header" mat-header-cell *matHeaderCellDef>
+            <button *ngIf="showListActions" mat-icon-button type="button" [matMenuTriggerFor]="listMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #listMenu="matMenu">
+              <!--Dynamic ListActions-->
+              <ng-template
+                [ngTemplateOutlet]="listActions"
+                [ngTemplateOutletContext]="{ $implicit: dataSource.selectionModel.selected }"
+              ></ng-template>
+
+              <button [hidden]="!refreshable" type="button" mat-menu-item (click)="refreshList()">
+                <mat-icon>refresh</mat-icon>
+                <span>{{ tableIntl.refreshListLabel }}</span>
+              </button>
+              <button *ngIf="settingsEnabled" type="button" mat-menu-item (click)="flipContainer.toggleFlip()">
+                <mat-icon>settings</mat-icon>
+                <span>{{ tableIntl.settingsLabel }}</span>
+              </button>
+            </mat-menu>
+          </th>
+          <td class="text-right" mat-cell *matCellDef="let row">
+            <button *ngIf="rowActions" mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #rowMenu="matMenu">
+              <!--Dynamic RowActions-->
+              <ng-container [ngTemplateOutlet]="rowActions" [ngTemplateOutletContext]="{ $implicit: row }"></ng-container>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container *ngIf="rowDetail" matColumnDef="__rowDetail">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="ps-table__detail-cell">
+            <ps-table-row-detail [show]="rowDetail.isExpanded(element)" [element]="element" [rowDetail]="rowDetail"></ps-table-row-detail>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row class="ps-table__row" *matRowDef="let row; columns: displayedColumns"></tr>
+        <ng-container *ngIf="rowDetail">
+          <tr
+            mat-row
+            *matRowDef="let row; columns: ['__rowDetail']"
+            class="ps-table__detail-row"
+            [class.ps-table__detail-row--collapsed]="!rowDetail.isExpanded(row)"
+            [class.ps-table__detail-row--expanded]="rowDetail.isExpanded(row)"
+          ></tr>
+        </ng-container>
+      </table>
+
+      <div class="text-center ps-table__no-entries-text" *ngIf="showNoEntriesText">{{ tableIntl.noEntriesLabel }}</div>
+      <div class="text-center ps-table__error-text" *ngIf="showError">{{ dataSource.errorMessage }}</div>
+      <div class="ps-table__loading-container" *ngIf="showLoading">
+        <mat-spinner class="ps-table__loading-spinner"></mat-spinner>
+      </div>
+      <mat-paginator
+        class="ps-table__paginator"
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [length]="dataSource.dataLength"
+        [showFirstLastButtons]="true"
+        (page)="onPage($event)"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+  <div *psFlipContainerBack>
+    <ps-table-settings
+      [tableId]="tableId"
+      [columnDefinitions]="columnDefs"
+      [sortDefinitions]="sortDefinitions"
+      [pageSizeOptions]="pageSizeOptions"
+      (settingsAborted)="flipContainer.toggleFlip()"
+      (settingsSaved)="onSettingsSaved()"
+    >
+    </ps-table-settings>
+  </div>
+</ps-flip-container>
