@@ -24,8 +24,6 @@ import {
   PsTableRowActionsDirective,
   PsTableRowDetailDirective,
   PsTableRowDetailTemplateDirective,
-  PsTableSearchableDirective,
-  PsTableSortableDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
 import { PsTableSettingsService } from './services/table-settings.service';
@@ -46,8 +44,6 @@ import { PsTableComponent } from './table.component';
     PsTableListActionsDirective,
     PsTableRowActionsDirective,
     PsTableCustomHeaderDirective,
-    PsTableSortableDirective,
-    PsTableSearchableDirective,
     PsTableRowDetailDirective,
     PsTableRowDetailTemplateDirective,
   ],
@@ -77,8 +73,6 @@ import { PsTableComponent } from './table.component';
     PsTableListActionsDirective,
     PsTableRowActionsDirective,
     PsTableCustomHeaderDirective,
-    PsTableSortableDirective,
-    PsTableSearchableDirective,
     PsTableRowDetailDirective,
     PsTableRowDetailTemplateDirective,
   ],

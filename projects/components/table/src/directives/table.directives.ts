@@ -56,20 +56,6 @@ export class PsTableCustomHeaderDirective {
   constructor(public el: ElementRef) {}
 }
 
-@Directive({
-  selector: '[psTableSearchable]',
-})
-export class PsTableSearchableDirective {
-  constructor(public el: ElementRef) {}
-}
-
-@Directive({
-  selector: '[psTableSortable]',
-})
-export class PsTableSortableDirective {
-  constructor(public el: ElementRef) {}
-}
-
 @Directive({ selector: '[psTableRowDetailTemplate]' })
 export class PsTableRowDetailTemplateDirective {
   constructor(public templateRef: TemplateRef<any>) {}
