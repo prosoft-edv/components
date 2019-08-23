@@ -10,11 +10,11 @@ import { _isNumberValue } from '../helper/table.helper';
 const MAX_SAFE_INTEGER = 9007199254740991;
 
 export interface IPsTableUpdateDataInfo {
-  currentPage: number;
-  pageSize: number;
-  searchText: string;
-  sortDirection: 'asc' | 'desc';
-  sortColumn: string;
+  currentPage: number | null;
+  pageSize: number | null;
+  searchText: string | null;
+  sortDirection: 'asc' | 'desc' | null;
+  sortColumn: string | null;
 }
 
 export interface IPsTableFilterResult<T> {
@@ -100,7 +100,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
   private _renderChangesSubscription = Subscription.EMPTY;
 
   constructor(
-    loadDataFunc?: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>,
+    loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>,
     public readonly mode: PsTableMode = 'client'
   ) {
     super();

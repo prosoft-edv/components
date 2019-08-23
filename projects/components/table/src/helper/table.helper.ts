@@ -15,11 +15,11 @@ export function fromQueryParams(settingsString: string): IPsTableUpdateDataInfo 
   }
 
   return <IPsTableUpdateDataInfo>{
-    pageSize: +settings[0],
-    currentPage: +settings[1],
-    searchText: settings[2],
-    sortColumn: settings[3],
-    sortDirection: settings[4],
+    pageSize: settings[0] ? +settings[0] : null,
+    currentPage: settings[1] ? +settings[1] : null,
+    searchText: settings[2] || null,
+    sortColumn: settings[3] || null,
+    sortDirection: settings[4] || null,
   };
 }
 

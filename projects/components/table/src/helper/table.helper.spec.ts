@@ -1,17 +1,15 @@
+import { asQueryParams, fromQueryParams, _isNumberValue } from './table.helper';
 import { IPsTableUpdateDataInfo } from '../data/table-data-source';
-import { asQueryParams, fromQueryParams } from './table.helper';
 
 describe('asQueryParams', () => {
   it('createsQueryParamsString', () => {
-    const settings = <IPsTableUpdateDataInfo>{
+    const paramsString = asQueryParams({
       pageSize: 22,
       currentPage: 2,
       searchText: 'asdf',
       sortColumn: 'Column1',
       sortDirection: 'desc',
-    };
-
-    const paramsString = asQueryParams(settings);
+    });
 
     expect(paramsString).toEqual('22◬2◬asdf◬Column1◬desc');
   });
@@ -19,34 +17,59 @@ describe('asQueryParams', () => {
 
 describe('fromQueryParams', () => {
   it('should return data when all values are valid', () => {
-    const tableDataInfo = fromQueryParams('22◬2◬asdf◬Column1◬desc');
-
-    expect(tableDataInfo.pageSize).toEqual(22);
-    expect(tableDataInfo.currentPage).toEqual(2);
-    expect(tableDataInfo.searchText).toEqual('asdf');
-    expect(tableDataInfo.sortColumn).toEqual('Column1');
-    expect(tableDataInfo.sortDirection).toEqual('desc');
+    expect(fromQueryParams('22◬2◬asdf◬Column1◬desc')).toEqual(<IPsTableUpdateDataInfo>{
+      pageSize: 22,
+      currentPage: 2,
+      searchText: 'asdf',
+      sortColumn: 'Column1',
+      sortDirection: 'desc',
+    });
   });
 
   it('should return partial data when some values are set', () => {
-    const tableDataInfo = fromQueryParams('22◬2◬◬◬desc');
+    expect(fromQueryParams('22◬2◬◬◬desc')).toEqual(<IPsTableUpdateDataInfo>{
+      pageSize: 22,
+      currentPage: 2,
+      searchText: null,
+      sortColumn: null,
+      sortDirection: 'desc',
+    });
 
-    expect(tableDataInfo.pageSize).toEqual(22);
-    expect(tableDataInfo.currentPage).toEqual(2);
-    expect(tableDataInfo.searchText).toEqual('');
-    expect(tableDataInfo.sortColumn).toEqual('');
-    expect(tableDataInfo.sortDirection).toEqual('desc');
+    expect(fromQueryParams('◬◬test◬◬')).toEqual(<IPsTableUpdateDataInfo>{
+      pageSize: null,
+      currentPage: null,
+      searchText: 'test',
+      sortColumn: null,
+      sortDirection: null,
+    });
   });
 
   it('should return undefined when all values are empty', () => {
-    const tableDataInfo = fromQueryParams('◬◬◬◬');
-
-    expect(tableDataInfo).toBe(undefined);
+    expect(fromQueryParams('◬◬◬◬')).toBe(undefined);
   });
 
   it('should return undefined when the input is empty', () => {
-    const tableDataInfo = fromQueryParams('');
+    expect(fromQueryParams('')).toBe(undefined);
+    expect(fromQueryParams(null)).toBe(undefined);
+    expect(fromQueryParams(undefined)).toBe(undefined);
+  });
+});
 
-    expect(tableDataInfo).toBe(undefined);
+describe('_isNumberValue', () => {
+  it('should only return true for numbers or string numbers', () => {
+    expect(_isNumberValue(null)).toBe(false);
+    expect(_isNumberValue(undefined)).toBe(false);
+    expect(_isNumberValue('')).toBe(false);
+    expect(_isNumberValue('safsa')).toBe(false);
+    expect(_isNumberValue(true)).toBe(false);
+    expect(_isNumberValue(false)).toBe(false);
+    expect(_isNumberValue([])).toBe(false);
+    expect(_isNumberValue({})).toBe(false);
+    expect(_isNumberValue('123hello')).toBe(false);
+
+    expect(_isNumberValue('123')).toBe(true);
+    expect(_isNumberValue(123)).toBe(true);
+    expect(_isNumberValue(123.5)).toBe(true);
+    expect(_isNumberValue('123.5')).toBe(true);
   });
 });
