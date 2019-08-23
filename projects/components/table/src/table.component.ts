@@ -107,7 +107,7 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
   }
 
   @HostBinding('class.ps-table--row-detail')
-  @ContentChild(PsTableRowDetailDirective, { static: true })
+  @ContentChild(PsTableRowDetailDirective, { static: false })
   public rowDetail: PsTableRowDetailDirective | null = null;
 
   public pageSizeOptions: number[];
