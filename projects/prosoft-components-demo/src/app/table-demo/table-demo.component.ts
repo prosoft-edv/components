@@ -38,14 +38,13 @@ function generateString() {
   );
 }
 
-let counter = 0;
-function generateSampleDataRow(): ISampleData {
+function generateSampleDataRow(idx: number): ISampleData {
   const num = generateNumber();
   const bool = generateBoolean();
   const date = generateDate();
   const str = generateString();
   return {
-    id: ++counter,
+    id: idx,
     number: num,
     boolean: bool,
     date: date,
@@ -54,8 +53,8 @@ function generateSampleDataRow(): ISampleData {
   };
 }
 function generateSampleData(rowCount: number): ISampleData[] {
-  const rows = Array.from(new Array(rowCount));
-  return rows.map(() => generateSampleDataRow());
+  const rows = Array.from(new Array(rowCount).keys());
+  return rows.map(x => generateSampleDataRow(x));
 }
 
 const sampleData = generateSampleData(100);

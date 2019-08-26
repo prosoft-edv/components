@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatSelectChange } from '@angular/material/select';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IPsTableSortDefinition } from '../data/table-sort-definition';
@@ -11,7 +10,21 @@ import { PsTableIntl } from '../services/table.intl';
 @Component({
   selector: 'ps-table-settings',
   templateUrl: './table-settings.component.html',
-  styleUrls: ['../table.component.scss'],
+  styles: [
+    `
+      .ps-table__settings-form {
+        display: flex;
+        justify-content: space-between;
+      }
+      .ps-table__settings-form > * {
+        min-width: 20%;
+      }
+      .ps-table__settings-form__display-columns {
+        display: flex;
+        flex-direction: column;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsTableSettingsComponent implements OnInit {
@@ -44,8 +57,12 @@ export class PsTableSettingsComponent implements OnInit {
     );
   }
 
-  public sortSelectionChange(event: MatSelectChange, settings: IPsTableSetting) {
-    settings.columnBlacklist = settings.columnBlacklist.filter(x => x !== event.value);
+  public onSortChanged(event: { sortColumn: string; sortDirection: 'asc' | 'desc' }, settings: IPsTableSetting) {
+    if (settings.sortColumn !== event.sortColumn) {
+      settings.sortColumn = event.sortColumn;
+      settings.columnBlacklist = settings.columnBlacklist.filter(x => x !== event.sortColumn);
+    }
+    settings.sortDirection = event.sortDirection;
   }
 
   public hiddenColumnsChange(settings: IPsTableSetting, event: MatCheckboxChange, columnDef: PsTableColumnDirective) {

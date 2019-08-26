@@ -14,7 +14,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { PsFlipContainerModule } from '@prosoft/components/flip-container';
 import { PsSavebarModule } from '@prosoft/components/savebar';
-
 import {
   PsTableColumnDirective,
   PsTableColumnHeaderTemplateDirective,
@@ -29,6 +28,7 @@ import {
 import { PsTableSettingsService } from './services/table-settings.service';
 import { PsTableIntl } from './services/table.intl';
 import { PsTableSettingsComponent } from './settings/table-settings.component';
+import { PsTableSortComponent } from './settings/table-sort.component';
 import { TableRowDetailComponent } from './table-row-detail.component';
 import { PsTableComponent } from './table.component';
 
@@ -36,6 +36,7 @@ import { PsTableComponent } from './table.component';
   declarations: [
     PsTableComponent,
     PsTableSettingsComponent,
+    PsTableSortComponent,
     TableRowDetailComponent,
     PsTableColumnDirective,
     PsTableColumnTemplateDirective,

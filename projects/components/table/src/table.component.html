@@ -8,35 +8,15 @@
       >
         <ng-container [ngTemplateOutlet]="customHeader"></ng-container>
         <ng-container *ngIf="showSorting">
-          <mat-form-field class="ps-table__flex-0-0-25">
-            <mat-select [placeholder]="tableIntl.sortLabel" [value]="sortColumn" (selectionChange)="sortPropChanged($event)">
-              <mat-option *ngFor="let sortDefinition of sortDefinitions" [value]="sortDefinition.prop">{{
-                sortDefinition.displayName
-              }}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="ps-table__form-field-layout ps-table__settings-sort-button-container">
-            <button
-              mat-mini-fab
-              type="button"
-              (click)="sortDirChanged('desc')"
-              class="ps-table__smaller-mini-fab"
-              [ngClass]="{ 'ps-table__button-inactive': sortDirection === 'asc' }"
-            >
-              <mat-icon>arrow_downward</mat-icon>
-            </button>
-            <button
-              mat-mini-fab
-              type="button"
-              (click)="sortDirChanged('asc')"
-              class="ps-table__smaller-mini-fab"
-              [ngClass]="{ 'ps-table__button-inactive': sortDirection === 'desc' }"
-            >
-              <mat-icon>arrow_upward</mat-icon>
-            </button>
-          </div>
+          <ps-table-sort
+            [sortColumn]="sortColumn"
+            [sortDirection]="sortDirection"
+            [sortDefinitions]="sortDefinitions"
+            [intl]="tableIntl"
+            (sortChanged)="onSortChanged($event)"
+          ></ps-table-sort>
         </ng-container>
-        <mat-form-field *ngIf="filterable" class="ps-table__flex-1-1-320">
+        <mat-form-field *ngIf="filterable" class="ps-table__filter">
           <input
             [ngModel]="filterText"
             type="text"

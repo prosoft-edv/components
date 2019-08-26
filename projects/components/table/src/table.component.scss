@@ -40,20 +40,6 @@ ps-table {
     color: black !important;
   }
 
-  .ps-table__smaller-mini-fab {
-    width: 28px;
-    height: 28px;
-
-    .mat-button-wrapper {
-      line-height: 14px;
-      padding: 0;
-
-      .mat-icon {
-        padding-bottom: 30px;
-      }
-    }
-  }
-
   .ps-table__searchbox-button {
     color: black;
     position: absolute;
@@ -74,15 +60,11 @@ ps-table {
     color: red;
   }
 
-  .ps-table__flex-0-0-25 {
+  .ps-table__sort {
     flex: 0 0 25px;
   }
 
-  .ps-table__flex-0-0-300 {
-    flex: 0 0 300px;
-  }
-
-  .ps-table__flex-1-1-320 {
+  .ps-table__filter {
     flex: 1 1 320px;
   }
 
@@ -119,16 +101,5 @@ ps-table {
 
   .ps-table__detail-row--collapsed > td {
     border-bottom: none;
-  }
-
-  .ps-table__settings-sort-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .ps-table__settings-sort-button-container {
-    margin-left: 1em;
-    margin-bottom: 1.25em;
-    flex: 1 0 auto;
   }
 }

@@ -238,13 +238,9 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     }
   }
 
-  public sortDirChanged(direction: 'asc' | 'desc') {
-    this.sortDirection = direction;
-    this.requestUpdate();
-  }
-
-  public sortPropChanged(event: MatSelectChange) {
-    this.sortColumn = event.value;
+  public onSortChanged(event: { sortColumn: string; sortDirection: 'asc' | 'desc' }) {
+    this.sortColumn = event.sortColumn;
+    this.sortDirection = event.sortDirection;
     this.requestUpdate();
   }
 
@@ -341,7 +337,7 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
           this.cd.markForCheck();
           this.dataSource.updateData();
         },
-        error: (err: Error | any) => (this.dataSource.error = err instanceof Error ? err.message : err),
+        error: (err: Error | any) => (this.dataSource.error = err instanceof Error ? err.message : err), // TODO nur err?
       })
     );
   }
