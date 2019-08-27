@@ -26,7 +26,6 @@ import {
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
 import { PsTableSettingsService } from './services/table-settings.service';
-import { PsTableIntl } from './services/table.intl';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableSortComponent } from './subcomponents/table-sort.component';
 import { TableRowDetailComponent } from './table-row-detail.component';
@@ -82,7 +81,7 @@ export class PsTableModule {
   public static forRoot(): ModuleWithProviders {
     return {
       ngModule: PsTableModule,
-      providers: [PsTableIntl, PsTableSettingsService],
+      providers: [PsTableSettingsService],
     };
   }
 }

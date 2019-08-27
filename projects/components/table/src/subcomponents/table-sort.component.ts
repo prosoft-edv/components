@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
+import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { IPsTableSortDefinition } from '../models';
 
 @Component({
@@ -55,7 +56,7 @@ import { IPsTableSortDefinition } from '../models';
   encapsulation: ViewEncapsulation.None,
 })
 export class PsTableSortComponent {
-  @Input() public intl: any; // TODO
+  @Input() public intl: IPsTableIntlTexts;
   @Input() public sortColumn: string;
   @Input() public sortDirection: 'asc' | 'desc';
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];

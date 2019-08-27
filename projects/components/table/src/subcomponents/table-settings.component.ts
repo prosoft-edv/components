@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PsTableColumnDirective } from '../directives/table.directives';
 import { IPsTableSortDefinition } from '../models';
 import { IPsTableSetting, PsTableSettingsService } from '../services/table-settings.service';
-import { PsTableIntl } from '../services/table.intl';
 
 @Component({
   selector: 'ps-table-settings',
@@ -28,6 +28,7 @@ import { PsTableIntl } from '../services/table.intl';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsTableSettingsComponent implements OnInit {
+  @Input() public intl: IPsTableIntlTexts;
   @Input() public tableId: string;
   @Input() public columnDefinitions: PsTableColumnDirective[] = [];
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];
@@ -38,7 +39,7 @@ export class PsTableSettingsComponent implements OnInit {
 
   public settings$: Observable<IPsTableSetting>;
 
-  constructor(public tableIntl: PsTableIntl, public settingsService: PsTableSettingsService) {}
+  constructor(public settingsService: PsTableSettingsService) {}
 
   public ngOnInit(): void {
     this.settings$ = combineLatest([this.settingsService.settings$, this.settingsService.defaultPageSize$]).pipe(

@@ -12,6 +12,7 @@ import {
   LOCALE_ID,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   QueryList,
   SimpleChanges,
@@ -21,9 +22,10 @@ import {
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IPsTableIntlTexts, PsIntlService } from '@prosoft/components/core';
 import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
 import { combineLatest, Subject, Subscription } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 import { PsTableDataSource } from './data/table-data-source';
 import {
   PsTableColumnDirective,
@@ -36,7 +38,6 @@ import {
 import { asQueryParams, fromQueryParams } from './helper/table.helper';
 import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
-import { PsTableIntl } from './services/table.intl';
 
 @Component({
   selector: 'ps-table',
@@ -45,10 +46,11 @@ import { PsTableIntl } from './services/table.intl';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
+export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() public caption: string;
   @Input() public dataSource: PsTableDataSource<{ [key: string]: any }>;
   @Input() public tableId: string;
+  @Input() public intlOverride: Partial<IPsTableIntlTexts>;
   @Input()
   public get pageSize(): number {
     return this.dataSource.pageSize;
@@ -165,15 +167,18 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     return !!this._mergedSortDefinitions.length;
   }
 
+  public intl: IPsTableIntlTexts;
+
   private requestDebouncedDataUpdateSubject = new Subject();
   private subscriptions: Subscription[] = [];
   private _sortDefinitions: IPsTableSortDefinition[] = [];
   private _mergedSortDefinitions: IPsTableSortDefinition[] = [];
   private _initialized = false;
   private _dataSourceChangesSub: Subscription;
+  private _intlChangesSub: Subscription;
 
   constructor(
-    public tableIntl: PsTableIntl,
+    public intlService: PsIntlService,
     public settingsService: PsTableSettingsService,
     private cd: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -181,7 +186,18 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Inject(LOCALE_ID) private _locale: string
   ) {}
 
+  public ngOnInit() {
+    this._intlChangesSub = this.intlService.intlChanged$.pipe(startWith(null as any)).subscribe(() => {
+      this.updateIntl();
+      this.cd.markForCheck();
+    });
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.intlOverride) {
+      this.updateIntl();
+    }
+
     if (changes.dataSource && this._initialized) {
       this.dataSource.updateData();
 
@@ -211,8 +227,7 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
       this.cd.markForCheck();
     });
 
-    this.paginator._intl = this.tableIntl;
-    this.paginator._intl.changes.next();
+    this.updatePaginatorIntl();
     this._initialized = true;
   }
 
@@ -223,6 +238,10 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
 
     if (this._dataSourceChangesSub) {
       this._dataSourceChangesSub.unsubscribe();
+    }
+
+    if (this._intlChangesSub) {
+      this._intlChangesSub.unsubscribe();
     }
   }
 
@@ -367,5 +386,24 @@ export class PsTableComponent implements OnChanges, AfterViewInit, OnDestroy {
       .filter((value, index, self) => self.indexOf(value) === index)
       .sort((a, b) => a.displayName.toLocaleLowerCase().localeCompare(b.displayName.toLocaleLowerCase()));
     this.cd.markForCheck();
+  }
+
+  private updateIntl() {
+    const intl = this.intlService.get('table');
+    this.intl = this.intlService.merge(intl, this.intlOverride);
+
+    this.updatePaginatorIntl();
+  }
+
+  private updatePaginatorIntl() {
+    if (this.paginator) {
+      this.paginator._intl.firstPageLabel = this.intl.firstPageLabel;
+      this.paginator._intl.lastPageLabel = this.intl.lastPageLabel;
+      this.paginator._intl.previousPageLabel = this.intl.previousPageLabel;
+      this.paginator._intl.nextPageLabel = this.intl.nextPageLabel;
+      this.paginator._intl.itemsPerPageLabel = this.intl.itemsPerPageLabel;
+      this.paginator._intl.getRangeLabel = this.intl.getRangeLabel;
+      this.paginator._intl.changes.next();
+    }
   }
 }

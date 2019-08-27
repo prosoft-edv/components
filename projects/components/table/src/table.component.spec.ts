@@ -5,32 +5,8 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 
 import { PsTableDataSource } from './data/table-data-source';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
-import { PsTableIntl } from './services/table.intl';
+import { PsIntlServiceEn } from '@prosoft/components/core';
 import { PsTableComponent } from './table.component';
-
-class TestTableIntl extends PsTableIntl {
-  constructor() {
-    super();
-    this.settingsLabel = 'a';
-    this.searchLabel = 'b';
-    this.sortLabel = 'c';
-    this.refreshListLabel = 'd';
-    this.noEntriesLabel = 'e';
-    this.saveSettingsLabel = 'f';
-    this.abortSettingsLabel = 'g';
-    this.displayedColumnsLabel = 'h';
-    this.itemsPerPageLabel = 'i';
-    this.nextPageLabel = 'j';
-    this.previousPageLabel = 'k';
-    this.firstPageLabel = 'l';
-    this.lastPageLabel = 'm';
-    this.getRangeLabel = (_: any, __: any, ___: any) => {
-      return 'n';
-    };
-
-    this.changes.next();
-  }
-}
 
 class TestSettingsService extends PsTableSettingsService {
   public readonly defaultPageSize$ = new BehaviorSubject<number>(15);
@@ -50,7 +26,8 @@ const router: any = {
   navigate: (_route: any, _options: any) => {},
 };
 
-const testIntl = new TestTableIntl();
+const intlService = new PsIntlServiceEn();
+const testIntl = intlService.get('table');
 const settingsService = new TestSettingsService();
 const cd = <ChangeDetectorRef>{ markForCheck: () => {} };
 const paginator = new MatPaginator(new MatPaginatorIntl(), cd);
@@ -85,35 +62,39 @@ const route: any = {
 
 describe('PsTableComponent', () => {
   it('setsSpecifiedIntl', () => {
-    const table = new PsTableComponent(testIntl, settingsService, cd, route, null, null);
+    const table = new PsTableComponent(intlService, settingsService, cd, route, null, null);
     table.dataSource = dataSouce;
     table.paginator = paginator;
     table.tableId = 'setsSpecifiedIntl';
+
+    table.ngOnInit();
     table.ngAfterViewInit();
 
-    expect(table.tableIntl).toEqual(testIntl);
+    expect(table.intl).toEqual(testIntl);
+    expect(table.intl.settingsLabel).toEqual(testIntl.settingsLabel);
+    expect(table.intl.searchLabel).toEqual(testIntl.searchLabel);
+    expect(table.intl.sortLabel).toEqual(testIntl.sortLabel);
+    expect(table.intl.refreshListLabel).toEqual(testIntl.refreshListLabel);
+    expect(table.intl.noEntriesLabel).toEqual(testIntl.noEntriesLabel);
+    expect(table.intl.saveLabel).toEqual(testIntl.saveLabel);
+    expect(table.intl.cancelLabel).toEqual(testIntl.cancelLabel);
+    expect(table.intl.displayedColumnsLabel).toEqual(testIntl.displayedColumnsLabel);
+
     expect(table.paginator._intl.getRangeLabel(null, null, null)).toEqual(testIntl.getRangeLabel(null, null, null));
-    expect((<any>table.paginator._intl).settingsLabel).toEqual(testIntl.settingsLabel);
-    expect((<any>table.paginator._intl).searchLabel).toEqual(testIntl.searchLabel);
-    expect((<any>table.paginator._intl).sortLabel).toEqual(testIntl.sortLabel);
-    expect((<any>table.paginator._intl).refreshListLabel).toEqual(testIntl.refreshListLabel);
-    expect((<any>table.paginator._intl).noEntriesLabel).toEqual(testIntl.noEntriesLabel);
-    expect((<any>table.paginator._intl).saveSettingsLabel).toEqual(testIntl.saveSettingsLabel);
-    expect((<any>table.paginator._intl).abortSettingsLabel).toEqual(testIntl.abortSettingsLabel);
-    expect((<any>table.paginator._intl).displayedColumnsLabel).toEqual(testIntl.displayedColumnsLabel);
-    expect((<any>table.paginator._intl).itemsPerPageLabel).toEqual(testIntl.itemsPerPageLabel);
-    expect((<any>table.paginator._intl).nextPageLabel).toEqual(testIntl.nextPageLabel);
-    expect((<any>table.paginator._intl).previousPageLabel).toEqual(testIntl.previousPageLabel);
-    expect((<any>table.paginator._intl).firstPageLabel).toEqual(testIntl.firstPageLabel);
-    expect((<any>table.paginator._intl).lastPageLabel).toEqual(testIntl.lastPageLabel);
+    expect(table.paginator._intl.itemsPerPageLabel).toEqual(testIntl.itemsPerPageLabel);
+    expect(table.paginator._intl.nextPageLabel).toEqual(testIntl.nextPageLabel);
+    expect(table.paginator._intl.previousPageLabel).toEqual(testIntl.previousPageLabel);
+    expect(table.paginator._intl.firstPageLabel).toEqual(testIntl.firstPageLabel);
+    expect(table.paginator._intl.lastPageLabel).toEqual(testIntl.lastPageLabel);
   });
 
   it('updateTableState', () => {
-    const table = new PsTableComponent(testIntl, settingsService, cd, route, router, null);
+    const table = new PsTableComponent(intlService, settingsService, cd, route, router, null);
     table.paginator = paginator;
     table.dataSource = new PsTableDataSource<any>(() => of([{ a: 'asdfg' }, { a: 'gasdf' }, { a: 'asdas' }, { a: '32424rw' }]));
     table.tableId = 'tableid';
 
+    table.ngOnInit();
     table.ngAfterViewInit();
 
     (settingsService as TestSettingsService).settings$.next({
@@ -152,7 +133,7 @@ describe('PsTableComponent', () => {
     };
     spyOn(router, 'navigate');
 
-    const table = new PsTableComponent(testIntl, settingsService, cd, testRoute, router, null);
+    const table = new PsTableComponent(intlService, settingsService, cd, testRoute, router, null);
     table.dataSource = dataSouce;
     table.paginator = paginator;
     table.pageIndex = 3;

@@ -1,9 +1,9 @@
 <mat-card *ngIf="settings$ | async as settings">
   <!-- h1 is the table title -->
-  <h2>{{ tableIntl.settingsLabel }}</h2>
+  <h2>{{ intl.settingsLabel }}</h2>
   <div class="ps-table__settings-form">
     <div class="ps-table__settings-form__display-columns">
-      <strong>{{ tableIntl.displayedColumnsLabel }}</strong>
+      <strong>{{ intl.displayedColumnsLabel }}</strong>
       <ng-container *ngFor="let columnDef of columnDefinitions">
         <mat-checkbox
           [disabled]="settings.sortColumn === columnDef.property || columnDef.mandatory"
@@ -21,19 +21,19 @@
       [sortColumn]="settings.sortColumn"
       [sortDirection]="settings.sortDirection"
       [sortDefinitions]="sortDefinitions"
-      [intl]="tableIntl"
+      [intl]="intl"
       (sortChanged)="onSortChanged($event, settings)"
     ></ps-table-sort>
 
     <mat-form-field>
-      <mat-label>{{ tableIntl.itemsPerPageLabel }}</mat-label>
+      <mat-label>{{ intl.itemsPerPageLabel }}</mat-label>
       <mat-select [(value)]="settings.pageSize">
         <mat-option *ngFor="let pageSizeOption of pageSizeOptions" [value]="pageSizeOption">{{ pageSizeOption }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
   <mat-card-actions style="text-align: right">
-    <button mat-raised-button color="primary" (click)="saveSettings(settings)">{{ tableIntl.saveSettingsLabel }}</button>
-    <button style="margin-left: 1em" mat-stroked-button (click)="abortSettings()">{{ tableIntl.abortSettingsLabel }}</button>
+    <button mat-raised-button color="primary" (click)="saveSettings(settings)">{{ intl.saveLabel }}</button>
+    <button style="margin-left: 1em" mat-stroked-button (click)="abortSettings()">{{ intl.cancelLabel }}</button>
   </mat-card-actions>
 </mat-card>

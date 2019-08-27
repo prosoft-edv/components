@@ -38,7 +38,7 @@ export class TestComponent {
   public onSortChanged(event: any) {}
 }
 
-fdescribe('PsTableSortComponent', () => {
+describe('PsTableSortComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [NoopAnimationsModule, CommonModule, MatFormFieldModule, MatSelectModule, MatButtonModule, MatIconModule],

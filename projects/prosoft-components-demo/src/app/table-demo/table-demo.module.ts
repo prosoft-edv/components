@@ -7,7 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
-import { IPsTableSetting, PsTableIntl, PsTableModule, PsTableSettingsService } from '@prosoft/components/table';
+import { PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
+import { IPsTableSetting, PsTableModule, PsTableSettingsService } from '@prosoft/components/table';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { TableDemoComponent } from './table-demo.component';
 
@@ -41,6 +42,9 @@ export class DemoPsTableSettingsService extends PsTableSettingsService {
       },
     ]),
   ],
-  providers: [{ provide: PsTableIntl, useClass: PsTableIntl }, { provide: PsTableSettingsService, useClass: DemoPsTableSettingsService }],
+  providers: [
+    { provide: PsIntlService, useClass: PsIntlServiceEn },
+    { provide: PsTableSettingsService, useClass: DemoPsTableSettingsService },
+  ],
 })
 export class TableDemoModule {}
