@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy } from '@angular/compiler/src/core';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
-import { IPsTableSortDefinition, PsTableComponent, PsTableDataSource } from '@prosoft/components/table';
+import { PsTableComponent, PsTableDataSource } from '@prosoft/components/table';
 import { NEVER, of, throwError } from 'rxjs';
 
 interface ISampleData {

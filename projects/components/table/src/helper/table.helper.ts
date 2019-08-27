@@ -1,4 +1,4 @@
-import { IPsTableUpdateDataInfo } from '../data/table-data-source';
+import { IPsTableUpdateDataInfo } from '../models';
 
 export function asQueryParams(settings: IPsTableUpdateDataInfo): string {
   return [settings.pageSize, settings.currentPage, settings.searchText, settings.sortColumn, settings.sortDirection].join('◬');

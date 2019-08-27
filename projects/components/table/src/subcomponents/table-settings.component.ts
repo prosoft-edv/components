@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IPsTableSortDefinition } from '../data/table-sort-definition';
 import { PsTableColumnDirective } from '../directives/table.directives';
+import { IPsTableSortDefinition } from '../models';
 import { IPsTableSetting, PsTableSettingsService } from '../services/table-settings.service';
 import { PsTableIntl } from '../services/table.intl';
 

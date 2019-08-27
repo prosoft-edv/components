@@ -2,20 +2,13 @@ import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, finalize, map, take } from 'rxjs/operators';
 import { _isNumberValue } from '../helper/table.helper';
+import { IPsTableUpdateDataInfo } from '../models';
 
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
  * flaky browser support and the value not being defined in Closure's typings.
  */
 const MAX_SAFE_INTEGER = 9007199254740991;
-
-export interface IPsTableUpdateDataInfo {
-  currentPage: number | null;
-  pageSize: number | null;
-  searchText: string | null;
-  sortDirection: 'asc' | 'desc' | null;
-  sortColumn: string | null;
-}
 
 export interface IPsTableFilterResult<T> {
   Items: T[];

@@ -1,7 +1,8 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { NEVER, of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { PsTableDataSource, IPsTableUpdateDataInfo } from '../data/table-data-source';
+import { PsTableDataSource } from '../data/table-data-source';
+import { IPsTableUpdateDataInfo } from '../models';
 
 describe('PsTableDataSource', () => {
   it('should have sensible default values', fakeAsync(() => {

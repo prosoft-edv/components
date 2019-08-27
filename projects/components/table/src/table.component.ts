@@ -20,13 +20,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { IPsTableUpdateDataInfo, PsTableDataSource } from './data/table-data-source';
-import { IPsTableSortDefinition } from './data/table-sort-definition';
+import { PsTableDataSource } from './data/table-data-source';
 import {
   PsTableColumnDirective,
   PsTableCustomHeaderDirective,
@@ -36,6 +34,7 @@ import {
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
 import { asQueryParams, fromQueryParams } from './helper/table.helper';
+import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 import { PsTableIntl } from './services/table.intl';
 

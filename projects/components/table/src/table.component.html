@@ -7,15 +7,14 @@
         class="ps-table__header-container"
       >
         <ng-container [ngTemplateOutlet]="customHeader"></ng-container>
-        <ng-container *ngIf="showSorting">
-          <ps-table-sort
-            [sortColumn]="sortColumn"
-            [sortDirection]="sortDirection"
-            [sortDefinitions]="sortDefinitions"
-            [intl]="tableIntl"
-            (sortChanged)="onSortChanged($event)"
-          ></ps-table-sort>
-        </ng-container>
+        <ps-table-sort
+          *ngIf="showSorting"
+          [sortColumn]="sortColumn"
+          [sortDirection]="sortDirection"
+          [sortDefinitions]="sortDefinitions"
+          [intl]="tableIntl"
+          (sortChanged)="onSortChanged($event)"
+        ></ps-table-sort>
         <mat-form-field *ngIf="filterable" class="ps-table__filter">
           <input
             [ngModel]="filterText"

@@ -1,9 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { Observable } from 'rxjs';
-import { IPsTableSortDefinition } from '../data/table-sort-definition';
-import { IPsTableSetting } from '../services/table-settings.service';
-import { PsTableIntl } from '../services/table.intl';
+import { IPsTableSortDefinition } from '../models';
 
 @Component({
   selector: 'ps-table-sort',
@@ -64,18 +61,18 @@ export class PsTableSortComponent {
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];
   @Output() public sortChanged = new EventEmitter<{ sortColumn: string; sortDirection: 'asc' | 'desc' }>();
 
-  public settings$: Observable<IPsTableSetting>;
-
-  constructor(public tableIntl: PsTableIntl) {}
-
   public onSortColumnChange(event: MatSelectChange) {
-    this.sortColumn = event.value;
-    this.emitChange();
+    if (this.sortColumn !== event.value) {
+      this.sortColumn = event.value;
+      this.emitChange();
+    }
   }
 
   public onSortSirectionChange(dir: 'asc' | 'desc') {
-    this.sortDirection = dir;
-    this.emitChange();
+    if (this.sortDirection !== dir) {
+      this.sortDirection = dir;
+      this.emitChange();
+    }
   }
 
   private emitChange() {

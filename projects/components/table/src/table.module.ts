@@ -27,8 +27,8 @@ import {
 } from './directives/table.directives';
 import { PsTableSettingsService } from './services/table-settings.service';
 import { PsTableIntl } from './services/table.intl';
-import { PsTableSettingsComponent } from './settings/table-settings.component';
-import { PsTableSortComponent } from './settings/table-sort.component';
+import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
+import { PsTableSortComponent } from './subcomponents/table-sort.component';
 import { TableRowDetailComponent } from './table-row-detail.component';
 import { PsTableComponent } from './table.component';
 

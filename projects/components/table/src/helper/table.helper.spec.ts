@@ -1,5 +1,5 @@
+import { IPsTableUpdateDataInfo } from '../models';
 import { asQueryParams, fromQueryParams, _isNumberValue } from './table.helper';
-import { IPsTableUpdateDataInfo } from '../data/table-data-source';
 
 describe('asQueryParams', () => {
   it('createsQueryParamsString', () => {
