@@ -169,7 +169,6 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
   public intl: IPsTableIntlTexts;
 
-  private requestDebouncedDataUpdateSubject = new Subject();
   private subscriptions: Subscription[] = [];
   private _sortDefinitions: IPsTableSortDefinition[] = [];
   private _mergedSortDefinitions: IPsTableSortDefinition[] = [];
@@ -217,12 +216,6 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
 
     this.initListSettingsSubscription();
 
-    this.subscriptions.push(
-      this.requestDebouncedDataUpdateSubject.pipe(debounceTime(300)).subscribe(() => {
-        this.requestUpdate();
-      })
-    );
-
     this._dataSourceChangesSub = this.dataSource._internalDetectChanges.subscribe(() => {
       this.cd.markForCheck();
     });
@@ -245,15 +238,9 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     }
   }
 
-  public search(key: string, value: string) {
-    if (key.toLowerCase() === 'escape') {
-      value = '';
-    }
-
-    if (this.filterText !== value) {
-      this.filterText = value;
-      this.requestDebouncedDataUpdateSubject.next();
-    }
+  public onSearchChanged(value: string) {
+    this.filterText = value;
+    this.requestUpdate();
   }
 
   public onSortChanged(event: { sortColumn: string; sortDirection: 'asc' | 'desc' }) {

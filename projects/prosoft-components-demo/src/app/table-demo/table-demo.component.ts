@@ -94,7 +94,7 @@ export class TableDemoComponent {
   });
   public pageEvent: PageEvent;
 
-  public cpation = 'table caption';
+  public caption = 'table caption';
   public pageSize = 15;
   public refreshable = true;
   public filterable = true;

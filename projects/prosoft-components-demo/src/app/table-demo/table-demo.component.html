@@ -11,8 +11,8 @@
       &#x7D;]"</mat-checkbox
     >
     <mat-form-field>
-      <mat-label>[cpation]</mat-label>
-      <input matInput type="string" [(ngModel)]="cpation" />
+      <mat-label>[caption]</mat-label>
+      <input matInput type="string" [(ngModel)]="caption" />
     </mat-form-field>
     <mat-form-field>
       <mat-label>[pageSize]</mat-label>
@@ -149,4 +149,4 @@
   </ng-container>
 </ps-table>
 
-<mat-card style="margin-bottom: 1em;"> Last page event: {{ pageEvent | json }} </mat-card>
+<mat-card style="margin: 1em 0;"> Last page event: {{ pageEvent | json }} </mat-card>

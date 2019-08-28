@@ -18,7 +18,7 @@ import { IPsTableSortDefinition } from '../models';
       mat-mini-fab
       type="button"
       (click)="onSortSirectionChange('desc')"
-      class="ps-table__sort-dir-button"
+      class="ps-table-sort__dir-button"
       [class.ps-table__button-inactive]="sortDirection === 'asc'"
     >
       <mat-icon>arrow_downward</mat-icon>
@@ -27,8 +27,8 @@ import { IPsTableSortDefinition } from '../models';
       mat-mini-fab
       type="button"
       (click)="onSortSirectionChange('asc')"
-      class="ps-table__sort-dir-button"
-      [class.ps-table__button-inactive]="sortDirection === 'desc'"
+      class="ps-table-sort__dir-button"
+      [class.ps-table-sort__dir-button--inactive]="sortDirection === 'desc'"
     >
       <mat-icon>arrow_upward</mat-icon>
     </button>
@@ -40,15 +40,20 @@ import { IPsTableSortDefinition } from '../models';
         grid-template-columns: 1fr min-content min-content;
       }
 
-      .ps-table__sort-dir-button {
+      .ps-table-sort__dir-button {
         width: 28px;
         height: 28px;
         line-height: 28px;
         margin-top: 16px;
       }
 
-      .ps-table__sort-dir-button .mat-button-wrapper {
+      .ps-table-sort__dir-button .mat-button-wrapper {
         padding: 0;
+      }
+
+      .ps-table-sort__dir-button--inactive {
+        background-color: transparent !important;
+        color: black !important;
       }
     `,
   ],

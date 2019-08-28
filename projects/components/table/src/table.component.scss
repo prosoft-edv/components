@@ -1,6 +1,5 @@
 ps-table {
   display: block;
-  margin-bottom: 1em;
 
   .ps-table__table {
     width: 100%;
@@ -26,28 +25,6 @@ ps-table {
     margin: 1em auto;
   }
 
-  .ps-table__header {
-    padding: 0 15px 0 24px;
-  }
-
-  .ps-table__form-field-layout {
-    margin-top: 12px;
-    padding: 0;
-  }
-
-  .ps-table__button-inactive {
-    background-color: transparent !important;
-    color: black !important;
-  }
-
-  .ps-table__searchbox-button {
-    color: black;
-    position: absolute;
-    top: 4px;
-    right: 0px;
-    z-index: 2;
-  }
-
   .ps-table__no-entries-text,
   .ps-table__error-text,
   .ps-table__loading-container {
@@ -58,27 +35,6 @@ ps-table {
 
   .ps-table__error-text {
     color: red;
-  }
-
-  .ps-table__sort {
-    flex: 0 0 25px;
-  }
-
-  .ps-table__filter {
-    flex: 1 1 320px;
-  }
-
-  .ps-table__header-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-  }
-
-  .ps-table__top-button-section-container {
-    flex: 1 0 auto;
-    margin: 0.3em 8px 1em;
-    text-align: end;
-    align-self: flex-end;
   }
 
   .ps-table__width-25-percent {

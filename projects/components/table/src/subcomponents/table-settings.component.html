@@ -1,15 +1,15 @@
 <mat-card *ngIf="settings$ | async as settings">
   <!-- h1 is the table title -->
   <h2>{{ intl.settingsLabel }}</h2>
-  <div class="ps-table__settings-form">
-    <div class="ps-table__settings-form__display-columns">
+  <div class="ps-table-settings__form">
+    <div class="ps-table-settings__form__display-columns">
       <strong>{{ intl.displayedColumnsLabel }}</strong>
       <ng-container *ngFor="let columnDef of columnDefinitions">
         <mat-checkbox
           [disabled]="settings.sortColumn === columnDef.property || columnDef.mandatory"
           *ngIf="columnDef.header && columnDef.property"
           [checked]="columnVisible(settings, columnDef)"
-          (change)="hiddenColumnsChange(settings, $event, columnDef)"
+          (change)="onColumnVisibilityChange($event, settings, columnDef)"
         >
           {{ columnDef.header }}
         </mat-checkbox>
@@ -33,7 +33,7 @@
     </mat-form-field>
   </div>
   <mat-card-actions style="text-align: right">
-    <button mat-raised-button color="primary" (click)="saveSettings(settings)">{{ intl.saveLabel }}</button>
-    <button style="margin-left: 1em" mat-stroked-button (click)="abortSettings()">{{ intl.cancelLabel }}</button>
+    <button mat-raised-button color="primary" (click)="onSaveClick(settings)">{{ intl.saveLabel }}</button>
+    <button style="margin-left: 1em" mat-stroked-button (click)="onCancelClick()">{{ intl.cancelLabel }}</button>
   </mat-card-actions>
 </mat-card>

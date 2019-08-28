@@ -25,6 +25,8 @@ import {
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
+import { PsTableHeaderComponent } from './subcomponents/table-header.component';
+import { PsTableSearchComponent } from './subcomponents/table-search.component';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableSortComponent } from './subcomponents/table-sort.component';
 import { TableRowDetailComponent } from './table-row-detail.component';
@@ -34,7 +36,9 @@ import { PsTableComponent } from './table.component';
   declarations: [
     PsTableComponent,
     PsTableSettingsComponent,
+    PsTableHeaderComponent,
     PsTableSortComponent,
+    PsTableSearchComponent,
     TableRowDetailComponent,
     PsTableColumnDirective,
     PsTableColumnTemplateDirective,

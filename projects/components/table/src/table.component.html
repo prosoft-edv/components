@@ -1,41 +1,20 @@
 <ps-flip-container>
   <div *psFlipContainerFront>
-    <div class="ps-table__header">
-      <h2 *ngIf="caption">{{ caption }}</h2>
-      <div
-        [style.padding-top]="!caption && (showSorting || filterable || topButtonSection) ? '1em' : '0'"
-        class="ps-table__header-container"
-      >
-        <ng-container [ngTemplateOutlet]="customHeader"></ng-container>
-        <ps-table-sort
-          *ngIf="showSorting"
-          [sortColumn]="sortColumn"
-          [sortDirection]="sortDirection"
-          [sortDefinitions]="sortDefinitions"
-          [intl]="intl"
-          (sortChanged)="onSortChanged($event)"
-        ></ps-table-sort>
-        <mat-form-field *ngIf="filterable" class="ps-table__filter">
-          <input
-            [ngModel]="filterText"
-            type="text"
-            matInput
-            [placeholder]="intl.searchLabel"
-            autocomplete="off"
-            (keyup)="search($event.key, $event.target.value)"
-          />
-          <a *ngIf="filterText" class="ps-table__searchbox-button" href="javascript:void(0)" (click)="search('escape', null)">
-            <mat-icon>close</mat-icon>
-          </a>
-        </mat-form-field>
-        <div *ngIf="topButtonSection" class="ps-table__top-button-section-container">
-          <ng-container
-            [ngTemplateOutlet]="topButtonSection"
-            [ngTemplateOutletContext]="{ $implicit: dataSource.selectionModel.selected }"
-          ></ng-container>
-        </div>
-      </div>
-    </div>
+    <ps-table-header
+      [intl]="intl"
+      [caption]="caption"
+      [topButtonSection]="topButtonSection"
+      [selectedRows]="dataSource.selectionModel.selected"
+      [customHeader]="customHeader"
+      [showSorting]="showSorting"
+      [sortColumn]="sortColumn"
+      [sortDirection]="sortDirection"
+      [sortDefinitions]="sortDefinitions"
+      [filterable]="filterable"
+      [searchText]="filterText"
+      (sortChanged)="onSortChanged($event)"
+      (searchChanged)="onSearchChanged($event)"
+    ></ps-table-header>
     <table mat-table multiTemplateDataRows class="ps-table__table" [class.mat-elevation-z3]="cardLayout" [dataSource]="dataSource">
       <!-- Checkbox Column -->
       <ng-container matColumnDef="select">
