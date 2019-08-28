@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -25,7 +25,6 @@ import {
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
-import { PsTableSettingsService } from './services/table-settings.service';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableSortComponent } from './subcomponents/table-sort.component';
 import { TableRowDetailComponent } from './table-row-detail.component';
@@ -77,11 +76,4 @@ import { PsTableComponent } from './table.component';
     PsTableRowDetailTemplateDirective,
   ],
 })
-export class PsTableModule {
-  public static forRoot(): ModuleWithProviders {
-    return {
-      ngModule: PsTableModule,
-      providers: [PsTableSettingsService],
-    };
-  }
-}
+export class PsTableModule {}

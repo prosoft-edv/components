@@ -8,7 +8,7 @@ export interface IPsTableSetting {
   pageSize: number;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class PsTableSettingsService {
   public defaultPageSize$: Observable<number> = of(15);
   public settings$: Observable<{ [id: string]: IPsTableSetting }> = of({});
