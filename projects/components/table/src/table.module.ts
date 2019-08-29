@@ -25,6 +25,7 @@ import {
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
+import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
 import { PsTableSearchComponent } from './subcomponents/table-search.component';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
@@ -35,6 +36,7 @@ import { PsTableComponent } from './table.component';
 @NgModule({
   declarations: [
     PsTableComponent,
+    PsTableDataComponent,
     PsTableSettingsComponent,
     PsTableHeaderComponent,
     PsTableSortComponent,

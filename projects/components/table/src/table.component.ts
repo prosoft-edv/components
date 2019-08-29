@@ -52,13 +52,6 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   @Input() public tableId: string;
   @Input() public intlOverride: Partial<IPsTableIntlTexts>;
   @Input()
-  public get pageSize(): number {
-    return this.dataSource.pageSize;
-  }
-  public set pageSize(value: number) {
-    this.dataSource.pageSize = value;
-  }
-  @Input()
   public set sortDefinitions(value: IPsTableSortDefinition[]) {
     if (!value) {
       return;
@@ -135,6 +128,13 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
   }
   public set pageIndex(value: number) {
     this.dataSource.pageIndex = value;
+  }
+
+  public get pageSize(): number {
+    return this.dataSource.pageSize;
+  }
+  public set pageSize(value: number) {
+    this.dataSource.pageSize = value;
   }
 
   public get filterText(): string {
@@ -256,12 +256,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDes
     this.requestUpdate();
   }
 
-  public toggleRowDetail(item: { [key: string]: any }) {
-    this.rowDetail.toggle(item);
-    this.cd.markForCheck();
-  }
-
-  public refreshList() {
+  public onRefreshDataClicked() {
     this.dataSource.updateData();
   }
 

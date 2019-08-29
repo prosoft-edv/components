@@ -95,7 +95,6 @@ export class TableDemoComponent {
   public pageEvent: PageEvent;
 
   public caption = 'table caption';
-  public pageSize = 15;
   public refreshable = true;
   public filterable = true;
   public showSettings = true;
