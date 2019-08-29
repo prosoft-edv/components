@@ -47,9 +47,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
   /** The error that occured in the last observable returned by loadData or null. */
   public error: any = null;
 
-  /** The error message for the error or null. */
-  public errorMessage: string = null;
-
   /** The locale for the table texts. */
   public locale: string;
 
@@ -100,21 +97,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
     this._loadData = loadDataFunc;
 
     this._initDataChangeSubscription();
-  }
-
-  /**
-   * Extracts a error message from a given error object
-   * @param error The error object.
-   * @returns The error message
-   */
-  public extractErrorMessage(error: any): string {
-    let errorMessage;
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    } else {
-      errorMessage = error;
-    }
-    return errorMessage;
   }
 
   /**
@@ -255,7 +237,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
   public updateData() {
     this.loading = true;
     this.error = null;
-    this.errorMessage = null;
     this.selectionModel.clear();
     this._renderData.next([]);
     this._loadDataSubscription.unsubscribe();
@@ -267,7 +248,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
         take(1),
         catchError((err: Error | any) => {
           this.error = err;
-          this.errorMessage = this.extractErrorMessage(err);
           return of([] as T[]);
         }),
         finalize(() => {

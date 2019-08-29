@@ -7,10 +7,13 @@ import {
   Output,
   TemplateRef,
   ViewEncapsulation,
+  SimpleChanges,
+  OnChanges,
 } from '@angular/core';
 import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { PsTableDataSource } from '../data/table-data-source';
 import { PsTableColumnDirective, PsTableRowDetailDirective } from '../directives/table.directives';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ps-table-data',
@@ -19,7 +22,7 @@ import { PsTableColumnDirective, PsTableRowDetailDirective } from '../directives
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PsTableDataComponent {
+export class PsTableDataComponent implements OnChanges {
   @Input() public dataSource: PsTableDataSource<{ [key: string]: any }>;
   @Input() public tableId: string;
   @Input() public intl: IPsTableIntlTexts;
@@ -36,7 +39,18 @@ export class PsTableDataComponent {
   @Output() public showSettingsClicked = new EventEmitter<void>();
   @Output() public refreshDataClicked = new EventEmitter<void>();
 
+  private _dataSourceChangesSub = Subscription.EMPTY;
+
   constructor(private cd: ChangeDetectorRef) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.dataSource) {
+      this._dataSourceChangesSub.unsubscribe();
+      this._dataSourceChangesSub = this.dataSource._internalDetectChanges.subscribe(() => {
+        this.cd.markForCheck();
+      });
+    }
+  }
 
   public onShowSettingsClicked() {
     this.showSettingsClicked.emit();

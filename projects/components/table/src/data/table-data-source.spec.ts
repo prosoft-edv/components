@@ -60,8 +60,7 @@ describe('PsTableDataSource', () => {
 
     const beforeDataItem = {};
     dataSource.loading = false;
-    dataSource.error = true;
-    dataSource.errorMessage = 'error';
+    dataSource.error = new Error();
     dataSource.data = [beforeDataItem];
     dataSource.dataLength = 1;
     dataSource.selectionModel.select(beforeDataItem);
@@ -72,7 +71,6 @@ describe('PsTableDataSource', () => {
     // state should be resetted
     expect(dataSource.loading).toBe(true);
     expect(dataSource.error).toBe(null);
-    expect(dataSource.errorMessage).toBe(null);
     expect(dataSource.selectionModel.selected).toEqual([]);
     expect(renderDataUpdates.length).toEqual(1);
     expect(renderDataUpdates.pop()).toEqual([]);
@@ -87,7 +85,6 @@ describe('PsTableDataSource', () => {
     tick(500);
     expect(dataSource.loading).toBe(false);
     expect(dataSource.error).toBe(null);
-    expect(dataSource.errorMessage).toBe(null);
     expect(dataSource.data).toEqual(loadedData);
     expect(dataSource.dataLength).toEqual(1);
     expect(dataSource.visibleRows).toEqual(loadedData);

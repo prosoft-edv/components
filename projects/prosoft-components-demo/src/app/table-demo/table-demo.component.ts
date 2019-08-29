@@ -90,7 +90,7 @@ export class TableDemoComponent {
   public emptyDataSource = new PsTableDataSource<any>(() => of([]));
   public loadingDataSource = new PsTableDataSource<any>(() => NEVER);
   public errorDataSource = new PsTableDataSource<any>(() => {
-    return throwError('Error while loading the data.');
+    return throwError(new Error('Error while loading the data.'));
   });
   public pageEvent: PageEvent;
 
