@@ -47,7 +47,7 @@ export class TestComponent {
   public onSettingsAborted(event: any) {}
 }
 
-fdescribe('PsTableSettingsComponent', () => {
+describe('PsTableSettingsComponent', () => {
   describe('integration', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -63,23 +63,6 @@ fdescribe('PsTableSettingsComponent', () => {
         ],
         declarations: [TestComponent, PsTableSettingsComponent, PsTableSortComponent],
       }).compileComponents();
-    }));
-
-    it('should emit searchChanged on changes after debounce time', fakeAsync(() => {
-      // const fixture = TestBed.createComponent(TestComponent);
-      // const component = fixture.componentInstance;
-      // expect(component).toBeDefined();
-      // spyOn(component, 'onSearchChanged');
-      // component.debounceTime = 100;
-      // component.searchText = 'initial text';
-      // fixture.detectChanges();
-      // const input = fixture.debugElement.query(By.directive(MatInput));
-      // input.nativeElement.value = 'new text';
-      // input.triggerEventHandler('keyup', new KeyboardEvent('keyup', <any>{ key: 'a' }));
-      // tick(99);
-      // expect(component.onSearchChanged).not.toHaveBeenCalled();
-      // tick(1);
-      // expect(component.onSearchChanged).toHaveBeenCalledWith('new text');
     }));
 
     it('should emit settingsAborted on cancel click', fakeAsync(() => {
