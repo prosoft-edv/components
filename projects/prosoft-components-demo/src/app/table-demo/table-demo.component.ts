@@ -142,10 +142,6 @@ export class TableDemoComponent {
     }
   }
 
-  public detectChanges() {
-    (this.table as any).cd.markForCheck();
-  }
-
   public rebuildTable() {
     this.show = false;
     setTimeout(() => {
@@ -156,5 +152,9 @@ export class TableDemoComponent {
 
   public onPage(event: PageEvent) {
     this.pageEvent = event;
+  }
+
+  public alertData(data: any) {
+    alert(JSON.stringify(data));
   }
 }

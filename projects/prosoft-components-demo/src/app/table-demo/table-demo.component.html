@@ -55,15 +55,15 @@
     <mat-checkbox [(ngModel)]="expandable" (change)="rebuildTable()">use</mat-checkbox>
     <mat-checkbox [(ngModel)]="expanded" (change)="rebuildTable()">[expanded]</mat-checkbox>
     <mat-checkbox [(ngModel)]="showToggleColumn" (change)="rebuildTable()">[showToggleColumn]</mat-checkbox>
-    <span>*psTableRowDetailTemplate="let item" for template</span>
+    <span>*psTableRowDetailTemplate="let item"</span>
   </mat-card>
 
   <mat-card class="app-table-demo__settings-box">
     <strong>template directives (only initially defineable)</strong>
-    <mat-checkbox [(ngModel)]="customHeader" (change)="detectChanges()">*psTableCustomHeader</mat-checkbox>
-    <mat-checkbox [(ngModel)]="customTopButton" (change)="detectChanges()">*psTableTopButtonSection</mat-checkbox>
-    <mat-checkbox [(ngModel)]="customListActions">*psTableListActions</mat-checkbox>
-    <mat-checkbox [(ngModel)]="customRowActions" (change)="detectChanges()">*psTableRowActions="let item"</mat-checkbox>
+    <mat-checkbox [(ngModel)]="customHeader" (change)="rebuildTable()">*psTableCustomHeader</mat-checkbox>
+    <mat-checkbox [(ngModel)]="customTopButton" (change)="rebuildTable()">*psTableTopButtonSection</mat-checkbox>
+    <mat-checkbox [(ngModel)]="customListActions" (change)="rebuildTable()">*psTableListActions="let selection"</mat-checkbox>
+    <mat-checkbox [(ngModel)]="customRowActions" (change)="rebuildTable()">*psTableRowActions="let item"</mat-checkbox>
   </mat-card>
 </div>
 
@@ -123,8 +123,8 @@
   </ng-container>
 
   <ng-container *ngIf="customListActions">
-    <ng-container *psTableListActions>
-      <button type="button" mat-menu-item>
+    <ng-container *psTableListActions="let selection">
+      <button type="button" mat-menu-item (click)="alertData(selection)">
         custom list actions
       </button>
     </ng-container>

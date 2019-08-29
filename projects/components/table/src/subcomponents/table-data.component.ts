@@ -1,43 +1,16 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  ContentChild,
-  ContentChildren,
   EventEmitter,
-  HostBinding,
-  Inject,
   Input,
-  LOCALE_ID,
-  OnChanges,
-  OnDestroy,
-  OnInit,
   Output,
-  QueryList,
-  SimpleChanges,
   TemplateRef,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
-import { ActivatedRoute, Router } from '@angular/router';
-import { IPsTableIntlTexts, PsIntlService } from '@prosoft/components/core';
-import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
-import { combineLatest, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { PsTableDataSource } from '../data/table-data-source';
-import {
-  PsTableColumnDirective,
-  PsTableCustomHeaderDirective,
-  PsTableListActionsDirective,
-  PsTableRowActionsDirective,
-  PsTableRowDetailDirective,
-  PsTableTopButtonSectionDirective,
-} from '../directives/table.directives';
-import { asQueryParams, fromQueryParams } from '../helper/table.helper';
-import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from '../models';
-import { IPsTableSetting, PsTableSettingsService } from '../services/table-settings.service';
+import { PsTableColumnDirective, PsTableRowDetailDirective } from '../directives/table.directives';
 
 @Component({
   selector: 'ps-table-data',
@@ -51,12 +24,14 @@ export class PsTableDataComponent {
   @Input() public tableId: string;
   @Input() public intl: IPsTableIntlTexts;
   @Input() public rowActions: TemplateRef<any> | null = null;
-
   @Input() public cardLayout: boolean;
-  @Input() public rowDetail: any;
-  @Input() public columnDefs: any;
-  @Input() public showListActions: any;
-  @Input() public displayedColumns: any;
+  @Input() public rowDetail: PsTableRowDetailDirective | null;
+  @Input() public listActions: TemplateRef<any> | null = null;
+  @Input() public columnDefs: PsTableColumnDirective[];
+  @Input() public showListActions: boolean;
+  @Input() public refreshable: boolean;
+  @Input() public settingsEnabled: boolean;
+  @Input() public displayedColumns: string[];
 
   @Output() public showSettingsClicked = new EventEmitter<void>();
   @Output() public refreshDataClicked = new EventEmitter<void>();
@@ -74,5 +49,29 @@ export class PsTableDataComponent {
   public toggleRowDetail(item: { [key: string]: any }) {
     this.rowDetail.toggle(item);
     this.cd.markForCheck();
+  }
+
+  public onMasterToggleChange() {
+    this.dataSource.toggleVisibleRowSelection();
+  }
+
+  public onRowToggleChange(row: any) {
+    this.dataSource.selectionModel.toggle(row);
+  }
+
+  public isMasterToggleChecked() {
+    return this.dataSource.selectionModel.hasValue() && this.dataSource.allVisibleRowsSelected;
+  }
+
+  public isMasterToggleIndeterminate() {
+    return this.dataSource.selectionModel.hasValue() && !this.dataSource.allVisibleRowsSelected;
+  }
+
+  public isRowSelected(row: any) {
+    return this.dataSource.selectionModel.isSelected(row);
+  }
+
+  public getSelectedRows() {
+    return this.dataSource.selectionModel.selected;
   }
 }

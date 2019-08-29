@@ -72,7 +72,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
    * Filter term that should be used to filter out objects from the data array. To override how
    * data objects match to this filter string, provide a custom function for filterPredicate.
    */
-  public filter: string;
+  public filter = '';
 
   private _loadData: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>;
 

@@ -24,14 +24,17 @@
       [cardLayout]="cardLayout"
       [rowDetail]="rowDetail"
       [columnDefs]="columnDefs"
+      [listActions]="listActions"
+      [refreshable]="refreshable"
+      [settingsEnabled]="settingsEnabled"
       [showListActions]="showListActions"
       [displayedColumns]="displayedColumns"
       (showSettingsClicked)="flipContainer.toggleFlip()"
       (refreshDataClicked)="onRefreshDataClicked()"
     ></ps-table-data>
 
-    <div class="text-center ps-table__no-entries-text" *ngIf="showNoEntriesText">{{ intl.noEntriesLabel }}</div>
-    <div class="text-center ps-table__error-text" *ngIf="showError">{{ dataSource.errorMessage }}</div>
+    <div class="ps-table__no-entries-text" *ngIf="showNoEntriesText">{{ intl.noEntriesLabel }}</div>
+    <div class="ps-table__error-text" *ngIf="showError">{{ dataSource.errorMessage }}</div>
     <div class="ps-table__loading-container" *ngIf="showLoading">
       <mat-spinner class="ps-table__loading-spinner"></mat-spinner>
     </div>

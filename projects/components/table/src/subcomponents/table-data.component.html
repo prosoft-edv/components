@@ -2,20 +2,11 @@
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
-      <mat-checkbox
-        (change)="$event ? dataSource.toggleVisibleRowSelection() : null"
-        [checked]="dataSource.selectionModel.hasValue() && dataSource.allVisibleRowsSelected"
-        [indeterminate]="dataSource.selectionModel.hasValue() && !dataSource.allVisibleRowsSelected"
-      >
+      <mat-checkbox (change)="onMasterToggleChange()" [checked]="isMasterToggleChecked()" [indeterminate]="isMasterToggleIndeterminate()">
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row" style="width: 55px;">
-      <mat-checkbox
-        (click)="$event.stopPropagation()"
-        (change)="$event ? dataSource.selectionModel.toggle(row) : null"
-        [checked]="dataSource.selectionModel.isSelected(row)"
-      >
-      </mat-checkbox>
+      <mat-checkbox (click)="$event.stopPropagation()" (change)="onRowToggleChange(row)" [checked]="isRowSelected(row)"> </mat-checkbox>
     </td>
   </ng-container>
 
@@ -61,10 +52,7 @@
       </button>
       <mat-menu #listMenu="matMenu">
         <!--Dynamic ListActions-->
-        <ng-template
-          [ngTemplateOutlet]="listActions"
-          [ngTemplateOutletContext]="{ $implicit: dataSource.selectionModel.selected }"
-        ></ng-template>
+        <ng-template [ngTemplateOutlet]="listActions" [ngTemplateOutletContext]="{ $implicit: getSelectedRows() }"></ng-template>
 
         <button [hidden]="!refreshable" type="button" mat-menu-item (click)="onRefreshDataClicked()">
           <mat-icon>refresh</mat-icon>

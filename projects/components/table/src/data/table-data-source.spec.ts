@@ -17,6 +17,7 @@ describe('PsTableDataSource', () => {
     expect(dataSource.pageSize).toEqual(15);
     expect(dataSource.sortColumn).toEqual(null);
     expect(dataSource.sortDirection).toEqual('asc');
+    expect(dataSource.filter).toEqual('');
     expect(dataSource.visibleRows).toEqual([]);
     expect(dataSource.dataLength).toEqual(0);
     expect(dataSource.selectionModel.isMultipleSelection()).toEqual(true);

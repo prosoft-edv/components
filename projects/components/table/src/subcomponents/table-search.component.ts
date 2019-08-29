@@ -42,7 +42,7 @@ export class PsTableSearchComponent implements OnInit, OnDestroy {
   @Input() public debounceTime: number;
   @Output() public searchChanged = new EventEmitter<string>();
 
-  public currentSearchText: string;
+  public currentSearchText = '';
 
   private _searchValueChanged$ = new Subject<void>();
 
