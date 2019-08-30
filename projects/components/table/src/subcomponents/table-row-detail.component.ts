@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
-import { PsTableRowDetailDirective } from './directives/table.directives';
+import { PsTableRowDetailDirective } from '../directives/table.directives';
 
 @Component({
   selector: 'ps-table-row-detail',

@@ -181,7 +181,6 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   private subscriptions: Subscription[] = [];
   private _sortDefinitions: IPsTableSortDefinition[] = [];
   private _mergedSortDefinitions: IPsTableSortDefinition[] = [];
-  private _initialized = false;
   private _intlChangesSub: Subscription;
 
   constructor(
@@ -200,7 +199,6 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
       this.cd.markForCheck();
     });
 
-    this.dataSource.locale = this._locale;
     this.pageSizeOptions = this.settingsService.pageSizeOptions;
   }
 
@@ -209,15 +207,17 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
       this.updateIntl();
     }
 
-    if (changes.dataSource && this._initialized) {
-      this.dataSource.updateData();
+    if (changes.dataSource) {
+      this.dataSource.locale = this._locale;
+      if (!changes.dataSource.firstChange) {
+        this.dataSource.updateData();
+      }
     }
   }
 
   public ngAfterContentInit(): void {
     // This can't happen earlier, otherwise the ContentChilds would not be resolved yet
     this.initListSettingsSubscription();
-    this._initialized = true;
   }
 
   public ngOnDestroy(): void {

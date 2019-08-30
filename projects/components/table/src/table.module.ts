@@ -27,10 +27,10 @@ import {
 } from './directives/table.directives';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
+import { TableRowDetailComponent } from './subcomponents/table-row-detail.component';
 import { PsTableSearchComponent } from './subcomponents/table-search.component';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableSortComponent } from './subcomponents/table-sort.component';
-import { TableRowDetailComponent } from './table-row-detail.component';
 import { PsTableComponent } from './table.component';
 
 @NgModule({
