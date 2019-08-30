@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { NEVER, of } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { PsTableDataSource } from '../data/table-data-source';
 import { IPsTableUpdateDataInfo } from '../models';
@@ -50,7 +50,7 @@ describe('PsTableDataSource', () => {
   }));
 
   it('should reset error/loading/data/selection before updateData and after', fakeAsync(() => {
-    const loadedData = [{ prop: 'x' }];
+    const loadedData = [{ prop: 'x' }, { prop: 'y' }];
     const dataSource = new PsTableDataSource<any>(() => of(loadedData).pipe(delay(500)));
 
     let renderDataUpdates: any[] = [];
@@ -86,7 +86,7 @@ describe('PsTableDataSource', () => {
     expect(dataSource.loading).toBe(false);
     expect(dataSource.error).toBe(null);
     expect(dataSource.data).toEqual(loadedData);
-    expect(dataSource.dataLength).toEqual(1);
+    expect(dataSource.dataLength).toEqual(2);
     expect(dataSource.visibleRows).toEqual(loadedData);
     expect(dataSource.selectionModel.selected).toEqual([]);
     expect(renderDataUpdates.length).toEqual(1);
@@ -117,7 +117,7 @@ describe('PsTableDataSource', () => {
     dataSource.filter = 'a';
     dataSource.sortColumn = 'prop';
     dataSource.sortDirection = 'desc';
-    dataSource.updateData();
+    dataSource.updateData(false);
 
     expect(lastUpdateInfo).toEqual({
       pageSize: 2,
@@ -163,6 +163,57 @@ describe('PsTableDataSource', () => {
     expect(renderData).toEqual([{ x: 'sorted' }]);
 
     sub.unsubscribe();
+  }));
+
+  it('should use cached data if loading is not neccessary in client mode', fakeAsync(() => {
+    let counter = 0;
+    let throwErr = false;
+    const dataProvider = {
+      loadData: () => (throwErr ? throwError(new Error('error')) : of([{ a: ++counter }])),
+    };
+    const clientDataSource = new PsTableDataSource<any>(() => dataProvider.loadData(), 'client');
+
+    let renderData: any[] = [];
+    const sub = clientDataSource.connect().subscribe(data => {
+      renderData = data;
+    });
+
+    clientDataSource.updateData(false);
+    expect(renderData).toEqual([{ a: 1 }]);
+
+    clientDataSource.updateData(false);
+    expect(renderData).toEqual([{ a: 1 }]);
+
+    clientDataSource.updateData(true);
+    expect(renderData).toEqual([{ a: 2 }]);
+
+    throwErr = true;
+    clientDataSource.updateData(false);
+    expect(renderData).toEqual([{ a: 2 }]);
+
+    clientDataSource.updateData(true);
+    expect(renderData).toEqual([]);
+
+    throwErr = false;
+    clientDataSource.updateData(false);
+    expect(renderData).toEqual([{ a: 3 }]);
+
+    sub.unsubscribe();
+  }));
+
+  it('should never cache data for server mode', fakeAsync(() => {
+    let counter = 0;
+    const dataProvider = {
+      loadData: () => of([{ a: ++counter }]),
+    };
+    spyOn(dataProvider, 'loadData').and.callThrough();
+
+    const serverDataSource = new PsTableDataSource<any>(() => dataProvider.loadData(), 'server');
+    serverDataSource.updateData(false);
+    serverDataSource.updateData(false);
+    serverDataSource.updateData(true);
+    serverDataSource.updateData(false);
+    expect(dataProvider.loadData).toHaveBeenCalledTimes(4);
   }));
 
   describe('sortingDataAccessor', () => {

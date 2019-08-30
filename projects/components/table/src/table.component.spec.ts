@@ -407,12 +407,12 @@ describe('PsTableComponent', () => {
 
     it('should delete own query params and flip to front when settings are saved', fakeAsync(() => {
       queryParams$.next(convertToParamMap({ existingParam: '0815', tableId: '12◬3◬Blubb◬col◬desc' }));
+      spyOn(router, 'navigate');
+
       const table = createTableInstance();
       table.tableId = 'tableId';
       table.flipContainer = { toggleFlip: () => {} } as any;
-
       spyOn(table.flipContainer, 'toggleFlip');
-      spyOn(router, 'navigate');
 
       table.onSettingsSaved();
 
@@ -421,7 +421,7 @@ describe('PsTableComponent', () => {
         existingParam: '0815',
       };
       expect(router.navigate).toHaveBeenCalledWith([], { queryParams: expectedQueryParams, relativeTo: route });
-      flush();
+      tick(1);
     }));
   });
 

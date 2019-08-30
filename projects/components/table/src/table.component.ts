@@ -332,7 +332,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
             }
 
             this.cd.markForCheck();
-            this.dataSource.updateData();
+            this.dataSource.updateData(false);
           },
           error: (err: Error | any) => {
             this.dataSource.error = err;

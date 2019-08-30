@@ -1,6 +1,6 @@
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, finalize, map, take } from 'rxjs/operators';
+import { catchError, finalize, map, take, tap } from 'rxjs/operators';
 import { _isNumberValue } from '../helper/table.helper';
 import { IPsTableUpdateDataInfo } from '../models';
 
@@ -78,6 +78,9 @@ export class PsTableDataSource<T> extends DataSource<T> {
 
   /** Stream emitting render data to the table (depends on ordered data changes). */
   private readonly _renderData = new BehaviorSubject<T[]>([]);
+
+  /** Indicates if the data source currently holds data provided by the _loadData function. */
+  private _hasData = false;
 
   /**
    * Subscription to the result of the loadData function.
@@ -234,7 +237,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
   /**
    * Reloads the data
    */
-  public updateData() {
+  public updateData(forceReload: boolean = true) {
     this.loading = true;
     this.error = null;
     this.selectionModel.clear();
@@ -242,11 +245,19 @@ export class PsTableDataSource<T> extends DataSource<T> {
     this._loadDataSubscription.unsubscribe();
     this._internalDetectChanges.next();
 
-    const filter = this.getUpdateDataInfo();
-    this._loadDataSubscription = this._loadData(filter)
+    let data$: Observable<T[] | IPsTableFilterResult<T>>;
+    if (this.mode === 'server' || forceReload || !this._hasData) {
+      const filter = this.getUpdateDataInfo();
+      data$ = this._loadData(filter);
+    } else {
+      data$ = of(this.data);
+    }
+    this._loadDataSubscription = data$
       .pipe(
         take(1),
+        tap(() => (this._hasData = true)),
         catchError((err: Error | any) => {
+          this._hasData = false;
           this.error = err;
           return of([] as T[]);
         }),
@@ -257,6 +268,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
       )
       .subscribe(data => {
         if (Array.isArray(data)) {
+          this.dataLength = data.length;
           this.data = data;
         } else {
           const filterResult = data;
