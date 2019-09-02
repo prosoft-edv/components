@@ -345,7 +345,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
     tableSettings = tableSettings || {};
     urlSettings = urlSettings || {};
 
-    this.pageIndex = Math.max(urlSettings.currentPage, 0) || 0;
+    this.pageIndex = Math.max(urlSettings.currentPage, 0);
     this.pageSize = Math.max(urlSettings.pageSize || tableSettings.pageSize || defaultPageSize, 1);
     this.sortColumn = urlSettings.sortColumn || tableSettings.sortColumn || null;
     this.sortDirection = urlSettings.sortDirection || tableSettings.sortDirection || 'asc';

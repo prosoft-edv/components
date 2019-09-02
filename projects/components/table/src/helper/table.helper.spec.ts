@@ -26,6 +26,16 @@ describe('fromQueryParams', () => {
     });
   });
 
+  it('should never return NaN for a parameter', () => {
+    expect(fromQueryParams('foo◬foo◬asdf◬Column1◬desc')).toEqual(<IPsTableUpdateDataInfo>{
+      pageSize: null,
+      currentPage: null,
+      searchText: 'asdf',
+      sortColumn: 'Column1',
+      sortDirection: 'desc',
+    });
+  });
+
   it('should return partial data when some values are set', () => {
     expect(fromQueryParams('22◬2◬◬◬desc')).toEqual(<IPsTableUpdateDataInfo>{
       pageSize: 22,

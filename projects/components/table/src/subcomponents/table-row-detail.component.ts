@@ -13,12 +13,12 @@ import { PsTableRowDetailDirective } from '../directives/table.directives';
       (@detailExpand.done)="rowDetailToggleEnd()"
     >
       <!--
-                ps-iframe autoheight funktioniert nur, wenn das iframe beim Initialisieren sichtbar ist.
-                Deshalb sorgen wir hier mit ngIf dafür, das es erst beim Aufklappen initialisiert wird.
-            -->
-      <div *ngIf="visible">
+        ps-iframe autoheight funktioniert nur, wenn das iframe beim Initialisieren sichtbar ist.
+        Deshalb sorgen wir hier mit ngIf dafür, das es erst beim Aufklappen initialisiert wird.
+      -->
+      <ng-container *ngIf="visible">
         <ng-template [ngTemplateOutlet]="rowDetail.template" [ngTemplateOutletContext]="{ $implicit: element }"> </ng-template>
-      </div>
+      </ng-container>
     </div>
   `,
   styles: [

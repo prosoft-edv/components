@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 
 export interface IPsTableSetting {
   columnBlacklist: string[];
@@ -17,6 +17,6 @@ export class PsTableSettingsService {
   public pageSizeOptions = [5, 10, 25, 50];
 
   public save(_: string, __: IPsTableSetting): Observable<void> {
-    return of(null);
+    return EMPTY;
   }
 }

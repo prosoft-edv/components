@@ -1,3 +1,4 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { IPsTableUpdateDataInfo } from '../models';
 
 export function asQueryParams(settings: IPsTableUpdateDataInfo): string {
@@ -15,8 +16,8 @@ export function fromQueryParams(settingsString: string): IPsTableUpdateDataInfo 
   }
 
   return <IPsTableUpdateDataInfo>{
-    pageSize: settings[0] ? +settings[0] : null,
-    currentPage: settings[1] ? +settings[1] : null,
+    pageSize: coerceNumberProperty(settings[0], null),
+    currentPage: coerceNumberProperty(settings[1], null),
     searchText: settings[2] || null,
     sortColumn: settings[3] || null,
     sortDirection: settings[4] || null,
