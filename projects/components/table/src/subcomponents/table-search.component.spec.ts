@@ -29,7 +29,7 @@ export class TestComponent {
 
   @ViewChild(PsTableSearchComponent, { static: true }) tableSearch: PsTableSearchComponent;
 
-  public onSearchChanged(event: any) {}
+  public onSearchChanged(event: string) {}
 }
 
 describe('PsTableSearchComponent', () => {
@@ -152,7 +152,7 @@ describe('PsTableSearchComponent', () => {
     const input = fixture.debugElement.query(By.directive(MatInput));
 
     input.nativeElement.value = 'initial text';
-    input.triggerEventHandler('keyup', new KeyboardEvent('keyup', <any>{ key: 'escape' }));
+    input.triggerEventHandler('keyup', new KeyboardEvent('keyup', <any>{ key: 'Escape' }));
 
     expect(component.onSearchChanged).toHaveBeenCalledWith('');
 
@@ -172,7 +172,7 @@ describe('PsTableSearchComponent', () => {
 
     const input = fixture.debugElement.query(By.directive(MatInput));
 
-    input.triggerEventHandler('keyup', new KeyboardEvent('keyup', <any>{ key: 'escape' }));
+    input.triggerEventHandler('keyup', new KeyboardEvent('keyup', <any>{ key: 'Escape' }));
 
     tick(100);
 

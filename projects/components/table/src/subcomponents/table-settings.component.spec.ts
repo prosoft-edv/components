@@ -43,8 +43,8 @@ export class TestComponent {
 
   @ViewChild(PsTableSettingsComponent, { static: true }) tableSearch: PsTableSettingsComponent;
 
-  public onSettingsSaved(event: any) {}
-  public onSettingsAborted(event: any) {}
+  public onSettingsSaved() {}
+  public onSettingsAborted() {}
 }
 
 describe('PsTableSettingsComponent', () => {

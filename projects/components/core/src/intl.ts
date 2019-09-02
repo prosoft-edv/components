@@ -86,9 +86,14 @@ export class PsIntlServiceEn extends PsIntlService {
   public get(intlKey: 'form'): IPsFormIntlTexts;
   public get(intlKey: 'savebar'): IPsSavebarIntlTexts;
   public get(intlKey: PsIntlKeys): IPsSavebarIntlTexts | IPsFormIntlTexts | IPsTableIntlTexts {
-    if (intlKey === 'table') {
-      return this.tableIntl;
+    switch (intlKey) {
+      case 'table':
+        return this.tableIntl;
+      case 'form':
+      case 'savebar':
+        return this.formSavebarIntl;
+      default:
+        return null;
     }
-    return this.formSavebarIntl;
   }
 }

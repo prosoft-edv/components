@@ -14,7 +14,7 @@ import { debounceTime } from 'rxjs/operators';
         mat-icon-button
         matSuffix
         class="ps-table-search__button"
-        (click)="onSearch('escape', null)"
+        (click)="onSearch('Escape', null)"
       >
         <mat-icon>close</mat-icon>
       </button>
@@ -53,7 +53,7 @@ export class PsTableSearchComponent implements OnInit, OnDestroy {
   }
 
   public onSearch(key: string, value: string) {
-    if (key.toLowerCase() === 'escape') {
+    if (key.startsWith('Esc')) {
       this.currentSearchText = '';
       this.emitChange();
       return;
