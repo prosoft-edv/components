@@ -263,7 +263,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
     };
 
     this._slider = noUiSlider.create(this.el.nativeElement.querySelector('div'), inputsConfig);
-    this._slider.on('change', () => {
+    this._slider.on('update', () => {
       const value = this._slider.get();
       this.value = Array.isArray(value) ? value.map(Number) : +value;
       this._emitChangeEvent();
