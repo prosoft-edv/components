@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -19,12 +20,12 @@ import {
   PsTableColumnHeaderTemplateDirective,
   PsTableColumnTemplateDirective,
   PsTableCustomHeaderDirective,
+  PsTableCustomSettingsDirective,
   PsTableListActionsDirective,
   PsTableRowActionsDirective,
   PsTableRowDetailDirective,
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
-  PsTableCustomSettingsDirective,
 } from './directives/table.directives';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
@@ -68,6 +69,7 @@ import { PsTableComponent } from './table.component';
     MatInputModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatAutocompleteModule,
     PsFlipContainerModule,
     PsSavebarModule,
   ],

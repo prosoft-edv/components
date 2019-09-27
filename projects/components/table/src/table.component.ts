@@ -1,5 +1,5 @@
 import {
-  AfterViewInit,
+  AfterContentInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -19,14 +19,14 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  AfterContentInit,
 } from '@angular/core';
+import { MatSelectChange } from '@angular/material';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IPsTableIntlTexts, PsIntlService, PsExceptionMessageExtractor } from '@prosoft/components/core';
+import { IPsTableIntlTexts, PsExceptionMessageExtractor, PsIntlService } from '@prosoft/components/core';
 import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
-import { combineLatest, Subject, Subscription, of, timer } from 'rxjs';
-import { debounceTime, map, startWith, debounce, takeUntil } from 'rxjs/operators';
+import { combineLatest, of, Subject, Subscription, timer } from 'rxjs';
+import { debounce, debounceTime, map, startWith, takeUntil } from 'rxjs/operators';
 import { PsTableDataSource } from './data/table-data-source';
 import {
   PsTableColumnDirective,
@@ -117,6 +117,10 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   @HostBinding('class.ps-table--row-detail')
   @ContentChild(PsTableRowDetailDirective, { static: false })
   public rowDetail: PsTableRowDetailDirective | null = null;
+
+  public get pages() {
+    return [...Array(this.dataSource.pages).keys()].map(x => (x += 1));
+  }
 
   public pageSizeOptions: number[];
   public columnDefs: PsTableColumnDirective[] = [];
@@ -273,6 +277,22 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   public onPage(event: PageEvent) {
     this.onPage$.next(event);
+  }
+
+  public clearPage(event: MouseEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.onPage$.next({ length: this.dataSource.dataLength, pageIndex: 0, pageSize: this.pageSize } as PageEvent);
+  }
+
+  public goToPage(event: MatSelectChange) {
+    const nextPage = event.value - 1;
+    this.onPage$.next({
+      length: this.dataSource.dataLength,
+      pageIndex: nextPage,
+      pageSize: this.pageSize,
+      previousPageIndex: nextPage - 1,
+    } as PageEvent);
   }
 
   public onRefreshDataClicked() {
