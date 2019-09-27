@@ -38,16 +38,22 @@
     <div class="ps-table__loading-container" *ngIf="showLoading">
       <mat-spinner class="ps-table__loading-spinner"></mat-spinner>
     </div>
-    <mat-paginator
-      class="ps-table__paginator"
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="pageSizeOptions"
-      [length]="dataSource.dataLength"
-      [showFirstLastButtons]="true"
-      (page)="onPage($event)"
-    >
-    </mat-paginator>
+    <mat-card class="mat-elevation-z0" style="display: flex; justify-content: flex-end;">
+      <mat-paginator
+        [pageIndex]="pageIndex"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        [length]="dataSource.dataLength"
+        [showFirstLastButtons]="true"
+        (page)="onPage($event)"
+      >
+      </mat-paginator>
+      <mat-form-field style="width: 5em;">
+        <mat-select [ngModel]="dataSource.pageIndex + 1" (selectionChange)="goToPage($event)">
+          <mat-option *ngFor="let page of pages" [value]="page"> {{ page }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-card>
   </div>
   <div *psFlipContainerBack>
     <ps-table-settings
