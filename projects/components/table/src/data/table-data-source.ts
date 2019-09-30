@@ -282,7 +282,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
         }
 
         this.pages = Math.round(this.dataLength / this.pageSize);
-        console.log(this.pages);
       });
   }
 
