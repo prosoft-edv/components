@@ -134,6 +134,7 @@ export class TestComponent {
   public showToggleColumn = true;
 
   @ViewChild(PsTableComponent, { static: true }) table: PsTableComponent;
+  @ViewChild(PsTablePaginationComponent, { static: true }) paginator: PsTablePaginationComponent;
 
   public onPage(event: any) {}
   public onCustomListActionClick(slectedItems: any[]) {}
@@ -151,83 +152,82 @@ describe('PsTableComponent', () => {
       const table = new PsTableComponent(intlService, settingsService, null, cd, route, router, 'de');
       table.tableId = 'tableid';
       table.dataSource = new PsTableDataSource<any>(() => of([{ a: 'asdfg' }, { a: 'gasdf' }, { a: 'asdas' }, { a: '32424rw' }]));
-      // table.paginator = new MatPaginator(new MatPaginatorIntl(), cd);
       return table;
     }
 
-    // it('should update table state from the settings service and the query params', fakeAsync(() => {
-    //   const table = createTableInstance();
-    //   settingsService.settings$.next({});
-    //   settingsService.defaultPageSize$.next(7);
-    //   table.columnDefs = [createColDef({ property: 'prop1' }), createColDef({ property: 'prop2' })];
-    //   table.rowDetail = <any>{ showToggleColumn: true };
-    //   table.listActions = <any>{};
-    //   table.rowActions = <any>{};
+    it('should update table state from the settings service and the query params', fakeAsync(() => {
+      const table = createTableInstance();
+      settingsService.settings$.next({});
+      settingsService.defaultPageSize$.next(7);
+      table.columnDefs = [createColDef({ property: 'prop1' }), createColDef({ property: 'prop2' })];
+      table.rowDetail = <any>{ showToggleColumn: true };
+      table.listActions = <any>{};
+      table.rowActions = <any>{};
 
-    //   table.ngOnInit();
-    //   table.ngAfterContentInit();
-    //   tick(1);
+      table.ngOnInit();
+      table.ngAfterContentInit();
+      tick(1);
 
-    //   expect(table.pageSize).toEqual(7);
-    //   expect(table.pageIndex).toEqual(0);
-    //   expect(table.filterText).toEqual('');
-    //   expect(table.sortColumn).toEqual(null);
-    //   expect(table.sortDirection).toEqual('asc');
-    //   expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'prop2', 'options']);
+      expect(table.pageSize).toEqual(7);
+      expect(table.pageIndex).toEqual(0);
+      expect(table.filterText).toEqual('');
+      expect(table.sortColumn).toEqual(null);
+      expect(table.sortDirection).toEqual('asc');
+      expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'prop2', 'options']);
 
-    //   settingsService.settings$.next({
-    //     tableid: <IPsTableSetting>{
-    //       columnBlacklist: ['prop2'],
-    //       pageSize: 22,
-    //       sortColumn: 'col',
-    //       sortDirection: 'desc',
-    //     },
-    //   });
-    //   tick(1);
+      settingsService.settings$.next({
+        tableid: <IPsTableSetting>{
+          columnBlacklist: ['prop2'],
+          pageSize: 22,
+          sortColumn: 'col',
+          sortDirection: 'desc',
+        },
+      });
+      tick(1);
 
-    //   expect(table.pageSize).toEqual(22);
-    //   expect(table.pageIndex).toEqual(0);
-    //   expect(table.filterText).toEqual('');
-    //   expect(table.sortColumn).toEqual('col');
-    //   expect(table.sortDirection).toEqual('desc');
-    //   expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'options']);
+      expect(table.pageSize).toEqual(22);
+      expect(table.pageIndex).toEqual(0);
+      expect(table.filterText).toEqual('');
+      expect(table.sortColumn).toEqual('col');
+      expect(table.sortDirection).toEqual('desc');
+      expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'options']);
 
-    //   queryParams$.next(
-    //     convertToParamMap(<Params>{
-    //       tableid: '1◬1◬asdf◬Column1◬asc',
-    //     })
-    //   );
-    //   tick(1);
+      queryParams$.next(
+        convertToParamMap(<Params>{
+          tableid: '1◬1◬asdf◬Column1◬asc',
+        })
+      );
+      tick(1);
 
-    //   expect(table.pageSize).toEqual(1);
-    //   expect(table.pageIndex).toEqual(1);
-    //   expect(table.filterText).toEqual('asdf');
-    //   expect(table.sortColumn).toEqual('Column1');
-    //   expect(table.sortDirection).toEqual('asc');
-    //   expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'options']);
+      expect(table.pageSize).toEqual(1);
+      expect(table.pageIndex).toEqual(1);
+      expect(table.filterText).toEqual('asdf');
+      expect(table.sortColumn).toEqual('Column1');
+      expect(table.sortDirection).toEqual('asc');
+      expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'options']);
 
-    //   table.rowDetail = <any>{ showToggleColumn: false };
-    //   queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
-    //   tick(1);
-    //   expect(table.displayedColumns).toEqual(['select', 'prop1', 'options']);
+      table.rowDetail = <any>{ showToggleColumn: false };
+      queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
+      tick(1);
+      expect(table.displayedColumns).toEqual(['select', 'prop1', 'options']);
 
-    //   table.rowDetail = null;
-    //   queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
-    //   tick(1);
-    //   expect(table.displayedColumns).toEqual(['select', 'prop1', 'options']);
+      table.rowDetail = null;
+      queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
+      tick(1);
+      expect(table.displayedColumns).toEqual(['select', 'prop1', 'options']);
 
-    //   table.listActions = null;
-    //   queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
-    //   tick(1);
-    //   expect(table.displayedColumns).toEqual(['prop1', 'options']);
+      table.listActions = null;
+      queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
+      tick(1);
+      expect(table.displayedColumns).toEqual(['prop1', 'options']);
 
-    //   table.rowActions = null;
-    //   table.showSettings = false;
-    //   table.refreshable = false;
-    //   queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
-    //   tick(1);
-    //   expect(table.displayedColumns).toEqual(['prop1']);
-    // }));
+      table.rowActions = null;
+      table.showSettings = false;
+      table.refreshable = false;
+      queryParams$.next(convertToParamMap(<Params>{ tableid: '1◬1◬asdf◬Column1◬desc' }));
+      tick(1);
+      expect(table.displayedColumns).toEqual(['prop1']);
+    }));
 
     it('should initialize page size options from the service', fakeAsync(() => {
       const table = createTableInstance();
@@ -334,27 +334,27 @@ describe('PsTableComponent', () => {
       expect(table.sortDefinitions).toEqual([]);
     }));
 
-    // it('requestUpdate should update query params without overriding deleting other query params', () => {
-    //   queryParams$.next(convertToParamMap({ existingParam: '0815' }));
-    //   spyOn(router, 'navigate');
+    it('requestUpdate should update query params without overriding deleting other query params', () => {
+      queryParams$.next(convertToParamMap({ existingParam: '0815' }));
+      spyOn(router, 'navigate');
 
-    //   const table = createTableInstance();
-    //   table.pageIndex = 3;
-    //   table.pageSize = 12;
-    //   table.filterText = 'Blubb';
-    //   table.sortColumn = 'col';
-    //   table.sortDirection = 'desc';
-    //   table.tableId = 'requestUpdate';
+      const table = createTableInstance();
+      table.pageIndex = 3;
+      table.pageSize = 12;
+      table.filterText = 'Blubb';
+      table.sortColumn = 'col';
+      table.sortDirection = 'desc';
+      table.tableId = 'requestUpdate';
 
-    //   (<any>table).requestUpdate();
+      (<any>table).requestUpdate();
 
-    //   const expectedQueryParams = {
-    //     existingParam: '0815',
-    //     requestUpdate: '12◬3◬Blubb◬col◬desc',
-    //   };
+      const expectedQueryParams = {
+        existingParam: '0815',
+        requestUpdate: '12◬3◬Blubb◬col◬desc',
+      };
 
-    //   expect(router.navigate).toHaveBeenCalledWith([], { queryParams: expectedQueryParams, relativeTo: route });
-    // });
+      expect(router.navigate).toHaveBeenCalledWith([], { queryParams: expectedQueryParams, relativeTo: route });
+    });
 
     it('should set locale and update data if data source changes', fakeAsync(() => {
       const initialDataSource = new PsTableDataSource(() => of([]), 'client');
@@ -398,16 +398,16 @@ describe('PsTableComponent', () => {
       expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
     }));
 
-    // it('should update state when page changes and emit output', fakeAsync(() => {
-    //   const table = createTableInstance();
-    //   spyOn(table.page, 'emit');
-    //   spyOn(<any>table, 'requestUpdate');
-    //   table.onPage({ pageIndex: 5, pageSize: 3, length: 20, previousPageIndex: 4 });
-    //   expect(table.pageIndex).toEqual(5);
-    //   expect(table.pageSize).toEqual(3);
-    //   expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
-    //   expect(table.page.emit).toHaveBeenCalledTimes(1);
-    // }));
+    it('should update state when page changes and emit output', fakeAsync(() => {
+      const table = createTableInstance();
+      spyOn(table.page, 'emit');
+      spyOn(<any>table, 'requestUpdate');
+      table.onPage({ pageIndex: 5, pageSize: 3, length: 20, previousPageIndex: 4 });
+      expect(table.pageIndex).toEqual(5);
+      expect(table.pageSize).toEqual(3);
+      expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
+      expect(table.page.emit).toHaveBeenCalledTimes(1);
+    }));
 
     it('should delete own query params and flip to front when settings are saved', fakeAsync(() => {
       queryParams$.next(convertToParamMap({ existingParam: '0815', tableId: '12◬3◬Blubb◬col◬desc' }));
@@ -616,7 +616,7 @@ describe('PsTableComponent', () => {
       });
     }));
 
-    it('should show "GoToPage"-Select, if there are more then 2 pages', fakeAsync(() => {
+    fit('should show "GoToPage"-Select, if there are more then 2 pages', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
       component.dataSource = new PsTableDataSource(
