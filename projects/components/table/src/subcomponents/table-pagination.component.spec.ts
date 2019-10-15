@@ -1,4 +1,4 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, tick, TestBed } from '@angular/core/testing';
 import { PageEvent } from '@angular/material/paginator';
 import { of } from 'rxjs';
 import { PsTableDataSource } from '../..';
