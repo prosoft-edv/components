@@ -1,13 +1,23 @@
 language: node_js
 node_js:
   - "10.16.0"
-sudo: true
+sudo: false
 
 addons:
-  chrome: stable
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
+cache:
+  directories:
+    - ./node_modules
+
+install:
+  - npm install
 
 before_script:
-  - npm ci
   # Install commitlint cli for travis
   - npm install @commitlint/travis-cli
 
@@ -16,5 +26,5 @@ script:
   - commitlint-travis
   - ng lint
   - ng build components
-  - ng test components --watch false --browsers ChromeHeadless
+  - ng test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
   - ng build --prod --baseHref=/components/
