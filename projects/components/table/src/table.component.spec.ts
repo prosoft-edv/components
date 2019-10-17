@@ -18,6 +18,7 @@ import { PsTableComponent } from './table.component';
 import { PsTableModule } from './table.module';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
+import { MatSelect } from '@angular/material';
 
 class TestSettingsService extends PsTableSettingsService {
   public readonly defaultPageSize$ = new BehaviorSubject<number>(15);
@@ -616,7 +617,7 @@ describe('PsTableComponent', () => {
       });
     }));
 
-    fit('should show "GoToPage"-Select, if there are more then 2 pages', fakeAsync(() => {
+    it('should show "GoToPage"-Select, if there are more then 2 pages', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
       component.dataSource = new PsTableDataSource(
@@ -626,32 +627,46 @@ describe('PsTableComponent', () => {
       component.dataSource.updateData();
       fixture.detectChanges();
 
-      spyOn(component.table.page, 'emit').and.callThrough();
-      spyOn(component, 'onPage');
-      useMatSelect(fixture, '#goToPageSelect', matOptionNodes => {
-        expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['1', '2', '3']);
+      tick(1);
+      fixture.detectChanges();
 
-        const itemNode = matOptionNodes.item(2);
-        itemNode.dispatchEvent(new Event('click'));
-      });
+      const paginationComponent = fixture.debugElement.query(By.directive(PsTablePaginationComponent));
+      const pageSelect = paginationComponent.queryAll(By.directive(MatSelect));
 
-      expect(component.table.page.emit).toHaveBeenCalledTimes(1);
-      expect(component.onPage).toHaveBeenCalledWith({
-        length: 50,
-        pageIndex: 2,
-        pageSize: 15,
-        previousPageIndex: 1,
-      } as PageEvent);
+      expect(pageSelect.length).toEqual(2);
+      expect(pageSelect.find(x => x.nativeElement.id === 'goToPageSelect')).toBeDefined();
+    }));
+
+    it('should not show "GoToPage"-Select, if there are less then 3 pages', fakeAsync(() => {
+      const fixture = TestBed.createComponent(TestComponent);
+      const component = fixture.componentInstance;
+      component.dataSource = new PsTableDataSource(
+        () => of(Array.from({ length: 5 }, (_, i: number) => ({ id: i, str: `item ${i}` }))),
+        'client'
+      );
+      component.dataSource.updateData();
+      fixture.detectChanges();
+      tick(1);
+      fixture.detectChanges();
+
+      const paginationComponent = fixture.debugElement.query(By.directive(PsTablePaginationComponent));
+      const pageSelect = paginationComponent.queryAll(By.directive(MatSelect));
+
+      expect(pageSelect.length).toEqual(1);
+      expect(pageSelect.find(x => x.nativeElement.id === 'goToPageSelect')).not.toBeDefined();
     }));
 
     it('should go to selected page chosen with "GoToPage"-Select', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
+      spyOn(component.table, 'onPage');
       component.dataSource = new PsTableDataSource(
         () => of(Array.from({ length: 50 }, (_, i: number) => ({ id: i, str: `item ${i}` }))),
         'client'
       );
       component.dataSource.updateData();
+      fixture.detectChanges();
+      tick(1);
       fixture.detectChanges();
 
       useMatSelect(fixture, '#goToPageSelect', matOptionNodes => {
@@ -661,11 +676,13 @@ describe('PsTableComponent', () => {
         itemNode.dispatchEvent(new Event('click'));
       });
 
-      fixture.detectChanges();
-      const tableDataEl: HTMLElement = fixture.debugElement.query(By.directive(PsTableDataComponent)).nativeElement;
-      const rowEls = tableDataEl.querySelectorAll('.ps-table-data__row');
-      const strFirstCol: HTMLElement = rowEls[0].querySelectorAll('.mat-column-str').item(0) as HTMLElement;
-      expect(strFirstCol.textContent.trim()).toEqual('item 15');
+      expect(component.table.onPage).toHaveBeenCalledTimes(1);
+      expect(component.table.onPage).toHaveBeenCalledWith({
+        length: 50,
+        pageIndex: 2,
+        pageSize: 15,
+        previousPageIndex: 1,
+      } as PageEvent);
     }));
   });
 });
