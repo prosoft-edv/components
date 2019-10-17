@@ -18,6 +18,10 @@ cache:
 install:
   - npm install
 
+branches:
+  only:
+  - master
+
 before_script:
   # Install commitlint cli for travis
   - npm install @commitlint/travis-cli
