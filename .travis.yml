@@ -1,4 +1,5 @@
 language: node_js
+dist: xenial
 node_js:
   - "10.16.0"
 sudo: false
@@ -27,4 +28,17 @@ script:
   - ng lint
   - ng build components
   - ng test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
-  - ng build --prod --baseHref=/components/
+  - ng build --prod --baseHref=https://https://prosoft-edv.github.io/components/
+
+notifications:
+  email:
+    on_failure: change
+    on_success: change
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/prosoft-components-demo
+  on:
+    branch: master
