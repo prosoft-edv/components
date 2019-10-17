@@ -22,7 +22,7 @@ describe('PsTablePaginationComponent', () => {
 
 function createPaginationInstance(): PsTablePaginationComponent {
   const pagination = new PsTablePaginationComponent(null);
-  pagination.dataSource = new PsTableDataSource<any>(() => of([{ a: 'asdfg' }, { a: 'gasdf' }, { a: 'asdas' }, { a: '32424rw' }]));
+  pagination.dataSource = new PsTableDataSource<any>(() => of([{ a: 'A' }, { a: 'B' }, { a: 'C' }, { a: 'D' }]));
 
   return pagination;
 }
