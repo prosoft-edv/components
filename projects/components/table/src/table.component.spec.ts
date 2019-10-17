@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, QueryList, SimpleChange, ViewChild } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSelect } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, ParamMap, Params, Router } from '@angular/router';
@@ -13,12 +14,11 @@ import { IPsTableSortDefinition } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
+import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
 import { PsTableSearchComponent } from './subcomponents/table-search.component';
+import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableComponent } from './table.component';
 import { PsTableModule } from './table.module';
-import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
-import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
-import { MatSelect } from '@angular/material';
 
 class TestSettingsService extends PsTableSettingsService {
   public readonly defaultPageSize$ = new BehaviorSubject<number>(15);
