@@ -88,7 +88,10 @@ export class PsTablePaginationComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.dataSource._internalDetectChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(() => {
-      this.pages = [...Array(this.dataSource.pages).keys()].map(x => (x += 1));
+      for (let i = 0; i < this.dataSource.pages; i++) {
+        this.pages.push(i + 1);
+      }
+
       this.pageSize = this.dataSource.pageSize;
       this.dataLength = this.dataSource.dataLength;
 
