@@ -28,7 +28,7 @@ script:
   - ng lint
   - ng build components
   - ng test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
-  - ng build --prod --baseHref=https://https://prosoft-edv.github.io/components/
+  - ng build --prod --baseHref=https://prosoft-edv.github.io/components/
 
 notifications:
   email:
