@@ -1,7 +1,7 @@
 language: node_js
 dist: xenial
 node_js:
-  - "10.16.0"
+  - "12"
 sudo: false
 
 addons:
@@ -10,13 +10,6 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
-
-cache:
-  directories:
-    - ./node_modules
-
-install:
-  - npm install
 
 branches:
   only:
