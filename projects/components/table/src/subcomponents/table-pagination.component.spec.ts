@@ -3,12 +3,11 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatPaginator, MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IPsTableIntlTexts } from '../..';
 import { PsTablePaginationComponent } from './table-pagination.component';
-import { useMatSelect } from '../table.component.spec';
 
 const testIntl: IPsTableIntlTexts = {
   firstPageLabel: 'a',
@@ -53,7 +52,7 @@ class PaginationTestComponent {
   public onPage = (_: PageEvent) => {};
 }
 
-fdescribe('PsTablePaginationComponent', () => {
+describe('PsTablePaginationComponent', () => {
   describe('Unit tests', () => {
     let component: PsTablePaginationComponent;
     const cd = { markForCheck: () => {} } as ChangeDetectorRef;
