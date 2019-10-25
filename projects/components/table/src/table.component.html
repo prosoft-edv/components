@@ -39,7 +39,8 @@
       <mat-spinner class="ps-table__loading-spinner"></mat-spinner>
     </div>
     <ps-table-pagination
-      [dataSource]="dataSource"
+      [pageSize]="pageSize"
+      [dataLength]="dataLength"
       [pageIndex]="pageIndex"
       [pageSizeOptions]="pageSizeOptions"
       [intl]="intl"

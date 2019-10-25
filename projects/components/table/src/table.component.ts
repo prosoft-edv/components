@@ -141,6 +141,10 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
     this.dataSource.pageSize = value;
   }
 
+  public get dataLength(): number {
+    return this.dataSource.dataLength;
+  }
+
   public get filterText(): string {
     return this.dataSource.filter;
   }
@@ -331,8 +335,8 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
               this.displayedColumns.push('options');
             }
 
-            this.cd.markForCheck();
             this.dataSource.updateData(false);
+            this.cd.markForCheck();
           },
           error: (err: Error | any) => {
             this.dataSource.error = err;

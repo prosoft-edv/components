@@ -4,20 +4,18 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
-  OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  AfterContentInit,
-  AfterViewInit,
 } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { IPsTableIntlTexts } from '@prosoft/components/core';
-import { of, Subject, timer } from 'rxjs';
-import { debounce, takeUntil } from 'rxjs/operators';
-import { PsTableDataSource } from '../data/table-data-source';
+import { of, Subject, timer, iif } from 'rxjs';
+import { debounce, takeUntil, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'ps-table-pagination',
@@ -27,14 +25,14 @@ import { PsTableDataSource } from '../data/table-data-source';
         [pageIndex]="pageIndex"
         [pageSize]="pageSize"
         [pageSizeOptions]="pageSizeOptions"
-        [length]="dataSource.dataLength"
+        [length]="dataLength"
         [showFirstLastButtons]="true"
         (page)="onPage($event)"
       >
       </mat-paginator>
       <div class="mat-paginator-page-size" style="font-size: 12px;">
         <mat-form-field *ngIf="pages.length > 2" class="mat-paginator-page-size-select">
-          <mat-select id="goToPageSelect" [ngModel]="pageIndex + 1" (selectionChange)="goToPage($event)">
+          <mat-select class="ps-table-pagination__page-select" [ngModel]="pageIndex + 1" (selectionChange)="goToPage($event)">
             <mat-option *ngFor="let page of pages" [value]="page"> {{ page }}</mat-option>
           </mat-select>
         </mat-form-field>
@@ -52,12 +50,11 @@ import { PsTableDataSource } from '../data/table-data-source';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PsTablePaginationComponent implements OnInit, OnDestroy {
+export class PsTablePaginationComponent implements OnChanges, OnDestroy {
   public pages: number[] = [];
-  public pageSize: number;
-  public dataLength: number;
 
-  @Input() public dataSource: PsTableDataSource<any>;
+  @Input() public pageSize: number;
+  @Input() public dataLength: number;
   @Input() public pageIndex: number;
   @Input() public pageSizeOptions: number;
   @Input() public intl: IPsTableIntlTexts;
@@ -78,6 +75,9 @@ export class PsTablePaginationComponent implements OnInit, OnDestroy {
   private ngUnsubscribe$ = new Subject<void>();
 
   constructor(private cd: ChangeDetectorRef) {
+    const test$ = of(true);
+    test$.pipe(switchMap(value => iif(() => value, of(1), of(2))));
+
     this._onPage$
       .pipe(
         debounce(() => (this.pageDebounce == null ? of(null) : timer(this.pageDebounce))),
@@ -86,18 +86,20 @@ export class PsTablePaginationComponent implements OnInit, OnDestroy {
       .subscribe(pageEvent => this.page.emit(pageEvent));
   }
 
-  public ngOnInit() {
-    this.dataSource._internalDetectChanges.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.pageSize || changes.dataLength) {
       this.pages = [];
-      for (let i = 0; i < this.dataSource.pages; i++) {
+      const pageCount = Math.ceil(this.dataLength / this.pageSize);
+      for (let i = 0; i < pageCount; i++) {
         this.pages.push(i + 1);
       }
 
-      this.pageSize = this.dataSource.pageSize;
-      this.dataLength = this.dataSource.dataLength;
-
       this.cd.markForCheck();
-    });
+    }
+
+    if (changes.intl) {
+      this.updatePaginatorIntl();
+    }
   }
 
   public onPage(event: PageEvent) {
@@ -107,7 +109,7 @@ export class PsTablePaginationComponent implements OnInit, OnDestroy {
   public goToPage(event: MatSelectChange) {
     const nextPage = event.value - 1;
     this._onPage$.next({
-      length: this.dataSource.dataLength,
+      length: this.dataLength,
       pageIndex: nextPage,
       pageSize: this.pageSize,
       previousPageIndex: nextPage - 1,

@@ -65,9 +65,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
   /** Number of items to display on a page. By default set to 15. */
   public pageSize = 15;
 
-  /** Number of pages. */
-  public pages = 0;
-
   /**
    * Filter term that should be used to filter out objects from the data array. To override how
    * data objects match to this filter string, provide a custom function for filterPredicate.
@@ -280,8 +277,6 @@ export class PsTableDataSource<T> extends DataSource<T> {
           this.data = filterResult.Items;
           this._checkPageValidity(filterResult.TotalItems);
         }
-
-        this.pages = Math.round(this.dataLength / this.pageSize);
       });
   }
 

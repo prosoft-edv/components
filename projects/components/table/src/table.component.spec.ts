@@ -563,15 +563,6 @@ describe('PsTableComponent', () => {
         sortDirection: 'asc',
       });
 
-      // pageing
-      const paginatorNextButtonEl = fixture.debugElement
-        .query(By.directive(MatPaginator))
-        .nativeElement.querySelectorAll('.mat-paginator-navigation-next')
-        .item(0) as HTMLButtonElement;
-      spyOn(component.table, 'onPage');
-      paginatorNextButtonEl.dispatchEvent(new MouseEvent('click'));
-      expect(component.table.onPage).toHaveBeenCalledWith({ previousPageIndex: 0, pageIndex: 1, pageSize: 2, length: 3 });
-
       // *psTableRowActions
       useMatMenu(fixture, '.ps-table-data__options-column button', rowActionButtonEls => {
         spyOn(component, 'onCustomRowActionClick');
@@ -634,7 +625,7 @@ describe('PsTableComponent', () => {
       const pageSelect = paginationComponent.queryAll(By.directive(MatSelect));
 
       expect(pageSelect.length).toEqual(2);
-      expect(pageSelect.find(x => x.nativeElement.id === 'goToPageSelect')).toBeDefined();
+      expect(pageSelect.find(x => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))).toBeDefined();
     }));
 
     it('should not show "GoToPage"-Select, if there are less then 3 pages', fakeAsync(() => {
@@ -653,7 +644,9 @@ describe('PsTableComponent', () => {
       const pageSelect = paginationComponent.queryAll(By.directive(MatSelect));
 
       expect(pageSelect.length).toEqual(1);
-      expect(pageSelect.find(x => x.nativeElement.id === 'goToPageSelect')).not.toBeDefined();
+      expect(
+        pageSelect.find(x => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))
+      ).not.toBeDefined();
     }));
 
     it('should go to selected page chosen with "GoToPage"-Select', fakeAsync(() => {
@@ -669,8 +662,8 @@ describe('PsTableComponent', () => {
       tick(1);
       fixture.detectChanges();
 
-      useMatSelect(fixture, '#goToPageSelect', matOptionNodes => {
-        expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['1', '2', '3']);
+      useMatSelect(fixture, 'ps-table-pagination__page-select', matOptionNodes => {
+        expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['1', '2', '3', '4']);
 
         const itemNode = matOptionNodes.item(2);
         itemNode.dispatchEvent(new Event('click'));
@@ -720,7 +713,7 @@ function closeMatSelect<T>(fixture: ComponentFixture<T>) {
   closeBackdrop(fixture);
 }
 
-function useMatSelect<T>(fixture: ComponentFixture<T>, selector: string, useFnc: (options: NodeListOf<HTMLElement>) => void) {
+export function useMatSelect<T>(fixture: ComponentFixture<T>, selector: string, useFnc: (options: NodeListOf<HTMLElement>) => void) {
   openMatSelect(fixture, selector);
   useFnc(getMatOptionsNodes());
   closeMatSelect(fixture);
