@@ -662,7 +662,7 @@ describe('PsTableComponent', () => {
       tick(1);
       fixture.detectChanges();
 
-      useMatSelect(fixture, 'ps-table-pagination__page-select', matOptionNodes => {
+      useMatSelect(fixture, '.ps-table-pagination__page-select', matOptionNodes => {
         expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['1', '2', '3', '4']);
 
         const itemNode = matOptionNodes.item(2);
