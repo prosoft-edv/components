@@ -75,9 +75,6 @@ export class PsTablePaginationComponent implements OnChanges, OnDestroy {
   private ngUnsubscribe$ = new Subject<void>();
 
   constructor(private cd: ChangeDetectorRef) {
-    const test$ = of(true);
-    test$.pipe(switchMap(value => iif(() => value, of(1), of(2))));
-
     this._onPage$
       .pipe(
         debounce(() => (this.pageDebounce == null ? of(null) : timer(this.pageDebounce))),
@@ -88,11 +85,8 @@ export class PsTablePaginationComponent implements OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.pageSize || changes.dataLength) {
-      this.pages = [];
       const pageCount = Math.ceil(this.dataLength / this.pageSize);
-      for (let i = 0; i < pageCount; i++) {
-        this.pages.push(i + 1);
-      }
+      this.pages = Array.from({ length: pageCount }, (_, k) => k + 1);
 
       this.cd.markForCheck();
     }

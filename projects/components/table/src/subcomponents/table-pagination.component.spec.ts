@@ -67,6 +67,9 @@ describe('PsTablePaginationComponent', () => {
       expect(component.paginator._intl.firstPageLabel).toEqual('a');
       expect(component.paginator._intl.lastPageLabel).toEqual('b');
       expect(component.paginator._intl.previousPageLabel).toEqual('c');
+      expect(component.paginator._intl.nextPageLabel).toEqual('d');
+      expect(component.paginator._intl.itemsPerPageLabel).toEqual('e');
+      expect(component.paginator._intl.getRangeLabel(0, 0, 0)).toEqual('fnc');
     });
 
     it('should debounce pageEvent, if pageDebounce-Property is set', fakeAsync(() => {
@@ -74,8 +77,10 @@ describe('PsTablePaginationComponent', () => {
       component.pageDebounce = 300;
       component.onPage({ length: 9999 } as PageEvent);
 
+      tick(299);
       expect(pageEmitSpy).not.toHaveBeenCalled();
-      tick(301);
+
+      tick(2);
       expect(pageEmitSpy).toHaveBeenCalledTimes(1);
       expect(pageEmitSpy).toHaveBeenCalledWith({ length: 9999 } as PageEvent);
     }));
