@@ -58,7 +58,6 @@ import { IPsTableSortDefinition } from '../models';
 
       .ps-table-header__search {
         flex: 0 1 800px;
-        margin: auto;
       }
 
       .ps-table-header__actions {
