@@ -4,6 +4,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatSelectChange } from '@angular/material/select';
 import { PsTableComponent, PsTableDataSource } from '@prosoft/components/table';
 import { NEVER, of, throwError } from 'rxjs';
+import { PsTableRowDetailDirective } from '@prosoft/components/table';
 
 interface ISampleData {
   id: number;
@@ -83,6 +84,7 @@ const sampleData = generateSampleData(100);
 export class TableDemoComponent {
   public show = true;
   @ViewChild(PsTableComponent, { static: false }) public table: PsTableComponent;
+  @ViewChild(PsTableRowDetailDirective, { static: false }) public rowDetail: PsTableRowDetailDirective;
 
   public clientSampleDataSource = new PsTableDataSource<ISampleData>(() => {
     return of(sampleData);
@@ -122,6 +124,7 @@ export class TableDemoComponent {
   public expandable = false;
   public expanded = false;
   public showToggleColumn = true;
+  public showCustomToggleColumn = false;
 
   public disableAllSortable = false;
 
@@ -158,5 +161,9 @@ export class TableDemoComponent {
 
   public alertData(data: any) {
     alert(JSON.stringify(data));
+  }
+
+  public onToggleDetailRow(item: ISampleData) {
+    this.rowDetail.toggle(item);
   }
 }

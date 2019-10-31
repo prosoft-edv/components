@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, QueryList, SimpleChange, ViewChild } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { PageEvent } from '@angular/material/paginator';
 import { MatSelect } from '@angular/material/select';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,7 +9,7 @@ import { ActivatedRoute, convertToParamMap, ParamMap, Params, Router } from '@an
 import { IPsTableIntlTexts, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PsTableDataSource } from './data/table-data-source';
-import { PsTableColumnDirective } from './directives/table.directives';
+import { PsTableColumnDirective, PsTableRowDetailDirective } from './directives/table.directives';
 import { IPsTableSortDefinition } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
@@ -90,6 +90,12 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
         <ng-container *psTableColumnTemplate="let item"> custom {{ item.id }} </ng-container>
       </ps-table-column>
 
+      <ps-table-column [sortable]="false" property="custom" [width]="'100px'">
+        <ng-container *psTableColumnTemplate="let item">
+          <button (click)="onCustomDetailToggle(item)">customToggle</button>
+        </ng-container>
+      </ps-table-column>
+
       <div *psTableCustomHeader>
         custom header
       </div>
@@ -136,10 +142,12 @@ export class TestComponent {
 
   @ViewChild(PsTableComponent, { static: true }) table: PsTableComponent;
   @ViewChild(PsTablePaginationComponent, { static: true }) paginator: PsTablePaginationComponent;
+  @ViewChild(PsTableRowDetailDirective, { static: false }) public rowDetail: PsTableRowDetailDirective;
 
   public onPage(event: any) {}
   public onCustomListActionClick(slectedItems: any[]) {}
   public onCustomRowActionClick(item: any) {}
+  public onCustomDetailToggle(item: any) {}
 }
 
 describe('PsTableComponent', () => {
@@ -676,6 +684,39 @@ describe('PsTableComponent', () => {
         pageSize: 15,
         previousPageIndex: 1,
       } as PageEvent);
+    }));
+
+    it('should work with custom row detail toggle', fakeAsync(() => {
+      const fixture = TestBed.createComponent(TestComponent);
+      const component = fixture.componentInstance;
+      component.dataSource = new PsTableDataSource(
+        () => of(Array.from({ length: 50 }, (_, i: number) => ({ id: i, str: `item ${i}` }))),
+        'client'
+      );
+      component.dataSource.updateData();
+      fixture.detectChanges();
+
+      tick(1);
+      fixture.detectChanges();
+
+      const tableDataEl: HTMLElement = fixture.debugElement.query(By.directive(PsTableDataComponent)).nativeElement;
+      const rowEls = tableDataEl.querySelectorAll('.ps-table-data__row');
+
+      const detailRowEls = tableDataEl.querySelectorAll('.ps-table-data__detail-row');
+      expect(detailRowEls[5].clientHeight).toEqual(0);
+      expect(detailRowEls[5].textContent.trim()).toEqual('');
+
+      const toggleSpy = spyOn(component.rowDetail, 'toggle').and.callThrough();
+      const customExpandButtonFirstRow: HTMLElement = rowEls[5].querySelectorAll('button').item(0) as HTMLElement;
+      customExpandButtonFirstRow.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(toggleSpy).toHaveBeenCalledTimes(1);
+      expect(toggleSpy).toHaveBeenCalledWith({ id: 5, str: 'item 5' });
+      expect(detailRowEls[5].clientHeight > 0).toEqual(true);
+      expect(detailRowEls[5].textContent.trim()).toEqual('item: 5');
     }));
   });
 });
