@@ -83,19 +83,19 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   @ViewChild(PsFlipContainerComponent, { static: true }) public flipContainer: PsFlipContainerComponent | null = null;
 
-  @ContentChild(PsTableCustomHeaderDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableCustomHeaderDirective, { read: TemplateRef })
   public customHeader: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableCustomSettingsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableCustomSettingsDirective, { read: TemplateRef })
   public customSettings: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableTopButtonSectionDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableTopButtonSectionDirective, { read: TemplateRef })
   public topButtonSection: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableListActionsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableListActionsDirective, { read: TemplateRef })
   public listActions: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableRowActionsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableRowActionsDirective, { read: TemplateRef })
   public rowActions: TemplateRef<any> | null = null;
 
   @ContentChildren(PsTableColumnDirective)
@@ -105,7 +105,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
 
   @HostBinding('class.ps-table--row-detail')
-  @ContentChild(PsTableRowDetailDirective, { static: false })
+  @ContentChild(PsTableRowDetailDirective)
   public rowDetail: PsTableRowDetailDirective | null = null;
 
   public pageSizeOptions: number[];

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -12,6 +12,7 @@ import { IPsTableSetting, PsTableModule, PsTableSettingsService } from '@prosoft
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { TableDemoComponent } from './table-demo.component';
 
+@Injectable()
 export class DemoPsTableSettingsService extends PsTableSettingsService {
   constructor() {
     super();

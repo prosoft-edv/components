@@ -39,10 +39,10 @@ import { FlipContainerBackDirective, FlipContainerFrontDirective } from './flip-
 export class PsFlipContainerComponent implements AfterViewInit {
   @Input() public removeHiddenNodes = true;
 
-  @ContentChild(FlipContainerFrontDirective, { read: TemplateRef, static: false })
+  @ContentChild(FlipContainerFrontDirective, { read: TemplateRef })
   public frontTemplate: TemplateRef<any> | null = null;
 
-  @ContentChild(FlipContainerBackDirective, { read: TemplateRef, static: false })
+  @ContentChild(FlipContainerBackDirective, { read: TemplateRef })
   public backTemplate: TemplateRef<any> | null = null;
 
   @ViewChild('frontside', { static: true }) public frontside: ElementRef<any>;

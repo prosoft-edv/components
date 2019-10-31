@@ -42,7 +42,7 @@ export class PsSavebarComponent implements OnInit, OnChanges, OnDestroy {
   @Output() public step = new EventEmitter<number>();
   @Output() public cancel = new EventEmitter<void>();
 
-  @ContentChild(PsSavebarRightContentDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsSavebarRightContentDirective, { read: TemplateRef })
   public customRightContent: TemplateRef<any> | null;
 
   public get isHidden(): boolean {

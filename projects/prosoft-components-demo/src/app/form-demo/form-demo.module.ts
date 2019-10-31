@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -34,6 +34,7 @@ export class DemoPsFormsService extends BasePsFormService {
   }
 }
 
+@Injectable()
 export class DemoPsFormActionService extends PsFormActionService {
   public static logStream$ = new Subject<string>();
   public defaultLoadSuccessHandler(params: IPsFormLoadSuccessParams): void {

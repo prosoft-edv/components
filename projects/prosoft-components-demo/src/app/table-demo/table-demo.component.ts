@@ -82,7 +82,7 @@ const sampleData = generateSampleData(100);
 })
 export class TableDemoComponent {
   public show = true;
-  @ViewChild(PsTableComponent, { static: false }) public table: PsTableComponent;
+  @ViewChild(PsTableComponent) public table: PsTableComponent;
 
   public clientSampleDataSource = new PsTableDataSource<ISampleData>(() => {
     return of(sampleData);
