@@ -16,7 +16,7 @@
     "strict": true,
     "strictNullChecks": false,
     "paths": {
-      "@prosoft/components/*": ["projects/components/*"]
+      "@prosoft/components/*": ["dist/components/*"]
     }
   }
 }
