@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "rootDir": ".",
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -16,7 +17,7 @@
     "strict": true,
     "strictNullChecks": false,
     "paths": {
-      "@prosoft/components/*": ["dist/components/*"]
+      "@prosoft/components/*": ["projects/components/*"]
     }
   }
 }
