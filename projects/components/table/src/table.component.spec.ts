@@ -9,7 +9,7 @@ import { ActivatedRoute, convertToParamMap, ParamMap, Params, Router } from '@an
 import { IPsTableIntlTexts, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { PsTableDataSource } from './data/table-data-source';
-import { PsTableColumnDirective, PsTableRowDetailDirective } from './directives/table.directives';
+import { PsTableColumnDirective } from './directives/table.directives';
 import { IPsTableSortDefinition } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
@@ -63,6 +63,7 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
   selector: 'ps-test-component',
   template: `
     <ps-table
+      #table
       [caption]="caption"
       [dataSource]="dataSource"
       [tableId]="tableId"
@@ -90,9 +91,9 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
         <ng-container *psTableColumnTemplate="let item"> custom {{ item.id }} </ng-container>
       </ps-table-column>
 
-      <ps-table-column [sortable]="false" property="custom" [width]="'100px'">
+      <ps-table-column [sortable]="false" property="__custom" [width]="'100px'">
         <ng-container *psTableColumnTemplate="let item">
-          <button (click)="onCustomDetailToggle(item)">customToggle</button>
+          <button (click)="table.toggleRowDetail(item)">customToggle</button>
         </ng-container>
       </ps-table-column>
 
@@ -142,12 +143,10 @@ export class TestComponent {
 
   @ViewChild(PsTableComponent, { static: true }) table: PsTableComponent;
   @ViewChild(PsTablePaginationComponent, { static: true }) paginator: PsTablePaginationComponent;
-  @ViewChild(PsTableRowDetailDirective, { static: false }) public rowDetail: PsTableRowDetailDirective;
 
   public onPage(event: any) {}
   public onCustomListActionClick(slectedItems: any[]) {}
   public onCustomRowActionClick(item: any) {}
-  public onCustomDetailToggle(item: any) {}
 }
 
 describe('PsTableComponent', () => {
@@ -706,9 +705,9 @@ describe('PsTableComponent', () => {
       expect(detailRowEls[5].clientHeight).toEqual(0);
       expect(detailRowEls[5].textContent.trim()).toEqual('');
 
-      const toggleSpy = spyOn(component.rowDetail, 'toggle').and.callThrough();
-      const customExpandButtonFirstRow: HTMLElement = rowEls[5].querySelectorAll('button').item(0) as HTMLElement;
-      customExpandButtonFirstRow.dispatchEvent(new MouseEvent('click'));
+      const toggleSpy = spyOn(component.table, 'toggleRowDetail').and.callThrough();
+      const customExpandButtonFifthRow: HTMLElement = rowEls[5].querySelectorAll('.mat-column-__custom button').item(0) as HTMLElement;
+      customExpandButtonFifthRow.dispatchEvent(new MouseEvent('click'));
       fixture.detectChanges();
       flush();
       fixture.detectChanges();
