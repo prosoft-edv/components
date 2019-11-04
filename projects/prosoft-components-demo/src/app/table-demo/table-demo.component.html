@@ -74,6 +74,7 @@
 </div>
 
 <ps-table
+  #table
   *ngIf="show"
   tableId="example"
   [dataSource]="dataSource"
@@ -120,7 +121,7 @@
     *ngIf="showCustomToggleColumn && expandable"
   >
     <ng-container *psTableColumnTemplate="let item; let expanded = expanded">
-      <button (click)="onToggleDetailRow(item)">Custom row detail expand button</button>
+      <button (click)="table.toggleRowDetail(item)">Custom row detail expand button</button>
     </ng-container>
   </ps-table-column>
   <ps-table-column [header]="'virtual column'" property="__virtual" [sortable]="false">
