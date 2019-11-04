@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, ViewEncapsulation, ViewChild } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup } from '@angular/forms';
-import { IPsFormSaveParams } from '@prosoft/components/form';
-import { PsFormEvent, PsFormComponent } from '@prosoft/components/form';
+import { IPsFormSaveParams, PsFormEvent, PsFormComponent } from '@prosoft/components/form';
 import { of, Subscription } from 'rxjs';
 import { delay, tap, map } from 'rxjs/operators';
 import { DemoPsFormActionService } from './form-demo.module';

@@ -15,7 +15,7 @@ import {
   IPsFormLoadSuccessParams,
   IPsFormSaveErrorParams,
   IPsFormSaveSuccessParams,
-} from '@prosoft/components/form/src/models';
+} from '@prosoft/components/form';
 import { PsSavebarModule } from '@prosoft/components/savebar';
 import { Observable, of, Subject } from 'rxjs';
 import { FormDemoComponent } from './form-demo.component';
