@@ -24,9 +24,9 @@ jobs:
     - name: npm install, lint, build, and test
       run: |
         npm ci
-        ng lint
-        ng build components
-        ng test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
-        ng build --prod --baseHref=https://prosoft-edv.github.io/components/
+        npm run ng -- lint
+        npm run ng -- build components
+        npm run ng -- test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+        npm run ng -- build --prod --baseHref=https://prosoft-edv.github.io/components/
       env:
         CI: true
