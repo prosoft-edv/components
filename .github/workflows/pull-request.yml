@@ -1,0 +1,32 @@
+name: pull request ci
+
+on: [pull_request]
+
+jobs:
+  lint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v1
+      - uses: wagoid/commitlint-github-action@v1.2.2
+  build:
+    name: lint, build and test the code
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: npm install, lint, build, and test
+      run: |
+        npm ci
+        ng lint
+        ng build components
+        ng test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+        ng build --prod --baseHref=https://prosoft-edv.github.io/components/
+      env:
+        CI: true
