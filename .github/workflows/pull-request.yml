@@ -4,13 +4,14 @@ on: [pull_request]
 
 jobs:
   commitlint:
-    name: commitlint
+    name: commit lint
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v1
       - uses: wagoid/commitlint-github-action@v1.2.2
+
   codelint:
     name: code lint
     runs-on: ubuntu-latest
@@ -27,8 +28,9 @@ jobs:
         npm run ng -- lint
       env:
         CI: true
+
   test:
-    name: code lint
+    name: test
     runs-on: ubuntu-latest
 
     steps:
@@ -37,14 +39,15 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - name: lint
+    - name: test
       run: |
         npm ci
         npm run ng -- test components --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
       env:
         CI: true
+
   build:
-    name: lint, build and test the code
+    name: build
     runs-on: ubuntu-latest
 
     steps:
@@ -53,7 +56,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
-    - name: npm install, lint, build, and test
+    - name: build
       run: |
         npm ci
         npm run ng -- build components
