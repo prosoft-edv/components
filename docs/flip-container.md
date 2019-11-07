@@ -4,7 +4,7 @@
 ## API
 ### Import
 ```javascript
-import { PsFlipContainerComponent  } from '@prosoft/components/flip-container'
+import { PsFlipContainerComponent } from '@prosoft/components/flip-container'
 ```
 
 ### Properties

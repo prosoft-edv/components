@@ -6,7 +6,7 @@ While ` blocked === true` all of `<ps-block-ui>`'s content is overlayed by a tra
 ## API
 ### Import
 ```javascript
-import { PsBlockUiComponent  } from '@prosoft/components/block-ui'
+import { PsBlockUiComponent } from '@prosoft/components/block-ui'
 ```
 
 ### Properties

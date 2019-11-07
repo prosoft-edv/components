@@ -4,7 +4,7 @@
 ## API
 ### Import
 ```javascript
-import { PsFormErrorsComponent  } from '@prosoft/components/form-errors'
+import { PsFormErrorsComponent } from '@prosoft/components/form-errors'
 ```
 
 ### Properties

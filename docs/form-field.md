@@ -7,7 +7,7 @@
 ## API
 ### Import
 ```javascript
-import { PsFormFieldComponent  } from '@prosoft/components/form-field'
+import { PsFormFieldComponent } from '@prosoft/components/form-field'
 ```
 
 ### Properties
@@ -15,8 +15,8 @@ import { PsFormFieldComponent  } from '@prosoft/components/form-field'
 | --------------------------------------- | -------------
 | `createLabel: boolean`                  | If `true` a label will be created automatically based on the information of the given FormControl.
 | `floatLabel: FloatLabelType`            | Behaviour of the label. See [FloatLabelType](https://material.angular.io/components/form-field/api) for more information.
-| `hint: string`                          | Handels the `<mat-hint>` automatically based on this hintText. See [MatHintComponent](https://material.angular.io/components/form-field/overview#hint-labels) for more                                            | information.
-| `appearance: MatFormFieldAppearance`    | Changes the appearance of the `<mat-form-field>`. See [MatFormFieldComponent](https://material.angular.io/components/form-field/overview#form-field-appearance-variants)                                          | for more information.
+| `hint: string`                          | Handels the `<mat-hint>` automatically based on this hintText. See [MatHintComponent](https://material.angular.io/components/form-field/overview#hint-labels) for more                                              information.
+| `appearance: MatFormFieldAppearance`    | Changes the appearance of the `<mat-form-field>`. See [MatFormFieldComponent](https://material.angular.io/components/form-field/overview#form-field-appearance-variants)                                            for more information.
 
 ## Usage
 
