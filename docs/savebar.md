@@ -31,7 +31,7 @@ You can also use it for wizard-like behavior with its forward and backward butto
   | `canSave: boolean`                                 | If set, the savebar checks this value additionally to `FormGroups` state.
   | `canStepFwd: boolean`                              | (In wizard) Checks, if you can step to the next part of the wizard.
   | `canStepBack: boolean`                             | (In wizard) Checks, if you can step to the previous part of the wizard.
-  | `intlOverride: Partial<IPsSavebarIntlTexts>`       | if you want to override dispalyed labels.
+  | `intlOverride: Partial<IPsSavebarIntlTexts>`       | If you want to override dispalyed labels.
   | `saveKey: string`                                  | The keyboard key, which is used in combination with 'ctrl' as save shortcut. (default 's' => ctrl + s)
 
   ### Events <a name="PsSavebarComponentEvents"></a>
