@@ -37,7 +37,9 @@ import { PsSavebarComponent } from '@prosoft/components/savebar'
 | `cancel: EventEmitter<void>`           | If you handle this, a 'Cancel' button is shown.
 
 ### Directives
-
+| Name                         | Description
+| ---------------------------- | -------------
+| `[psSavebarRightContent]`    | If set, you can add additional components to the right side of PsSavebar's default buttons.
 
 ## Usage
 If you want PsSavebar to show errors in `FormGroup` via `<ps-form-errors>`:
