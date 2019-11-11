@@ -1,37 +1,46 @@
-# PsBlockUi
+<link href="style.css" rel="stylesheet"></link> 
+
+# PsBlockUi <a name="PsBlockUi"></a>
 `<ps-block-ui>` is a component for blocking controls. Most common use is for blocking forms while loading data.
 
 While ` blocked === true` all of `<ps-block-ui>`'s content is overlayed by a transparent frame with a loading spinner and an optional `spinnerText`. During blocked-state it's not possible to click any control underneath the block-ui.
 
-## API
-### Import
-```javascript
-import { PsBlockUiComponent } from '@prosoft/components/block-ui'
-```
+---
 
-### Properties
-| Name                    | Description
-| ----------------------- | -------------
-| `blocked: boolean`      | Toggles the blocking overlay
-| `spinnerText: string`   | Text, that will be shown under the blocking spinner      
+  ## API <a name="PsBlockUiApi"></a>   
+  ### Import <a name="PsBlockUiImport"></a>
+  ```ts | js
+    import { PsBlockUiComponent } from '@prosoft/components/block-ui'
+  ```
 
-## Usage
-Import the module into your module. 
+---
 
-```javascript
-@NgModule({
-  declarations: [MyComponent],
-  imports: [PsBlockUiModule]
-})
-export class MyModule {}
-```
+  ## PsBlockUiComponent <a name="PsBlockUiComponent"></a>
+  ### Properties <a name="PsBlockUiComponentProperties"></a>
+  | Name                    | Description
+  | ----------------------- | -------------
+  | `blocked: boolean`      | Toggles the blocking overlay
+  | `spinnerText: string`   | Text, that will be shown under the blocking spinner.
 
-Now you can use it in your components like this:
+---
 
-```html
-<ps-block-ui [blocked]="blocked" [spinnerText]="spinnerText">
-  <mat-card>
-    this will be blocked
-  </mat-card>
-</ps-block-ui>
-```
+  ## Implementation <a name="PsBlockUiImplementation"></a>
+  Import the module into your module. 
+
+  ```ts | js
+    @NgModule({
+      declarations: [MyComponent],
+      imports: [PsBlockUiModule]
+    })
+    export class MyModule {}
+  ```
+
+  Now you can use it in your components like this:
+
+  ```html
+    <ps-block-ui [blocked]="blocked" [spinnerText]="spinnerText">
+      <mat-card>
+        this will be blocked
+      </mat-card>
+    </ps-block-ui>
+  ```
