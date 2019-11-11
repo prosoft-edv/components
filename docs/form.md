@@ -1,5 +1,5 @@
 # PsForm
-`<ps-form>` is a component for managing your input forms. 
+`<ps-form>` is a component for managing your input forms. It automatically blocks the UI via `<ps-block-ui>` while loading Data and has the `<ps-save-bar>` with `<ps-form-errors>` under its content. 
 
 ## API
 ### Import
@@ -26,47 +26,106 @@ import { PsFormComponent } from '@prosoft/components/form'
 | `saveError: EventEmitter<PsFormSaveErrorEvent>`                              | Emmited, if an error occured during `saveFnc`.
 | `cancel: EventEmitter<PsFormCancelEvent>`                                    | Emmited, if an cancelation was requested via "Cancel"-button.
 
-## Interfaces
+## Events
+### PsFormEvent
+Base class for every PsFormEvent.
+
+### Properties
+| Name                            | Description
+| ------------------------------- | -----------
+| `defaultPrevented: boolean`     | `true`, if the default load success handling is prevented.
+
+### Functions
+| Name                          | Description
+| ----------------------------- | -----------
+| `preventDefault: () => void`  | Prevents the default load success handling from beeing executed.
+
 ### PsFormLoadSuccessEvent
-| Name | Description
-| ---- | -----------
-|      |
+extends `PsFormEvent`
+
+### Properties
+| Name             | Description
+| ---------------- | -----------
+| `value: any`     | The loaded value from `loadFnc`.
 
 ### PsFormLoadErrorEvent
-| Name | Description
-| ---- | -----------
-|      |
+extends `PsFormEvent`
+
+### Properties
+| Name                    | Description
+| ----------------------- | -----------
+| `(readonly) error: any`   | The error object from `loadFnc`.
 
 ### PsFormSaveSuccessEvent
-| Name | Description
-| ---- | -----------
-|      |
+extends `PsFormEvent`
+
+### Properties
+| Name                             | Description
+| -------------------------------- | -----------
+| `(readonly) value: any`            | The data object that was saved.
+| `(readonly) saveResponse: any`     | The saveResponse from your save functionality.
+| `(readonly) close: boolean`        | `true`, if the "Save & close"-Button was clicked.
 
 ### PsFormSaveErrorEvent
-| Name | Description
-| ---- | -----------
-|      |
+extends `PsFormEvent`
+
+### Properties
+| Name                             | Description
+| -------------------------------- | -----------
+| `(readonly) value: any`          | The data object that was saved.
+| `(readonly) error: any`          | the error object from `saveFnc`.
 
 ### PsFormCancelEvent
-| Name | Description
-| ---- | -----------
-|      |
+extends `PsFormEvent`
 
 ## Usage
+
+<!--TODO put this into a seperate file-->
+1. You have to override `BasePsFormService` and implement the following two functions:
+* `getLabel: (formControl: any) => Observable<string>` which should return the FormControls label.
+* `mapDataToError: (errorData: IPsFormErrorData[]) => Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
+
+2. Import the PsFormBaseModule forRoot with the created service. Like this:
+`PsFormBaseModule.forRoot(DemoPsFormsService)`
+
 Import the module into your module. 
 
 ```javascript
 @NgModule({
   declarations: [MyComponent],
-  imports: [PsFormModule]
+  imports: [PsFormModule, PsFormBaseModule.forRoot(MyPsFormsService)]
 })
 export class MyModule {}
 ```
 
-Now you can use it in your components like this:
+Now you can use it in your components like this (See demo):
 
 ```html
-<ps-form>
-
-</ps-form>
+<ps-form
+    [form]="setForm ? form : null"
+    [formMode]="formMode"
+    [loadFnc]="loadFnc"
+    [saveFnc]="saveFnc"
+    [hideSave]="hideSave"
+    [hideSaveAndClose]="hideSaveAndClose"
+    [canSave]="canSave"
+    [blocked]="blocked"
+    (loadSuccess)="onEvent($event, 'loadSuccess')"
+    (loadError)="onEvent($event, 'loadError')"
+    (saveSuccess)="onEvent($event, 'saveSuccess')"
+    (saveError)="onEvent($event, 'saveError')"
+    (cancel)="onEvent($event, 'cancel')">
+    <mat-card>
+      <form [formGroup]="form">
+        <mat-form-field>
+          <mat-label>Input 1</mat-label>
+          <input type="text" matInput formControlName="input1" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Input 2</mat-label>
+          <input type="text" matInput formControlName="input2" />
+        </mat-form-field>
+      </form>
+    </mat-card>
+  </ps-form>
 ```

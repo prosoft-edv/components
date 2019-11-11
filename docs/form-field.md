@@ -20,7 +20,8 @@ import { PsFormFieldComponent } from '@prosoft/components/form-field'
 
 ## Usage
 
-1. You have to override its `BasePsFormService` and override the following two functions:
+<!--TODO put this into a seperate file-->
+1. You have to override `BasePsFormService` and implement the following two functions:
 * `getLabel: (formControl: any) => Observable<string>` which should return the FormControls label.
 * `mapDataToError: (errorData: IPsFormErrorData[]) => Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
 
@@ -38,7 +39,7 @@ Import the modules into your module.
 export class MyModule {}
 ```
 
-Now you can use it in your components like this:
+Now you can use it in your components like this (See demo):
 
 ```html
 <form [formGroup]="form">

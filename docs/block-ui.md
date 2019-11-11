@@ -13,7 +13,7 @@ import { PsBlockUiComponent } from '@prosoft/components/block-ui'
 | Name                    | Description
 | ----------------------- | -------------
 | `blocked: boolean`      | Toggles the blocking overlay
-| `spinnerText: string`   | (optional) Text, that will be shown under the blocking spinner      
+| `spinnerText: string`   | Text, that will be shown under the blocking spinner      
 
 ## Usage
 Import the module into your module. 
