@@ -31,11 +31,11 @@
   ### Events <a name="PsFormComponentEvents"></a>
   | Name                                                | Description
   | --------------------------------------------------- | -------------
-  | `loadSuccess: EventEmitter<PsFormLoadSuccessEvent>` | Emmited, after `loadFnc` was successful.
-  | `loadError: EventEmitter<PsFormLoadErrorEvent>`     | Emmited, if an error occured during `loadFnc`.
-  | `saveSuccess: EventEmitter<PsFormSaveSuccessEvent>` | Emmited, after `saveFnc` was successful.
-  | `saveError: EventEmitter<PsFormSaveErrorEvent>`     | Emmited, if an error occured during `saveFnc`.
-  | `cancel: EventEmitter<PsFormCancelEvent>`           | Emmited, if an cancelation was requested via "Cancel"-button.
+  | `loadSuccess: EventEmitter<PsFormLoadSuccessEvent>` | Emited, after `loadFnc` was successful.
+  | `loadError: EventEmitter<PsFormLoadErrorEvent>`     | Emited, if an error occured during `loadFnc`.
+  | `saveSuccess: EventEmitter<PsFormSaveSuccessEvent>` | Emited, after `saveFnc` was successful.
+  | `saveError: EventEmitter<PsFormSaveErrorEvent>`     | Emited, if an error occured during `saveFnc`.
+  | `cancel: EventEmitter<PsFormCancelEvent>`           | Emited, if an cancelation was requested via "Cancel"-button.
 
 ---
 

@@ -14,9 +14,10 @@
 ---
 
   ## Directives <a name="PsSelectDirectives"></a>
-  | Name                                                | Description
-  | --------------------------------------------------- | -------------
-  | `myDirective`                                       | I tell you, what `myDirective` does.
+  | Name                      | Description
+  | ------------------------- | -------------
+  | `psSelectTriggerTemplate` | Use this, if you want to change the apearance of the selected item.
+  | `psSelectOptionTemplate`  | Use this, if you want to change the apearance of the items of the selection popup.
 
 ---
 
@@ -30,24 +31,8 @@
   ### Events <a name="PsSelectComponentEvents"></a>
   | Name                                                | Description
   | --------------------------------------------------- | -------------
-  | `myEvent: EventEmitter<myType>`                     | I tell you, what `myEvent` does.
-
-  ### Functions <a name="PsSelectComponentFunctions"></a>
-  | Name                                                | Description
-  | --------------------------------------------------- | -------------
-  | `myFunction(myInputs: myType): myReturnType`        | I tell you, what `myFunction` does.
-
-  ### Types <a name="PsSelectComponentTypes"></a>
-  | Name                                                | Description
-  | --------------------------------------------------- | -------------
-  | `myType`                                            | I tell you, what `myType` does.
-
-  ### Misc <a name="PsSelectComponentMisc"></a>
-  <!--Misc stuff here-->
----
-
-  ## Prerequisites/Requirements <a name="PsSelectRequirements"></a>
-  <!--Requirements here-->
+  | `openedChange: EventEmitter<boolean>`               | Emitted, if the opened state of the selection popup is changed.
+  | `selectionChange: EventEmitter<MatSelectChange>`    | Emitted, if the selected item of the select changed. For MatSelectChange properties check [MatSelectChange](https://material.angular.io/components/select/api#MatSelectChange).
 
 ---
 
@@ -65,7 +50,13 @@
   Now you can use it in your components like this:
 
   ```html
-    <ps-select>
-
+    <ps-select [(ngModel)]="ngModelValue" [dataSource]="items">
+      <ng-container *psSelectTriggerTemplate="let item">
+        color: <span [style.color]="item.value" class="asdf">{{ item.viewValue }}</span>
+      </ng-container>
+      <ng-container *psSelectOptionTemplate="let item">
+        <div>color:</div>
+        <span [style.color]="item.value.color" [style.font-size]="item.value.size" class="asdf">{{ item.label }}</span>
+      </ng-container>
     </ps-select>
   ```
