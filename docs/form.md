@@ -20,18 +20,18 @@ import { PsFormModule } from '@prosoft/components/form';
 
 ### Properties <a name="PsFormComponentProperties"></a>
 
-| Name                                                                     | Description                                                                                            |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `form: FormGroup`                                                        | Angular's `FormGroup`                                                                                  |
-| `formMode: 'create' \| 'update'`                                         | Tells the PsForm if you are currently creating or editing data.                                        |
-| `autocomplete: 'on' \| 'off'` (default: `off`)                           | If set to 'on', the browsers autocompletion is enabled.                                                |
-| `hideSaveAndClose: boolean`                                              | `true` if a "Save & close"-button should be hidden.                                                    |
-| `hideSave: boolean`                                                      | `true` if a "Save"-button should be hidden.                                                            |
-| `blocked: boolean`                                                       | `true` if the Savebar shall be blocked.                                                                |
-| `canSave: boolean`                                                       | `true` if the data is valid and can be saved.                                                          |
-| `intlOverride: Partial<IPsFormIntlTexts>`                                | `IPsFormIntlTexts` if you want to override dispalyed labels.                                           |
-| `loadFnc(): Observable<any>`                                             | A function for loading data. this will be called, when the PsForm is initialized.                      |
-| `saveFnc(formRawValue: any, params: IPsFormSaveParams): Observable<any>` | A function for saving data. this will be called, when the "Save"- or "Save & Close"-Button is clicked. |
+| Name                                                                     | Description                                                                                                                                                               |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `form: FormGroup`                                                        | Angular's `FormGroup`                                                                                                                                                     |
+| `formMode: 'create' \| 'update'`                                         | Tells the PsForm if you are currently creating or editing data.                                                                                                           |
+| `autocomplete: 'on' \| 'off'` (default: `off`)                           | Sets the HTML autocomplete attribute on `<input>` elements. See [HTML-autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for more info. |
+| `hideSaveAndClose: boolean`                                              | `true` if a "Save & close"-button should be hidden.                                                                                                                       |
+| `hideSave: boolean`                                                      | `true` if a "Save"-button should be hidden.                                                                                                                               |
+| `blocked: boolean`                                                       | `true` if the Savebar shall be blocked.                                                                                                                                   |
+| `canSave: boolean`                                                       | `true` if the data is valid and can be saved.                                                                                                                             |
+| `intlOverride: Partial<IPsFormIntlTexts>`                                | `IPsFormIntlTexts` if you want to override dispalyed labels.                                                                                                              |
+| `loadFnc(): Observable<any>`                                             | A function for loading data. this will be called, when the PsForm is initialized.                                                                                         |
+| `saveFnc(formRawValue: any, params: IPsFormSaveParams): Observable<any>` | A function for saving data. this will be called, when the "Save"- or "Save & Close"-Button is clicked.                                                                    |
 
 ### Events <a name="PsFormComponentEvents"></a>
 
