@@ -9,7 +9,6 @@ import { ActivatedRoute } from '@angular/router';
 import { PsBlockUiComponent } from '@prosoft/components/block-ui';
 import { PsExceptionMessageExtractor, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { BasePsFormService, IPsFormError, IPsFormErrorData, PsFormService } from '@prosoft/components/form-base';
-import { DemoPsFormActionService } from 'projects/prosoft-components-demo/src/app/form-demo/form-demo.module';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, switchMapTo } from 'rxjs/operators';
 import { PsFormActionService } from './form-action.service';
@@ -499,7 +498,7 @@ describe('PsFormComponent', () => {
     let cd: ChangeDetectorRef;
     let component: PsFormComponent;
     beforeEach(async(() => {
-      actionService = new DemoPsFormActionService();
+      actionService = new TestPsFormActionService();
       intlService = new PsIntlServiceEn();
       errorExtractor = new PsExceptionMessageExtractor();
       route = {} as any;

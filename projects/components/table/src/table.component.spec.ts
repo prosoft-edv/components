@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, QueryList, SimpleChange, ViewChild, Injectable } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelect } from '@angular/material/select';
@@ -20,6 +20,7 @@ import { PsTableSettingsComponent } from './subcomponents/table-settings.compone
 import { PsTableComponent } from './table.component';
 import { PsTableModule } from './table.module';
 
+@Injectable()
 class TestSettingsService extends PsTableSettingsService {
   public readonly defaultPageSize$ = new BehaviorSubject<number>(15);
   public readonly settings$ = new BehaviorSubject<{ [id: string]: IPsTableSetting }>({});

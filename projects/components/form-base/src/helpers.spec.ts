@@ -41,7 +41,7 @@ describe('getControlType', () => {
     expect(getControlType(control)).toBe('some-name');
   });
   it('should work with mat-slider', () => {
-    const elementRef: ElementRef = { nativeElement: { classList: { add: () => {} } } };
+    const elementRef: ElementRef = { nativeElement: { classList: { add: () => {} }, addEventListener: () => {} } };
     const control = new MatSlider(elementRef, null, null, null, null, null);
     expect(getControlType(control)).toBe('mat-slider');
   });
