@@ -20,8 +20,8 @@ import { PsSelectModule } from '@prosoft/components/select';
 
 | Name                      | Description                                                                        |
 | ------------------------- | ---------------------------------------------------------------------------------- |
-| `psSelectTriggerTemplate` | Use this, if you want to change the apearance of the selected item.                |
-| `psSelectOptionTemplate`  | Use this, if you want to change the apearance of the items of the selection popup. |
+| `psSelectTriggerTemplate` | Use this if you want to change the appearance of the selected item.                |
+| `psSelectOptionTemplate`  | Use this if you want to change the appearance of the items of the selection popup. |
 
 ---
 
@@ -31,25 +31,25 @@ import { PsSelectModule } from '@prosoft/components/select';
 
 | Name                 | Description                                                                                                                     |
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `dataSource: any`    | The selects's source of data.                                                                                                   |
+| `dataSource: any`    | The PsSelect's source of data.                                                                                                  |
 | `clearable: boolean` | If `true`, PsSelect will show a 'Clear' button at the end of the selected value. If clicked, the selected item will be removed. |
 
 ### Events <a name="PsSelectComponentEvents"></a>
 
-| Name                                             | Description                                                                                                                                                                     |
-| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `openedChange: EventEmitter<boolean>`            | Emitted, if the opened state of the selection popup is changed.                                                                                                                 |
-| `selectionChange: EventEmitter<MatSelectChange>` | Emitted, if the selected item of the select changed. For MatSelectChange properties check [MatSelectChange](https://material.angular.io/components/select/api#MatSelectChange). |
+| Name                                             | Description                                                                                                                                                                    |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `openedChange: EventEmitter<boolean>`            | Emitted if the opened state of the selection popup is changed.                                                                                                                 |
+| `selectionChange: EventEmitter<MatSelectChange>` | Emitted if the selected item of the select changed. For MatSelectChange properties check [MatSelectChange](https://material.angular.io/components/select/api#MatSelectChange). |
 
 ---
 
 ## Prerequisites/Requirements <a name="PsSelectRequirements"></a>
 
-1. You have to override `PsSelectService` and implement the following two function:
+1. You have to override `PsSelectService` and implement the following function:
 
 - > `createDataSource<T>(dataSource: PsSelectData<T>, _: AbstractControl | null): PsSelectDataSource<T>` which should create a PsSelectDataSource from your data.
 
-2. Import the PsSelectModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsSelectModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsSelectModule.forRoot(DefaultPsSelectService)`
 
 ---

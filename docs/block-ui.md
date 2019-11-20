@@ -2,7 +2,7 @@
 
 # PsBlockUi <a name="PsBlockUi"></a>
 
-`<ps-block-ui>` is a component for blocking controls. Most common use is for blocking forms while loading data.
+`<ps-block-ui>` is a component for blocking controls. Most common use is to block forms while loading data.
 
 While `blocked === true` all of `<ps-block-ui>`'s content is overlayed by a transparent frame with a loading spinner and an optional `spinnerText`. During blocked-state it's not possible to click any control underneath the block-ui.
 
@@ -22,10 +22,10 @@ import { PsBlockUiModule } from '@prosoft/components/block-ui';
 
 ### Properties <a name="PsBlockUiComponentProperties"></a>
 
-| Name                  | Description                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| `blocked: boolean`    | Toggles the blocking overlay. The blocked content however is still accessable via keyboard. |
-| `spinnerText: string` | Text, that will be shown under the blocking spinner.                                        |
+| Name                  | Description                                                                                  |
+| --------------------- | -------------------------------------------------------------------------------------------- |
+| `blocked: boolean`    | Toggles the blocking overlay. However, the blocked content is still accessable via keyboard. |
+| `spinnerText: string` | The text that will be shown under the blocking spinner.                                      |
 
 ---
 

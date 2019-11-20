@@ -22,18 +22,18 @@ import { PsSliderModule } from '@prosoft/components/slider';
 
 | Name                          | Description                                                                                                               |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `isRange: boolean`            | `true`, if the slider should handle number ranges.                                                                        |
+| `isRange: boolean`            | `true` if the slider should handle number ranges.                                                                        |
 | `min: number`                 | Sets the lowest selectable number.                                                                                        |
 | `max: number`                 | Sets the highest selectable number.                                                                                       |
 | `stepSize: number`            | Sets the step size of each tick when draging a handle.                                                                    |
-| `connect: boolean | boolan[]` | `true`, if the handle should be connected via border. For multiple handles provide individual connected states via array. |
-| `showTooltip: boolean`        | `true`, if each handle should show a tooltip of its current value on draging.                                             |
+| `connect: boolean | boolan[]` | `true` if the handle should be connected via border. For multiple handles provide individual connected states via array. |
+| `showTooltip: boolean`        | `true` if each handle should show a tooltip of its current value on draging.                                             |
 
 ### Events <a name="PsSliderComponentEvents"></a>
 
-| Name                                           | Description                    |
-| ---------------------------------------------- | ------------------------------ |
-| `valueChange: EventEmitter<number | number[]>` | Emitted, if the value changed. |
+| Name                                           | Description                   |
+| ---------------------------------------------- | ----------------------------- |
+| `valueChange: EventEmitter<number | number[]>` | Emitted if the value changed. |
 
 ---
 

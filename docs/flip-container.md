@@ -2,7 +2,7 @@
 
 # PsFlipContainer <a name="PsFlipContainer"></a>
 
-`<ps-flip-container>` is a component for switching between two controls that are on the same spot.
+`<ps-flip-container>` is a component for switching between two controls that are on the same spot. This is achieved by a rotation animation between the two sides of the PsFlipContainer.
 
 ---
 
@@ -35,9 +35,9 @@ import { PsFlipContainerModule } from '@prosoft/components/flip-container';
 
 ### Functions <a name="PsFlipContainerComponentFunctions"></a>
 
-| Name                 | Description                                                                        |
-| -------------------- | ---------------------------------------------------------------------------------- |
-| `toggleFlip(): void` | Toggles the flip animation and the shows the opposite side of the PsFlipContainer. |
+| Name                 | Description                                                                    |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `toggleFlip(): void` | Toggles the flip animation and shows the opposite side of the PsFlipContainer. |
 
 ---
 

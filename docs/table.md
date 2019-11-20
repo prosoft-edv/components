@@ -2,7 +2,7 @@
 
 # PsTable <a name="PsTable"></a>
 
-`<ps-table>` enhances the [MatTable](https://material.angular.io/components/table/overview) with many features.
+`<ps-table>` enhances the [MatTable](https://material.angular.io/components/table/overview).
 
 ---
 
@@ -18,18 +18,18 @@ import { PsTableModule } from '@prosoft/components/table';
 
 ## Directives <a name="<componentName>Directives"></a>
 
-| Name                          | Description                                                               |
-| ----------------------------- | ------------------------------------------------------------------------- |
-| `psTableColumnHeaderTemplate` | Used for customizing your columns header.                                 |
-| `psTableColumnTemplate`       | Used for customizing your columns content.                                |
-| `psTableCustomHeader`         | Used for customizing the header part of the table.                        |
-| `psTableCustomSettings`       | Used for customizing the tables settings part.                            |
-| `psTableTopButtonSection`     | Use this, if you want to add custom buttons to the tables top right part. |
-| `psTableListActions`          | Used for customizing the table list actions.                              |
-| `psTableRowActions`           | Used for customizing the actions every row has to offer.                  |
-| `psTableRowDetailTemplate`    | Used for customizing the tables row detail template.                      |
-| `ps-table-column`             | Used for declaring a column in the table.                                 |
-| `ps-table-row-detail`         | Used for declaring a detail view for every table row.                     |
+| Name                          | Description                                                              |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| `psTableColumnHeaderTemplate` | Used for customizing your column header.                                 |
+| `psTableColumnTemplate`       | Used for customizing your column content.                                |
+| `psTableCustomHeader`         | Used for customizing the header part of the table.                       |
+| `psTableCustomSettings`       | Used for customizing the tables settings part.                           |
+| `psTableTopButtonSection`     | Use this if you want to add custom buttons to the tables top right part. |
+| `psTableListActions`          | Used for customizing the table list actions.                             |
+| `psTableRowActions`           | Used for customizing the actions every row has to offer.                 |
+| `psTableRowDetailTemplate`    | Used for customizing the tables row detail template.                     |
+| `ps-table-column`             | Used for declaring a column in the table.                                |
+| `ps-table-row-detail`         | Used for declaring a detail view for every table row.                    |
 
 ---
 
@@ -37,25 +37,25 @@ import { PsTableModule } from '@prosoft/components/table';
 
 ### Properties <a name="PsTableComponentProperties"></a>
 
-| Name                                        | Description                                                               |
-| ------------------------------------------- | ------------------------------------------------------------------------- |
-| `caption: string`                           | The tables caption.                                                       |
-| `dataSource: PsTableDataSource<T>`          | The tables source of data.                                                |
-| `tableId: string`                           | Unique identifyer. Used to identify saved settings and for url parameter. |
-| `intlOverride: Partial<IPsTableIntlTexts>`  | If you want to override dispalyed labels.                                 |
-| `sortDefinitions: IPsTableSortDefinition[]` | Array of additional data element properties used for sorting.             |
-| `refreshable: boolean`                      | `true`, if you want the table to have a 'refresh' button.                 |
-| `filterable: boolean`                       | `true`, if the table should have a searchbar in its header.               |
-| `showSettings: boolean`                     | `true`, if the table should have a settings page.                         |
-| `pageDebounce: number`                      | Delays the paging by the given milliseconds.                              |
-| `cardLayout: boolean`                       | `true`, if you want the table to be displayed as a MatCard.               |
-| `striped: boolean`                          | `true`, if you want every other row to be colorized.                      |
+| Name                                        | Description                                                                |
+| ------------------------------------------- | -------------------------------------------------------------------------- |
+| `caption: string`                           | The tables caption.                                                        |
+| `dataSource: PsTableDataSource<T>`          | The tables source of data.                                                 |
+| `tableId: string`                           | Unique identifier. Used to identify saved settings and for url parameters. |
+| `intlOverride: Partial<IPsTableIntlTexts>`  | If you want to override displayed labels.                                  |
+| `sortDefinitions: IPsTableSortDefinition[]` | Array of additional data element properties used for sorting.              |
+| `refreshable: boolean`                      | `true` if you want the table to have a 'refresh' button.                   |
+| `filterable: boolean`                       | `true` if the table should have a searchbar in its header.                 |
+| `showSettings: boolean`                     | `true` if the table should have a settings page.                           |
+| `pageDebounce: number`                      | Delays the paging by the given milliseconds.                               |
+| `cardLayout: boolean`                       | `true` if you want the table to be displayed as a MatCard.                 |
+| `striped: boolean`                          | `true` if you want every other row to be colorized.                        |
 
 ### Events <a name="PsTableComponentEvents"></a>
 
-| Name                            | Description                                                                                                                                            |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `page: EventEmitter<PageEvent>` | Emitted, if the user wants to page to another side. For PageEvent info see [PageEvent](https://material.angular.io/components/paginator/api#PageEvent) |
+| Name                            | Description                                                                                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `page: EventEmitter<PageEvent>` | Emitted if the user wants to page to another side. For PageEvent info see [PageEvent](https://material.angular.io/components/paginator/api#PageEvent) |
 
 ---
 
@@ -86,17 +86,17 @@ const dataSource = new PsTableDataSource<MyDataType>((filter: IPsTableUpdateData
 | `filter: string`                                                                                       | Filter term that should be used to filter out objects from the data array. To override how data objects match to this filter string, provide a custom function for filterPredicate.                                                                                                                                                                                               |
 | `filterPredicate: (row: { [key: string]: any }, filter: string) => boolean`                            | Checks if a data object matches the data source's filter string. By default, each data object is converted to a string of its properties and returns true if the filter has at least one occurrence in that string. By default, the filter string has its whitespace trimmed and the match is case-insensitive. May be overridden for a custom implementation of filter matching. |
 | `sortingDataAccessor: (data: T[], sort: { sortColumn: string; sortDirection: 'asc' | 'desc' }) => T[]` | This default function assumes that the sort header IDs (which defaults to the column name) matches the data's properties (e.g. column Xyz represents data['Xyz']). May be set to a custom function for different behavior.                                                                                                                                                        |
-| `filterProperties: (row: { [key: string]: any }) => string[]`                                          | Returns the names of the property that should be used in filterPredicate.                                                                                                                                                                                                                                                                                                         |
+| `filterProperties: (row: { [key: string]: any }) => string[]`                                          | Returns the names of the properties that should be used in filterPredicate.                                                                                                                                                                                                                                                                                                       |
 | `filterValues: (row: { [key: string]: any }) => any[]`                                                 | Returns all values that should be used for filtering.                                                                                                                                                                                                                                                                                                                             |
 
 ### Functions <a name="PsTableDataSourceFunctions"></a>
 
-| Name                                          | Description                                                                       |
-| --------------------------------------------- | --------------------------------------------------------------------------------- |
-| `updateData(forceReload: boolean): void`      | Triggers a reload of the data. The callback given in the constructor is executed. |
-| `selectVisibleRows(): void`                   | Selects all visible rows.                                                         |
-| `toggleVisibleRowSelection(): void`           | Toggle the selection of the visible rows.                                         |
-| `getUpdateDataInfo(): IPsTableUpdateDataInfo` | Gets the current page, sort and filter state.                                     |
+| Name                                          | Description                                                                          |
+| --------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `updateData(forceReload: boolean): void`      | Triggers a reload of the data. The callback provided in the constructor is executed. |
+| `selectVisibleRows(): void`                   | Selects all visible rows.                                                            |
+| `toggleVisibleRowSelection(): void`           | Toggle the selection of the visible rows.                                            |
+| `getUpdateDataInfo(): IPsTableUpdateDataInfo` | Gets the current page, sort and filter state.                                        |
 
 ### Types <a name="PsTableDataSourceTypes"></a>
 
@@ -116,7 +116,7 @@ const dataSource = new PsTableDataSource<MyDataType>((filter: IPsTableUpdateData
 - > `constructor` to define the loading of the settings for each table.
 - > `save(tableId: string, settings: IPsTableSetting): Observable<void>` to tell the table service where to store the settings for each table.
 
-2. Import the PsFormBaseModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsFormBaseModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsFormBaseModule.forRoot(DemoPsFormsService)`
 
 ---

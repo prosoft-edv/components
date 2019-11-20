@@ -2,9 +2,8 @@
 
 # PsSavebar <a name="PsSavebar"></a>
 
-`<ps-savebar>` is a component for handling save, save & close and cancel your input forms. It will create a Savebar under its content with sticky functionality depending on `FormGroups` state.
-
-You can also use it for wizard-like behavior with its forward and backward buttons.
+`<ps-savebar>` is a component to provide different actions for input forms. It will create a savebar under its content with sticky functionality depending on `FormGroups` state. By default it contains a "Save", "Save & close" and "Cancel" button, which are shown if you handle their individual outputs.
+You can also use it for wizard-like behavior by enabling its forward and backward buttons.
 
 ---
 
@@ -30,15 +29,15 @@ import { PsSavebarModule } from '@prosoft/components/savebar';
 
 ### Properties <a name="PsSavebarComponentProperties"></a>
 
-| Name                                            | Description                                                                                            |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `form: FormGroup`                               | Angular's `FormGroup`                                                                                  |
-| `mode: 'sticky' \| 'fixed' \| 'auto' \| 'hide'` | Sets the mode of the Savebar.                                                                          |
-| `canSave: boolean`                              | If set, the savebar checks this value additionally to `FormGroups` state.                              |
-| `canStepFwd: boolean`                           | (In wizard) Checks, if you can step to the next part of the wizard.                                    |
-| `canStepBack: boolean`                          | (In wizard) Checks, if you can step to the previous part of the wizard.                                |
-| `intlOverride: Partial<IPsSavebarIntlTexts>`    | If you want to override dispalyed labels.                                                              |
-| `saveKey: string`                               | The keyboard key, which is used in combination with 'ctrl' as save shortcut. (default 's' => ctrl + s) |
+| Name                                            | Description                                                                                     |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `form: FormGroup`                               | Angular's `FormGroup`                                                                           |
+| `mode: 'sticky' \| 'fixed' \| 'auto' \| 'hide'` | Sets the mode of the savebar.                                                                   |
+| `canSave: boolean \| null`                      | If set, the savebar checks this value instead of the `FormGroups` state.                        |
+| `canStepFwd: boolean`                           | (In wizard) Checks, if you can step to the next part of the wizard.                             |
+| `canStepBack: boolean`                          | (In wizard) Checks, if you can step to the previous part of the wizard.                         |
+| `intlOverride: Partial<IPsSavebarIntlTexts>`    | If you want to override displayed labels.                                                       |
+| `saveKey: string`                               | The keyboard key to use as a save shortcut in combination with 'ctrl' (default 's' => ctrl + s) |
 
 ### Events <a name="PsSavebarComponentEvents"></a>
 
@@ -55,10 +54,10 @@ import { PsSavebarModule } from '@prosoft/components/savebar';
 
 | Name             | Description                                                                                                                            |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `sticky`         | The Savebar sticks to the bottom of the screen. When scrolling, it overlaps its content until it reaches its contents end.             |
-| `fixed`          | The Savebar is fixed on the bottom of its content.                                                                                     |
+| `sticky`         | The savebar sticks to the bottom of the screen. When scrolling, it overlaps its content until it reaches its contents end.             |
+| `fixed`          | The savebar is fixed on the bottom of its content.                                                                                     |
 | `(default) auto` | (`form` has to be set) The mode is switched automatically between `sticky` and `fixed` depending on the `FormGroups` "pristine" state. |
-| `hide`           | The Savebar is not shown.                                                                                                              |
+| `hide`           | The savebar is not shown.                                                                                                              |
 
 ---
 
@@ -67,9 +66,9 @@ import { PsSavebarModule } from '@prosoft/components/savebar';
 1. You have to override `BasePsFormService` and implement the following two functions:
 
 - > `getLabel(formControl: any): Observable<string>` which should return the FormControls label.
-- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
+- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the required information `errorText` and `data`.
 
-2. Import the PsFormBaseModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsFormBaseModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsFormBaseModule.forRoot(DemoPsFormsService)`
 
 ---

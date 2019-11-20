@@ -4,7 +4,7 @@
 
 `<ps-form-field>` extends the [MatFormFieldComponent](https://material.angular.io/components/form-field/overview) from Angular Material with features like:
 
-- Label handling (labels can be extracted from FormControl informations for example)
+- Label handling (labels can be extracted from FormControl information for example)
 - Handling controls with no `formControlName` given
 
 ---
@@ -27,7 +27,7 @@ import { PsFormFieldModule } from '@prosoft/components/form-field';
 | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `createLabel: boolean` (default: `true`)                   | If `true` a label will be created automatically based on the information of the given FormControl.                                                                                             |
 | `floatLabel: FloatLabelType` (default: `'auto'`)           | Behaviour of the label. See [FloatLabelType](https://material.angular.io/components/form-field/api) for more information.                                                                      |
-| `hint: string`                                             | Handels the `<mat-hint>` automatically based on this hintText. See [MatHintComponent](https://material.angular.io/components/form-field/overview#hint-labels) for more information.            |
+| `hint: string`                                             | Automatically generates a `<mat-hint>` for this hintText. See [MatHintComponent](https://material.angular.io/components/form-field/overview#hint-labels) for more information.                 |
 | `appearance: MatFormFieldAppearance` (default: `'legacy'`) | Changes the appearance of the `<mat-form-field>`. See [MatFormFieldComponent](https://material.angular.io/components/form-field/overview#form-field-appearance-variants) for more information. |
 
 ---
@@ -37,9 +37,9 @@ import { PsFormFieldModule } from '@prosoft/components/form-field';
 1. You have to override `BasePsFormService` and implement the following two functions:
 
 - > `getLabel(formControl: any): Observable<string>` which should return the FormControls label.
-- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
+- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the required information `errorText` and `data`.
 
-2. Import the PsFormBaseModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsFormBaseModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsFormBaseModule.forRoot(DemoPsFormsService)`
 
 ---

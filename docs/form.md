@@ -2,7 +2,7 @@
 
 # PsForm <a name="PsForm"></a>
 
-`<ps-form>` is a component for managing your input forms. It automatically blocks the UI via `<ps-block-ui>` while loading Data and has the `<ps-save-bar>` with `<ps-form-errors>` under its content.
+`<ps-form>` is a component to manage your input forms. It automatically blocks the UI via `<ps-block-ui>` while loading Data and has the `<ps-save-bar>` with `<ps-form-errors>` under its content.
 
 ---
 
@@ -20,28 +20,28 @@ import { PsFormModule } from '@prosoft/components/form';
 
 ### Properties <a name="PsFormComponentProperties"></a>
 
-| Name                                                                     | Description                                                                                                                                                               |
-| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `form: FormGroup`                                                        | Angular's `FormGroup`                                                                                                                                                     |
-| `formMode: 'create' \| 'update'`                                         | Tells the PsForm if you are currently creating or editing data.                                                                                                           |
+| Name                                                                     | Description                                                                                                                                                                   |
+| ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `form: FormGroup`                                                        | Angular's `FormGroup`                                                                                                                                                         |
+| `formMode: 'create' \| 'update'`                                         | Tells the PsForm if you are currently creating or editing data.                                                                                                               |
 | `autocomplete: 'on' \| 'off'` (default: `off`)                           | Sets the HTML autocomplete attribute on `<input>` elements. See [HTML-autocomplete](https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete) for more info. |
-| `hideSaveAndClose: boolean`                                              | `true` if a "Save & close"-button should be hidden.                                                                                                                       |
-| `hideSave: boolean`                                                      | `true` if a "Save"-button should be hidden.                                                                                                                               |
-| `blocked: boolean`                                                       | `true` if the Savebar shall be blocked.                                                                                                                                   |
-| `canSave: boolean`                                                       | `true` if the data is valid and can be saved.                                                                                                                             |
-| `intlOverride: Partial<IPsFormIntlTexts>`                                | `IPsFormIntlTexts` if you want to override dispalyed labels.                                                                                                              |
-| `loadFnc(): Observable<any>`                                             | A function for loading data. this will be called, when the PsForm is initialized.                                                                                         |
-| `saveFnc(formRawValue: any, params: IPsFormSaveParams): Observable<any>` | A function for saving data. this will be called, when the "Save"- or "Save & Close"-Button is clicked.                                                                    |
+| `hideSaveAndClose: boolean`                                              | `true` to hide the "Save & close"-button.                                                                                                                                     |
+| `hideSave: boolean`                                                      | `true` to hide the "Save"-button.                                                                                                                                             |
+| `blocked: boolean`                                                       | `true` to manually block the `<ps-form>`'s content via `<ps-block-ui>`.                                                                                                       |
+| `canSave: boolean \| null`                                               | `true` to enable the "Save" and "Save & close" buttons. If no value is provided, this defaults to form.pristine \|\| form.invalid;                                            |
+| `intlOverride: Partial<IPsFormIntlTexts>`                                | `IPsFormIntlTexts` if you want to override displayed labels.                                                                                                                  |
+| `loadFnc(): Observable<any>`                                             | A function for loading data. this will be called when the PsForm is initialized.                                                                                              |
+| `saveFnc(formRawValue: any, params: IPsFormSaveParams): Observable<any>` | A function for saving data. this will be called when the "Save"- or "Save & Close"-Button is clicked.                                                                         |
 
 ### Events <a name="PsFormComponentEvents"></a>
 
-| Name                                                | Description                                                  |
-| --------------------------------------------------- | ------------------------------------------------------------ |
-| `loadSuccess: EventEmitter<PsFormLoadSuccessEvent>` | Emited, after `loadFnc` was successful.                      |
-| `loadError: EventEmitter<PsFormLoadErrorEvent>`     | Emited, if an error occured during `loadFnc`.                |
-| `saveSuccess: EventEmitter<PsFormSaveSuccessEvent>` | Emited, after `saveFnc` was successful.                      |
-| `saveError: EventEmitter<PsFormSaveErrorEvent>`     | Emited, if an error occured during `saveFnc`.                |
-| `cancel: EventEmitter<PsFormCancelEvent>`           | Emited, if an cancelation was requested via "Cancel"-button. |
+| Name                                                | Description                                                   |
+| --------------------------------------------------- | ------------------------------------------------------------- |
+| `loadSuccess: EventEmitter<PsFormLoadSuccessEvent>` | Emitted if `loadFnc` was successful.                          |
+| `loadError: EventEmitter<PsFormLoadErrorEvent>`     | Emitted if an error occured during `loadFnc`.                 |
+| `saveSuccess: EventEmitter<PsFormSaveSuccessEvent>` | Emitted if `saveFnc` was successful.                          |
+| `saveError: EventEmitter<PsFormSaveErrorEvent>`     | Emitted if an error occured during `saveFnc`.                 |
+| `cancel: EventEmitter<PsFormCancelEvent>`           | Emitted if an cancellation was requested via "Cancel"-button. |
 
 ---
 
@@ -49,9 +49,9 @@ import { PsFormModule } from '@prosoft/components/form';
 
 ### Properties <a name="PsFormEventProperties"></a>
 
-| Name                        | Description                                                |
-| --------------------------- | ---------------------------------------------------------- |
-| `defaultPrevented: boolean` | `true`, if the default load success handling is prevented. |
+| Name                        | Description                                          |
+| --------------------------- | ---------------------------------------------------- |
+| `defaultPrevented: boolean` | `true` to prevent the default load success handling. |
 
 ### Functions <a name="PsFormEventFunctions"></a>
 
@@ -89,7 +89,7 @@ import { PsFormModule } from '@prosoft/components/form';
 | ------------------------------ | ------------------------------------------------- |
 | `(readonly) value: any`        | The data object that was saved.                   |
 | `(readonly) saveResponse: any` | The saveResponse from your save functionality.    |
-| `(readonly) close: boolean`    | `true`, if the "Save & close"-Button was clicked. |
+| `(readonly) close: boolean`    | `true` if the "Save & close"-Button was clicked. |
 
 ---
 
@@ -113,9 +113,9 @@ import { PsFormModule } from '@prosoft/components/form';
 1. You have to override `BasePsFormService` and implement the following two functions:
 
 - > `getLabel(formControl: any): Observable<string>` which should return the FormControls label.
-- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
+- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the required information `errorText` and `data`.
 
-2. Import the PsFormBaseModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsFormBaseModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsFormBaseModule.forRoot(DemoPsFormsService)`
 
 ---

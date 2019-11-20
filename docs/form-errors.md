@@ -2,7 +2,7 @@
 
 # PsFormErrors <a name="PsFormErrors"></a>
 
-`<ps-form-errors>` is a control, that extracts all validation errors from a given 'FormGroup' and shows them as chips.
+`<ps-form-errors>` is a control that extracts all validation errors from a given 'FormGroup' and shows them as chips.
 
 ---
 
@@ -31,9 +31,9 @@ import { PsFormErrorsModule } from '@prosoft/components/form-errors';
 1. You have to override `BasePsFormService` and implement the following two functions:
 
 - > `getLabel(formControl: any): Observable<string>` which should return the FormControls label.
-- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the needed information `errorText` and `data`.
+- > `mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]>` which should return `IPsFormError` with the required information `errorText` and `data`.
 
-2. Import the PsFormBaseModule forRoot with the created service in your AppModule. Like this:
+2. Import the PsFormBaseModule using `.forRoot()` with the created service in your AppModule. Like this:
    `PsFormBaseModule.forRoot(DemoPsFormsService)`
 
 ---
