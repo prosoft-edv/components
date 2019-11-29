@@ -217,7 +217,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
       }
     }
   }
-  private _value: number | number[];
+  private _value: number | number[] = null;
   private _rawProvidedValue: any = null;
 
   @Output() public valueChange = new EventEmitter<number | number[]>();
