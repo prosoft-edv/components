@@ -62,14 +62,12 @@ export class PsFormCancelEvent extends PsFormEvent {}
             <ng-content></ng-content>
           </ps-block-ui>
 
-          <mat-card *ngIf="hasLoadError" class="ps-form__error-container ps-form__error-container--center">
-            <mat-icon class="ps-form__error-icon">sentiment_very_dissatisfied</mat-icon>
-            <span>{{ errorMessage }}</span>
-          </mat-card>
-
-          <mat-card *ngIf="hasSaveError" class="ps-form__error-container">
-            <span>{{ errorMessage }}</span>
-          </mat-card>
+          <ps-error-card
+            *ngIf="hasLoadError || hasSaveError"
+            [errorMessage]="errorMessage"
+            [showIcon]="hasLoadError"
+            [center]="hasLoadError"
+          ></ps-error-card>
 
           <mat-card *ngIf="hasLoadError" class="ps-form__error-actions">
             <button mat-stroked-button type="button" (click)="onCancel()">
@@ -85,22 +83,6 @@ export class PsFormCancelEvent extends PsFormEvent {}
       .ps-form__cards-container {
         display: grid;
         grid-gap: 1em;
-      }
-
-      .ps-form__error-container {
-        color: var(--ps-error);
-      }
-
-      .ps-form__error-container--center {
-        display: grid;
-        justify-items: center;
-      }
-
-      .ps-form__error-icon {
-        color: var(--ps-error);
-        font-size: 72px;
-        height: 72px;
-        width: 72px;
       }
 
       .ps-form__error-actions {

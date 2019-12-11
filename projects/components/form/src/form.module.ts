@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { PsBlockUiModule } from '@prosoft/components/block-ui';
+import { PsErrorCardModule } from '@prosoft/components/error-card';
 import { PsSavebarModule } from '@prosoft/components/savebar';
 import { PsFormComponent } from './form.component';
 
@@ -22,6 +23,7 @@ import { PsFormComponent } from './form.component';
 
     PsBlockUiModule,
     PsSavebarModule,
+    PsErrorCardModule,
   ],
   exports: [PsFormComponent],
 })
