@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 @Component({
   selector: 'app-reference-column',
   template: `
-    <ps-form-field [hint]="'hint text'">
+    <ps-form-field [hint]="'hint text asdf foo bar and other things like this'">
       <mat-label>Referenz Column</mat-label>
       <input matInput [(ngModel)]="value" type="text" />
     </ps-form-field>
@@ -20,30 +20,8 @@ export class ReferenceColumnComponent {
   template: `
     <div>
       <div>
-        <h2>Appearances</h2>
-        For more detail please visit
-        <a href="https://material.angular.io/components/form-field/overview#form-field-appearance-variants"
-          >https://material.angular.io/components/form-field/overview#form-field-appearance-variants</a
-        >
-        <ps-form-field style="margin: .5em;" [appearance]="'legacy'" [hint]="'hint text'">
-          <mat-label>Legacy</mat-label>
-          <input matInput type="text" />
-        </ps-form-field>
-        <ps-form-field style="margin: .5em;" [appearance]="'standard'" [hint]="'hint text'">
-          <mat-label>Standard</mat-label>
-          <input matInput type="text" />
-        </ps-form-field>
-        <ps-form-field style="margin: .5em;" [appearance]="'fill'" [hint]="'hint text'">
-          <mat-label>Fill</mat-label>
-          <input matInput type="text" />
-        </ps-form-field>
-        <ps-form-field style="margin: .5em;" [appearance]="'outline'" [hint]="'hint text'">
-          <mat-label>Outline</mat-label>
-          <input matInput type="text" />
-        </ps-form-field>
-
-        <h2>No form binding</h2>
-        <ps-form-field [hint]="'hint text'">
+        <h2>No form binding and no hint</h2>
+        <ps-form-field>
           <mat-label>Referenz Column</mat-label>
           <input matInput type="text" />
         </ps-form-field>
@@ -167,9 +145,9 @@ export class ReferenceColumnComponent {
                   mat-icon-button
                   [disabled]="form.get('Radio').disabled || form.get('Radio').value === null"
                   (click)="form.get('Radio').patchValue(null)"
-                  style="height:24px;width:24px;line-height:24px;"
+                  style="height:20px;width:20px;line-height:20px"
                 >
-                  <mat-icon>clear</mat-icon>
+                  <mat-icon style="line-height: 20px;">clear</mat-icon>
                 </button>
               </mat-radio-group>
             </ps-form-field>
@@ -217,7 +195,10 @@ export class FormFieldDemoComponent {
       }
       const ctrl = this.form.controls[ctrlName];
       if (value) {
-        ctrl.setValidators(() => ({ error1: 'value1', error2: 'value2' }));
+        ctrl.setValidators(() => ({
+          error1: 'value1', //'this is a very long error is will be truncated in this demo',
+          error2: 'value2 aaaaaaa aaaaa aaaaa aaaa aaaaaaaaa aaaaa',
+        }));
       } else {
         ctrl.setValidators(null);
       }
