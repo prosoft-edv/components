@@ -305,6 +305,11 @@ export class PsFormFieldComponent implements AfterContentInit, OnDestroy {
     }
   }
 
+  public toggleHint(event: MouseEvent) {
+    this.showHint = !this.showHint;
+    event.stopPropagation();
+  }
+
   private updateLabel() {
     this.calculatedLabel = null;
     if (!this.createLabel || this._labelChild || !this.formControl) {
@@ -337,11 +342,6 @@ export class PsFormFieldComponent implements AfterContentInit, OnDestroy {
       // when labelText$ didn't run synchronously
       (<any>this._matFormField)._changeDetectorRef.markForCheck();
     });
-  }
-
-  private toggleHint(event: MouseEvent) {
-    this.showHint = !this.showHint;
-    event.stopPropagation();
   }
 }
 
