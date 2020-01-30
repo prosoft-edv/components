@@ -196,8 +196,8 @@ export class FormFieldDemoComponent {
       const ctrl = this.form.controls[ctrlName];
       if (value) {
         ctrl.setValidators(() => ({
-          error1: 'value1', //'this is a very long error is will be truncated in this demo',
-          error2: 'value2 aaaaaaa aaaaa aaaaa aaaa aaaaaaaaa aaaaa',
+          error1: 'error value 1',
+          error2: 'this is a very long error is will be truncated in this demo',
         }));
       } else {
         ctrl.setValidators(null);
