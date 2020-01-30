@@ -89,7 +89,7 @@ import { DummyMatFormFieldControl } from './dummy-mat-form-field-control';
 
       /* hint/error bubble container */
       .ps-form-field--bubble .mat-form-field-subscript-wrapper {
-        padding-top: 1.25em;
+        padding-top: 1.25em !important;
         overflow: visible;
         z-index: 1;
         margin-top: 0.25em;
@@ -202,7 +202,7 @@ export class PsFormFieldComponent implements AfterContentInit, OnDestroy {
   @Input() public createLabel = true;
   @Input() public floatLabel: FloatLabelType = 'auto';
   @Input() public hint: string = null;
-  public appearance: MatFormFieldAppearance = 'legacy';
+  @Input() public appearance: MatFormFieldAppearance = 'legacy';
 
   @ViewChild(MatFormField, { static: true }) public _matFormField: MatFormField;
 
