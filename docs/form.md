@@ -55,7 +55,7 @@ import { PsFormModule } from '@prosoft/components/form';
 | `form: FormGroup` | The `FormGroup` to be forwarded to the `ps-savebar`. |
 | `buttons: IPsFormButton[]` | The buttons to show in the `ps-savebar`. |
 | `contentVisible: boolean` | `false` to hide the transcluded `ng-content`. |
-| `contentBlocked: boolean` | `true` show a loading spinner over the transcluded `ng-content`. |
+| `contentBlocked: boolean` | `true` to show a loading spinner over the transcluded `ng-content`. |
 | `exception: IPsFormException` | When set, shows an error view with the provided information. |
 | `savebarMode: IPsSavebarMode` | The mode to be forwarded to the `ps-savebar`. |
 
@@ -63,7 +63,7 @@ import { PsFormModule } from '@prosoft/components/form';
 
 | Name | Description |
 | - | - |
-| `connect(): Observable<void>` | Called when `ps-form` connects from the datasource. Emits of the returned Observable will mark `ps-form` for a check of the change detection.|
+| `connect(): Observable<void>` | Called when `ps-form` connects to the datasource. Emits of the returned `Observable` will mark `ps-form` for a check of the change detection.|
 | `disconnect(): void` | Called when `ps-form` disconnects from the datasource. |
 
 ### ng-content Slots
@@ -183,4 +183,4 @@ Now you can use it in your components like this:
 </ps-form>
 ```
 
-Currently no default implemention of `IPsFormDataSource` exists, but could maybe be added in a following release. For guidance how to implement one yourself, you can look at the code of the demo application.
+Currently no default implementation of `IPsFormDataSource` exists, but could be added in a following release. For guidance on how to implement one yourself, you can take a look at the code of the demo application.

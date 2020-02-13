@@ -37,8 +37,8 @@
         <ng-container *ngTemplateOutlet="content"></ng-container>
       </ps-block-ui>
 
-      <mat-card *ngIf="exception as error" class="ps-form__error-container" [class.ps-form__error-container--center]="error.alignCenter">
-        <mat-icon *ngIf="error.icon" class="ps-form__error-icon">{{ error.icon }}</mat-icon>
+      <mat-card *ngIf="exception" class="ps-form__error-container" [class.ps-form__error-container--center]="exception.alignCenter">
+        <mat-icon *ngIf="exception.icon" class="ps-form__error-icon">{{ exception.icon }}</mat-icon>
         <span>{{ exceptionMessage }}</span>
       </mat-card>
     </div>
