@@ -1,6 +1,6 @@
 import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { TrackByFunction } from '@angular/core';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, NEVER, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, finalize, map, take, tap } from 'rxjs/operators';
 
 import { _isNumberValue } from '../helper/table.helper';
@@ -11,6 +11,12 @@ import { IPsTableUpdateDataInfo } from '../models';
  * flaky browser support and the value not being defined in Closure's typings.
  */
 const MAX_SAFE_INTEGER = 9007199254740991;
+
+export interface PsTableDataSourceOptions<TData> {
+  loadTrigger$?: Observable<any>;
+  loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  mode?: PsTableMode;
+}
 
 export interface IPsTableFilterResult<T> {
   Items: T[];
@@ -73,7 +79,12 @@ export class PsTableDataSource<T> extends DataSource<T> {
    */
   public filter = '';
 
-  private _loadData: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>;
+  public readonly mode: PsTableMode;
+
+  /** Stream that emits when a new data array is set on the data source. */
+  private readonly _updateDataTrigger$: Observable<any>;
+
+  private readonly _loadData: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>;
 
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
@@ -87,19 +98,31 @@ export class PsTableDataSource<T> extends DataSource<T> {
   /**
    * Subscription to the result of the loadData function.
    */
-  private _loadDataSubscription: Subscription = Subscription.EMPTY;
+  private _loadDataSubscription = Subscription.EMPTY;
+
+  /**
+   * Subscription to the updateDataTrigger$ of the options.
+   */
+  private _updateDataTriggerSub = Subscription.EMPTY;
 
   /**
    * Subscription to the changes that should trigger an update to the table's rendered rows.
    */
   private _renderChangesSubscription = Subscription.EMPTY;
 
+  constructor(options: PsTableDataSourceOptions<T>);
+  constructor(loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>, mode?: PsTableMode);
   constructor(
-    loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>,
-    public readonly mode: PsTableMode = 'client'
+    optionsOrLoadDataFunc: PsTableDataSourceOptions<T> | ((filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>),
+    mode?: PsTableMode
   ) {
     super();
-    this._loadData = loadDataFunc;
+    const options: PsTableDataSourceOptions<T> =
+      'loadDataFunc' in optionsOrLoadDataFunc ? optionsOrLoadDataFunc : { loadDataFunc: optionsOrLoadDataFunc, mode: mode };
+
+    this.mode = options.mode || 'client';
+    this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
+    this._loadData = options.loadDataFunc;
 
     this._initDataChangeSubscription();
   }
@@ -310,6 +333,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
    * @docs-private
    */
   public connect() {
+    this._updateDataTriggerSub = this._updateDataTrigger$.subscribe(() => this.updateData());
     return this._renderData;
   }
 
@@ -318,9 +342,8 @@ export class PsTableDataSource<T> extends DataSource<T> {
    * @docs-private
    */
   public disconnect() {
-    if (this._loadDataSubscription) {
-      this._loadDataSubscription.unsubscribe();
-    }
+    this._updateDataTriggerSub.unsubscribe();
+    this._loadDataSubscription.unsubscribe();
   }
 
   /**
