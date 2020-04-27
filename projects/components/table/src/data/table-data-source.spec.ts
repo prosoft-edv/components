@@ -52,32 +52,32 @@ describe('PsTableDataSource', () => {
 
   it('should work with minimal options object and set default values', fakeAsync(() => {
     const options: PsTableDataSourceOptions<any> = {
-      loadDataFunc: () => of([]),
+      loadDataFn: () => of([]),
     };
-    spyOn(options, 'loadDataFunc').and.callThrough();
+    spyOn(options, 'loadDataFn').and.callThrough();
 
     const dataSource = new PsTableDataSource<any>(options);
     expect(dataSource.mode).toEqual('client');
 
     const sub = dataSource.connect().subscribe();
-    expect(options.loadDataFunc).not.toHaveBeenCalled();
+    expect(options.loadDataFn).not.toHaveBeenCalled();
 
     dataSource.updateData(true);
 
     dataSource.disconnect();
     sub.unsubscribe();
 
-    expect(options.loadDataFunc).toHaveBeenCalledTimes(1);
+    expect(options.loadDataFn).toHaveBeenCalledTimes(1);
   }));
 
   it('should work with complete options object', fakeAsync(() => {
     const trigger$ = new Subject<void>();
     const options: PsTableDataSourceOptions<any> = {
       loadTrigger$: trigger$,
-      loadDataFunc: () => of([]),
+      loadDataFn: () => of([]),
       mode: 'server',
     };
-    spyOn(options, 'loadDataFunc').and.callThrough();
+    spyOn(options, 'loadDataFn').and.callThrough();
 
     const dataSource = new PsTableDataSource<any>(options);
     expect(dataSource.mode).toEqual('server');
@@ -85,14 +85,14 @@ describe('PsTableDataSource', () => {
     // trigger before connect shouldn't do anything
     trigger$.next();
     const sub = dataSource.connect().subscribe();
-    expect(options.loadDataFunc).not.toHaveBeenCalled();
+    expect(options.loadDataFn).not.toHaveBeenCalled();
 
     // trigger while connected should call the load function
     trigger$.next();
     dataSource.disconnect();
     sub.unsubscribe();
 
-    expect(options.loadDataFunc).toHaveBeenCalledTimes(1);
+    expect(options.loadDataFn).toHaveBeenCalledTimes(1);
   }));
 
   it('should reset error/loading/data/selection before updateData and after', fakeAsync(() => {
@@ -136,11 +136,7 @@ describe('PsTableDataSource', () => {
     initDirtyState(loadedData);
     dataSource.filter = 'x';
     dataSource.updateData(false);
-    expectLoadedState(
-      loadedData,
-      1,
-      loadedData.filter(x => x.prop === 'x')
-    );
+    expectLoadedState(loadedData, 1, loadedData.filter(x => x.prop === 'x'));
     dataSource.filter = '';
 
     // with force reload, it should load data from the server

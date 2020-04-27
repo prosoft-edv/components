@@ -14,7 +14,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 
 export interface PsTableDataSourceOptions<TData> {
   loadTrigger$?: Observable<any>;
-  loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  loadDataFn: (filter: IPsTableUpdateDataInfo) => Observable<TData[] | IPsTableFilterResult<TData>>;
   mode?: PsTableMode;
 }
 
@@ -79,6 +79,7 @@ export class PsTableDataSource<T> extends DataSource<T> {
    */
   public filter = '';
 
+  /** Controls if the data sould be paged, filtered and sorted on the client or the server */
   public readonly mode: PsTableMode;
 
   /** Stream that emits when a new data array is set on the data source. */
@@ -111,18 +112,18 @@ export class PsTableDataSource<T> extends DataSource<T> {
   private _renderChangesSubscription = Subscription.EMPTY;
 
   constructor(options: PsTableDataSourceOptions<T>);
-  constructor(loadDataFunc: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>, mode?: PsTableMode);
+  constructor(loadDataFn: (filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>, mode?: PsTableMode);
   constructor(
-    optionsOrLoadDataFunc: PsTableDataSourceOptions<T> | ((filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>),
+    optionsOrLoadDataFn: PsTableDataSourceOptions<T> | ((filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>),
     mode?: PsTableMode
   ) {
     super();
     const options: PsTableDataSourceOptions<T> =
-      'loadDataFunc' in optionsOrLoadDataFunc ? optionsOrLoadDataFunc : { loadDataFunc: optionsOrLoadDataFunc, mode: mode };
+      'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, mode: mode };
 
     this.mode = options.mode || 'client';
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
-    this._loadData = options.loadDataFunc;
+    this._loadData = options.loadDataFn;
 
     this._initDataChangeSubscription();
   }
