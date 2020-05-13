@@ -9,11 +9,12 @@ import { ActivatedRoute } from '@angular/router';
 import { PsBlockUiComponent } from '@prosoft/components/block-ui';
 import { PsExceptionMessageExtractor, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { BasePsFormService, IPsFormError, IPsFormErrorData, PsFormService } from '@prosoft/components/form-base';
+import { PsSavebarComponent } from '@prosoft/components/savebar';
 import { DemoPsFormActionService } from 'projects/prosoft-components-demo/src/app/form-demo/form-demo.module';
-import { Observable, of, throwError, Subject } from 'rxjs';
+import { Observable, of, Subject, throwError } from 'rxjs';
 import { delay, switchMapTo } from 'rxjs/operators';
 import { PsFormActionService } from './form-action.service';
-import { IPsFormDataSource, IPsFormException } from './form-data-source';
+import { IPsFormDataSource } from './form-data-source';
 import {
   PsFormCancelEvent,
   PsFormComponent,
@@ -32,7 +33,7 @@ import {
   IPsFormSaveParams,
   IPsFormSaveSuccessParams,
 } from './models';
-import { PsSavebarComponent } from '@prosoft/components/savebar';
+import { isInViewport } from '@prosoft/components/utils';
 
 class TestPsFormService extends BasePsFormService {
   constructor() {
@@ -129,6 +130,7 @@ export class TestComponent {
   template: `
     <ps-form [dataSource]="dataSource">
       <div id="content">content text</div>
+      <div id="hight-strech" style="height: 2000px;">hight strech</div>
       <ng-container psFormSavebarButtons>
         <button type="button">btnCus</button>
       </ng-container>
@@ -137,6 +139,7 @@ export class TestComponent {
 })
 export class TestDataSourceComponent {
   public dataSource: IPsFormDataSource;
+  @ViewChild(PsFormComponent, { static: false }) formComponent: PsFormComponent;
 }
 
 describe('PsFormComponent', () => {
@@ -246,6 +249,68 @@ describe('PsFormComponent', () => {
       fixture.detectChanges();
       expect(getErrorIcon(fixture).nativeElement.textContent.trim()).toBe('asdf-icon');
       expect(getErrorText(fixture)).toBe('error1');
+    });
+
+    it('should show error notifier when saving failed', async () => {
+      const fixture = TestBed.createComponent(TestDataSourceComponent);
+      const component = fixture.componentInstance;
+      expect(component).toBeDefined();
+
+      const dataSource = createDataSource();
+      component.dataSource = dataSource;
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).toBe(null);
+      expect(getErrorNotifier(fixture)).toBe(null);
+
+      dataSource.exception = {
+        errorObject: new Error('error1'),
+      };
+
+      dataSource.cdTrigger$.next();
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).not.toBe(null);
+      expect(getErrorNotifier(fixture)).not.toBe(null);
+    });
+
+    it('should scroll to errorCard if notfier button is clicked', async () => {
+      const fixture = TestBed.createComponent(TestDataSourceComponent);
+      const component = fixture.componentInstance;
+      expect(component).toBeDefined();
+
+      const dataSource = createDataSource();
+      component.dataSource = dataSource;
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).toBe(null);
+      expect(getErrorNotifier(fixture)).toBe(null);
+
+      dataSource.exception = {
+        errorObject: new Error('error1'),
+      };
+
+      dataSource.cdTrigger$.next();
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).not.toBe(null);
+      expect(getErrorNotifier(fixture)).not.toBe(null);
+
+      expect(isInViewport(component.formComponent.errorCardWrapper.nativeElement)).toBe(false);
+
+      const errorNotifier = getErrorNotifier(fixture);
+      const errorWrapper = getErrorWrapper(fixture);
+
+      spyOn(component.formComponent, 'onErrorNotifierClick').and.callThrough();
+      spyOn(errorWrapper.nativeElement, 'scrollIntoView').and.callThrough();
+
+      errorNotifier.triggerEventHandler('click', new Event('click'));
+      await fixture.whenStable().then(() => {
+        expect(component.formComponent.onErrorNotifierClick).toHaveBeenCalledTimes(1);
+        expect(errorWrapper.nativeElement.scrollIntoView).toHaveBeenCalledTimes(1);
+        expect(getErrorContainer(fixture)).not.toBe(null);
+        expect(isInViewport(component.formComponent.errorCardWrapper.nativeElement)).toBe(true);
+      });
     });
 
     it('should block ui when contentBlocked is true', async () => {
@@ -862,6 +927,12 @@ function getSavebarCard(fixture: ComponentFixture<any>): DebugElement {
 }
 function getErrorContainer(fixture: ComponentFixture<any>): DebugElement {
   return fixture.debugElement.query(By.css('.ps-form__error-container'));
+}
+function getErrorWrapper(fixture: ComponentFixture<any>): DebugElement {
+  return fixture.debugElement.query(By.css('.ps-form__error-wrapper'));
+}
+function getErrorNotifier(fixture: ComponentFixture<any>): DebugElement {
+  return fixture.debugElement.query(By.css('.ps-form__error-notfier-button'));
 }
 function getErrorActions(fixture: ComponentFixture<any>): DebugElement {
   return fixture.debugElement.query(By.css('.ps-form__error-actions'));

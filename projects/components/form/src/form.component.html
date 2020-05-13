@@ -37,13 +37,18 @@
         <ng-container *ngTemplateOutlet="content"></ng-container>
       </ps-block-ui>
 
-      <mat-card *ngIf="exception" class="ps-form__error-container" [class.ps-form__error-container--center]="exception.alignCenter">
-        <mat-icon *ngIf="exception.icon" class="ps-form__error-icon">{{ exception.icon }}</mat-icon>
-        <span>{{ exceptionMessage }}</span>
-      </mat-card>
+      <div #errorCardWrapper class="ps-form__error-wrapper">
+        <mat-card *ngIf="exception" class="ps-form__error-container" [class.ps-form__error-container--center]="exception.alignCenter">
+          <mat-icon *ngIf="exception.icon" class="ps-form__error-icon">{{ exception.icon }}</mat-icon>
+          <span>{{ exceptionMessage }}</span>
+        </mat-card>
+      </div>
     </div>
     <div *psSavebarRightContent class="ps-form__buttons">
       <ng-content select="[psFormSavebarButtons]"></ng-content>
+      <mat-icon *ngIf="exception" color="warn" class="ps-form__error-notfier-button" (click)="onErrorNotifierClick()"
+        >error_outline</mat-icon
+      >
       <button
         *ngFor="let btn of buttons"
         mat-button

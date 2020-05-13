@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -76,7 +77,14 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
     this._dataSource = value;
 
     if (this._dataSource) {
+      this.createErrorCardObserver();
       this._dataSourceSub = this._dataSource.connect().subscribe(() => {
+        if (!this._dataSource.exception) {
+          this._errorCardObserver.unobserve(this.errorCardWrapper.nativeElement);
+        } else if (this._dataSource.exception !== this._lastException) {
+          this._errorCardObserver.observe(this.errorCardWrapper.nativeElement);
+        }
+
         this.cd.markForCheck();
       });
     }
@@ -156,6 +164,8 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  @ViewChild('errorCardWrapper', { static: false }) public errorCardWrapper: ElementRef | null;
+
   /** @deprecated */
   public internalBlocked = false;
   /** @deprecated */
@@ -183,6 +193,9 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
   private _loadSub: Subscription;
   private _savebar: PsSavebarComponent;
   private _dataSourceSub = Subscription.EMPTY;
+  private _isErrorCardInView = false;
+  private _lastException: IPsFormException;
+  private _errorCardObserver: IntersectionObserver;
 
   constructor(
     @Optional() public actionService: PsFormActionService,
@@ -240,6 +253,10 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
     }
     if (this._saveAndCloseSub) {
       this._saveAndCloseSub.unsubscribe();
+    }
+
+    if (this._errorCardObserver) {
+      this._errorCardObserver.disconnect();
     }
 
     this._dataSourceSub.unsubscribe();
@@ -364,6 +381,12 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  public onErrorNotifierClick() {
+    if (!this._isErrorCardInView) {
+      this.errorCardWrapper.nativeElement.scrollIntoView();
+    }
+  }
+
   private updateIntl() {
     const intl = this.intlService.get('form');
     this.intl = this.intlService.merge(intl, this.intlOverride);
@@ -389,5 +412,19 @@ export class PsFormComponent implements OnChanges, OnInit, OnDestroy {
       this._saveAndCloseSub = this._savebar.saveAndClose.subscribe(() => this.onSave(true));
     }
     this._savebar.cd.markForCheck();
+  }
+
+  private createErrorCardObserver() {
+    if (!this._errorCardObserver) {
+      const options = {
+        root: null as any, // relative to document viewport
+        rootMargin: '-100px', // margin around root. Values are similar to css property. Unitless values not allowed
+        threshold: 1.0, // visible amount of item shown in relation to root
+      };
+
+      this._errorCardObserver = new IntersectionObserver((changes, _) => {
+        this._isErrorCardInView = changes[0].intersectionRatio > 0;
+      }, options);
+    }
   }
 }
