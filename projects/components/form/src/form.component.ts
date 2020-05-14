@@ -19,7 +19,8 @@ import { ActivatedRoute } from '@angular/router';
 import { IPsFormIntlTexts, PsExceptionMessageExtractor, PsIntlService } from '@prosoft/components/core';
 import { PsSavebarComponent } from '@prosoft/components/savebar';
 import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
-import { startWith, takeUntil } from 'rxjs/operators';
+import { distinctUntilChanged, startWith, takeUntil } from 'rxjs/operators';
+
 import { PsFormActionService } from './form-action.service';
 import { IPsFormButton, IPsFormDataSource, IPsFormDataSourceConnectOptions, IPsFormException } from './form-data-source';
 import { IPsFormSaveParams } from './models';
@@ -61,6 +62,10 @@ export class PsFormSaveErrorEvent extends PsFormEvent {
 
 /** @deprecated */
 export class PsFormCancelEvent extends PsFormEvent {}
+
+export const dependencies = {
+  IntersectionObserver: IntersectionObserver,
+};
 
 @Component({
   selector: 'ps-form',
@@ -418,7 +423,7 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     }
 
     const options = {
-      errorInView$: this._errrorInView$,
+      errorInView$: this._errrorInView$.pipe(distinctUntilChanged()),
       scrollToError: () => {
         this.errorCardWrapper.nativeElement.scrollIntoView({ behavior: 'smooth' });
       },
@@ -437,7 +442,7 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
         threshold: 1.0, // visible amount of item shown in relation to root
       } as IntersectionObserverInit;
 
-      this._errorCardObserver = new IntersectionObserver((changes, _) => {
+      this._errorCardObserver = new dependencies.IntersectionObserver((changes, _) => {
         const isErrorCardInView = changes[0].intersectionRatio > 0;
         this._errrorInView$.next(isErrorCardInView);
         this.cd.markForCheck();

@@ -11,7 +11,7 @@ import { PsExceptionMessageExtractor, PsIntlService, PsIntlServiceEn } from '@pr
 import { BasePsFormService, IPsFormError, IPsFormErrorData, PsFormService } from '@prosoft/components/form-base';
 import { PsSavebarComponent } from '@prosoft/components/savebar';
 import { DemoPsFormActionService } from 'projects/prosoft-components-demo/src/app/form-demo/form-demo.module';
-import { Observable, of, Subject, throwError } from 'rxjs';
+import { Observable, of, Subject, throwError, Subscription } from 'rxjs';
 import { delay, switchMapTo } from 'rxjs/operators';
 import { PsFormActionService } from './form-action.service';
 import { IPsFormDataSource, IPsFormDataSourceConnectOptions } from './form-data-source';
@@ -23,6 +23,7 @@ import {
   PsFormLoadSuccessEvent,
   PsFormSaveErrorEvent,
   PsFormSaveSuccessEvent,
+  dependencies,
 } from './form.component';
 import { PsFormModule } from './form.module';
 import {
@@ -336,67 +337,60 @@ describe('PsFormComponent', () => {
       expect(ds1.disconnect).toHaveBeenCalledTimes(1);
     });
 
-    it('should update errorInView$ properly', async () => {
+    it('should handle scrolling to error card and visibility updates correctly', async () => {
+      let intersectCallback: (x: any) => void;
+      let observedEl: any;
+      let observerOptions: any;
+      dependencies.IntersectionObserver = function MockIO(callback: any, options: any) {
+        intersectCallback = callback;
+        observerOptions = options;
+
+        return {
+          observe: (el: any) => {
+            observedEl = el;
+          },
+          disconnect: () => {},
+        };
+      } as any;
+
       const fixture = TestBed.createComponent(TestDataSourceComponent);
       const component = fixture.componentInstance;
       expect(component).toBeDefined();
 
       const ds = createDataSource();
-      component.dataSource = ds;
+      const errorInViewValues: boolean[] = [];
       let opts: IPsFormDataSourceConnectOptions;
-      spyOn(ds, 'connect').and.callFake((options: IPsFormDataSourceConnectOptions) => {
+      let errorInViewSub: Subscription;
+      ds.connect = options => {
         opts = options;
+        expect(errorInViewSub).not.toBeDefined();
+        errorInViewSub = options.errorInView$.subscribe(value => errorInViewValues.push(value));
         return ds.cdTrigger$;
-      });
-      fixture.detectChanges();
-      expect(ds.connect).toHaveBeenCalledTimes(1);
-      expect(opts).toBeDefined();
-
-      let errorInViewCheck = (value: boolean) => expect(value).toBe(false);
-
-      opts.errorInView$.subscribe(value => errorInViewCheck(value));
-
+      };
       ds.exception = { errorObject: new Error('asdf') };
-      ds.cdTrigger$.next();
-      fixture.detectChanges();
 
-      expect(getErrorContainer(fixture)).not.toBe(null);
-
-      errorInViewCheck = (value: boolean) => expect(value).toBe(true);
-      opts.scrollToError();
-    });
-
-    it('should update call errorCardWrappers scrollIntoView only once', async () => {
-      const fixture = TestBed.createComponent(TestDataSourceComponent);
-      const component = fixture.componentInstance;
-      expect(component).toBeDefined();
-
-      const ds = createDataSource();
       component.dataSource = ds;
-      let opts: IPsFormDataSourceConnectOptions;
-      spyOn(ds, 'connect').and.callFake((options: IPsFormDataSourceConnectOptions) => {
-        opts = options;
-        return ds.cdTrigger$;
-      });
       fixture.detectChanges();
-      expect(ds.connect).toHaveBeenCalledTimes(1);
+
       expect(opts).toBeDefined();
-
-      let errorInViewCheck = (value: boolean) => expect(value).toBe(false);
-
-      opts.errorInView$.subscribe(value => errorInViewCheck(value));
-
-      ds.exception = { errorObject: new Error('asdf') };
-      ds.cdTrigger$.next();
-      fixture.detectChanges();
-
+      expect(observerOptions).toEqual({
+        root: null as any,
+        rootMargin: '-100px',
+        threshold: 1.0,
+      });
       expect(getErrorContainer(fixture)).not.toBe(null);
+      expect(observedEl).toBe(component.formComponent.errorCardWrapper.nativeElement);
       spyOn(component.formComponent.errorCardWrapper.nativeElement, 'scrollIntoView').and.callThrough();
 
-      errorInViewCheck = (value: boolean) => expect(value).toBe(true);
       opts.scrollToError();
-
       expect(component.formComponent.errorCardWrapper.nativeElement.scrollIntoView).toHaveBeenCalledTimes(1);
+
+      intersectCallback([{ intersectionRatio: 1 }]);
+      intersectCallback([{ intersectionRatio: 1 }]);
+      intersectCallback([{ intersectionRatio: 0 }]);
+
+      expect(errorInViewValues).toEqual([false, true, false]);
+      errorInViewSub.unsubscribe();
     });
   });
 
