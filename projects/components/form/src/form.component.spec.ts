@@ -33,7 +33,6 @@ import {
   IPsFormSaveParams,
   IPsFormSaveSuccessParams,
 } from './models';
-import { isInViewport } from '@prosoft/components/utils';
 
 class TestPsFormService extends BasePsFormService {
   constructor() {
@@ -312,6 +311,93 @@ describe('PsFormComponent', () => {
 
       expect(savebar.mode).toBe(dataSource.savebarMode);
     });
+
+    it("should call dataSource's connect() once per new dataSource", () => {
+      const fixture = TestBed.createComponent(TestDataSourceComponent);
+      const component = fixture.componentInstance;
+      expect(component).toBeDefined();
+
+      const ds1 = createDataSource();
+      component.dataSource = ds1;
+      spyOn(ds1, 'connect').and.callThrough();
+
+      fixture.detectChanges();
+
+      expect(ds1.connect).toHaveBeenCalledTimes(1);
+
+      const ds2 = createDataSource();
+      component.dataSource = ds2;
+      spyOn(ds1, 'disconnect').and.callThrough();
+      spyOn(ds2, 'connect').and.callThrough();
+
+      fixture.detectChanges();
+
+      expect(ds2.connect).toHaveBeenCalledTimes(1);
+      expect(ds1.disconnect).toHaveBeenCalledTimes(1);
+    });
+
+    it('should update errorInView$ properly', async () => {
+      const fixture = TestBed.createComponent(TestDataSourceComponent);
+      const component = fixture.componentInstance;
+      expect(component).toBeDefined();
+
+      const ds = createDataSource();
+      component.dataSource = ds;
+      let opts: IPsFormDataSourceConnectOptions;
+      spyOn(ds, 'connect').and.callFake((options: IPsFormDataSourceConnectOptions) => {
+        opts = options;
+        return ds.cdTrigger$;
+      });
+      fixture.detectChanges();
+      expect(ds.connect).toHaveBeenCalledTimes(1);
+      expect(opts).toBeDefined();
+
+      let errorInViewCheck = (value: boolean) => expect(value).toBe(false);
+
+      opts.errorInView$.subscribe(value => errorInViewCheck(value));
+
+      ds.exception = { errorObject: new Error('asdf') };
+      ds.cdTrigger$.next();
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).not.toBe(null);
+
+      errorInViewCheck = (value: boolean) => expect(value).toBe(true);
+      opts.scrollToError();
+    });
+
+    it('should update call errorCardWrappers scrollIntoView only once', async () => {
+      const fixture = TestBed.createComponent(TestDataSourceComponent);
+      const component = fixture.componentInstance;
+      expect(component).toBeDefined();
+
+      const ds = createDataSource();
+      component.dataSource = ds;
+      let opts: IPsFormDataSourceConnectOptions;
+      spyOn(ds, 'connect').and.callFake((options: IPsFormDataSourceConnectOptions) => {
+        opts = options;
+        return ds.cdTrigger$;
+      });
+      fixture.detectChanges();
+      expect(ds.connect).toHaveBeenCalledTimes(1);
+      expect(opts).toBeDefined();
+
+      let errorInViewCheck = (value: boolean) => expect(value).toBe(false);
+
+      opts.errorInView$.subscribe(value => errorInViewCheck(value));
+
+      ds.exception = { errorObject: new Error('asdf') };
+      ds.cdTrigger$.next();
+      fixture.detectChanges();
+
+      expect(getErrorContainer(fixture)).not.toBe(null);
+      spyOn(component.formComponent.errorCardWrapper.nativeElement, 'scrollIntoView').and.callThrough();
+
+      errorInViewCheck = (value: boolean) => expect(value).toBe(true);
+      opts.scrollToError();
+
+      expect(component.formComponent.errorCardWrapper.nativeElement.scrollIntoView).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('integration with inputs', () => {
@@ -330,7 +416,6 @@ describe('PsFormComponent', () => {
     it('should show savebar buttons', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       fixture.detectChanges();
 
@@ -345,7 +430,6 @@ describe('PsFormComponent', () => {
     it('should work without form', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       component.form = null;
       expect(component).toBeDefined();
       fixture.detectChanges();
@@ -360,7 +444,6 @@ describe('PsFormComponent', () => {
     it('should hide save button if hideSave is true', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       fixture.detectChanges();
 
@@ -376,7 +459,6 @@ describe('PsFormComponent', () => {
     it('should hide save & close button if hideSaveAndClose is true', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       fixture.detectChanges();
 
@@ -392,7 +474,6 @@ describe('PsFormComponent', () => {
     it('should disable save buttons if canSave is false', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       fixture.detectChanges();
 
@@ -412,7 +493,6 @@ describe('PsFormComponent', () => {
     it('should show error view and hide save buttons when loading failed', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       component.loadFnc = () => throwError(new Error('error'));
       fixture.detectChanges();
@@ -429,7 +509,6 @@ describe('PsFormComponent', () => {
     it('should show error view when loading failed, even if the error is null', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       component.loadFnc = () => throwError(null);
       fixture.detectChanges();
@@ -448,7 +527,6 @@ describe('PsFormComponent', () => {
     it('should show error bar when saving failed', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       component.saveFnc = () => throwError(new Error('error'));
       fixture.detectChanges();
@@ -469,7 +547,6 @@ describe('PsFormComponent', () => {
     it('should call loadFnc', async(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
 
       const loadData = {};
@@ -482,7 +559,6 @@ describe('PsFormComponent', () => {
     it('should call saveFnc with the right data when save or save & close is clicked', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
       fixture.detectChanges();
 
@@ -504,7 +580,6 @@ describe('PsFormComponent', () => {
     it('should disable save buttons while loading/saving', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
 
       spyOn(component, 'loadFnc').and.returnValues(
@@ -574,7 +649,6 @@ describe('PsFormComponent', () => {
     it('should block while loading', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
 
       spyOn(component, 'loadFnc').and.returnValues(
@@ -614,7 +688,6 @@ describe('PsFormComponent', () => {
     it('should block while saving', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
 
       spyOn(component, 'saveFnc').and.returnValues(
@@ -656,7 +729,6 @@ describe('PsFormComponent', () => {
     it('should not mix up blocked input with loading block', fakeAsync(() => {
       const fixture = TestBed.createComponent(TestComponent);
       const component = fixture.componentInstance;
-      spyOn(component.formCmp, 'ngAfterViewInit').and.callFake(() => {});
       expect(component).toBeDefined();
 
       spyOn(component, 'loadFnc').and.returnValues(
@@ -879,9 +951,6 @@ function getSavebarCard(fixture: ComponentFixture<any>): DebugElement {
 }
 function getErrorContainer(fixture: ComponentFixture<any>): DebugElement {
   return fixture.debugElement.query(By.css('.ps-form__error-container'));
-}
-function getErrorNotifier(fixture: ComponentFixture<any>): DebugElement {
-  return fixture.debugElement.query(By.css('.ps-form__error-notfier-button'));
 }
 function getErrorActions(fixture: ComponentFixture<any>): DebugElement {
   return fixture.debugElement.query(By.css('.ps-form__error-actions'));

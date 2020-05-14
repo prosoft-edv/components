@@ -77,6 +77,8 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
 
     this._dataSource = value;
 
+    this.updateErrorCardObserver();
+
     if (this._dataSource) {
       this.activateDataSource();
     }
@@ -236,7 +238,7 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
 
   public ngAfterViewInit() {
     this._viewReady = true;
-    this.createErrorCardObserver();
+    this.updateErrorCardObserver();
     this.activateDataSource();
   }
 
@@ -411,7 +413,7 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
   }
 
   private activateDataSource() {
-    if (!this._viewReady && this._dataSource) {
+    if (!this._viewReady || !this._dataSource) {
       return;
     }
 
@@ -427,8 +429,8 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
     });
   }
 
-  private createErrorCardObserver() {
-    if (!this._errorCardObserver) {
+  private updateErrorCardObserver() {
+    if (!this._errorCardObserver && this._dataSource && this._viewReady) {
       const options = {
         root: null as any, // relative to document viewport
         rootMargin: '-100px', // margin around root. Values are similar to css property. Unitless values not allowed
@@ -442,6 +444,9 @@ export class PsFormComponent implements OnChanges, OnInit, AfterViewInit, OnDest
       }, options);
 
       this._errorCardObserver.observe(this.errorCardWrapper.nativeElement);
+    } else if (this._errorCardObserver && !this._dataSource) {
+      this._errorCardObserver.disconnect();
+      this._errorCardObserver = null;
     }
   }
 }
