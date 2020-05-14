@@ -6,8 +6,6 @@ export interface IPsSavebarIntlTexts {
   saveLabel: string;
   saveAndCloseLabel: string;
   cancelLabel: string;
-  nextLabel: string;
-  prevLabel: string;
 }
 
 // tslint:disable-next-line: no-empty-interface
@@ -60,8 +58,6 @@ export class PsIntlServiceEn extends PsIntlService {
     saveLabel: 'Save',
     saveAndCloseLabel: 'Save & close',
     cancelLabel: 'Cancel',
-    nextLabel: 'Next',
-    prevLabel: 'Previous',
   };
 
   private tableIntl: IPsTableIntlTexts = {
