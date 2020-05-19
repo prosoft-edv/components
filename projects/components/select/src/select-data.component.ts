@@ -33,7 +33,7 @@ import { PsSelectService } from './select.service';
       --
     </mat-option>
     <mat-option *ngIf="hasError" [disabled]="true" class="ps-select-data__error">
-      <span class="ps-select-data__error-message">{{ errorMessage }}</span>
+      <span class="ps-select-data__error-message">{{ error | psErrorMessage }}</span>
     </mat-option>
     <mat-option
       *ngFor="let item of items; trackBy: trackByOptions"
@@ -114,8 +114,8 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
   }
 
   /** Die Fehlernachricht, wenn es beim Items Laden einen Fehler gab */
-  public get errorMessage() {
-    return this.dataSource && this.dataSource.errorMessage;
+  public get error() {
+    return this.dataSource && this.dataSource.error;
   }
 
   /** Gibt an, ob der multiselect Modus aktiv ist */
@@ -194,7 +194,7 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
   }
 
   public trackByOptions(_: number, item: PsSelectItem<T>) {
-    return item.value;
+    return `${item.value}#${item.label}`;
   }
 
   private _updateCompareWithBindings() {
