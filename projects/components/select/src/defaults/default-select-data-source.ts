@@ -103,7 +103,7 @@ export class DefaultPsSelectDataSource<T = any> extends PsSelectDataSource<T> {
       shareReplay({ bufferSize: 1, refCount: true })
     );
 
-    // Values die nicht in den Options sind, generieren wir hier
+    // generate values as options, that aren't in the loaded options
     const missingOptions$ = loadedOptions$.pipe(
       switchMap(options =>
         this._currentValues$.pipe(map(values => values.filter(value => !options.find(o => this.compareWith(o.value, value)))))
@@ -128,9 +128,9 @@ export class DefaultPsSelectDataSource<T = any> extends PsSelectDataSource<T> {
     );
 
     const panelCloseEvent$ = this._isPanelOpen$.pipe(
-      skip(1), // Wir wollen nur Close-Events, nicht den initialen Zustand des Panels
+      skip(1), // we don't need the initial value
       distinctUntilChanged(),
-      filter(x => !x)
+      filter(x => !x) // we only care about close-events
     );
     const valueChangedWhileClosed$ = this._isPanelOpen$.pipe(
       distinctUntilChanged(),
@@ -138,7 +138,7 @@ export class DefaultPsSelectDataSource<T = any> extends PsSelectDataSource<T> {
     );
     const sortTrigger$ = merge(panelCloseEvent$, valueChangedWhileClosed$);
     const renderOptions$ = options$.pipe(
-      // Initial und wenn sich das Panel schließt, müssen wir die selektierten Options nach oben sortieren
+      // initially and on panel close we must sort the selected options to the top
       switchMap(options =>
         sortTrigger$.pipe(
           startWith(!this._isPanelOpen$.value),
@@ -161,7 +161,7 @@ export class DefaultPsSelectDataSource<T = any> extends PsSelectDataSource<T> {
           })
         )
       ),
-      // Suchtext handling
+      // searchtext handling
       switchMap(options =>
         this._searchText$.pipe(
           debounceTime(this._searchDebounceTime),
