@@ -224,7 +224,7 @@ describe('PsTableDataSource', () => {
   it('should not sort/filter/page, but provide info to loadData when mode is server', () => {
     const loadedData = Array.from(new Array(20).keys()).map(x => ({ prop: x }));
     let lastUpdateInfo: IPsTableUpdateDataInfo = null;
-    const dataSource = new PsTableDataSource<any>(updateInfo => {
+    const dataSource = new PsTableDataSource<any>((triggerData, updateInfo) => {
       lastUpdateInfo = updateInfo;
       return of(loadedData);
     }, 'server');
@@ -577,7 +577,7 @@ describe('PsTableDataSource', () => {
   });
 
   it('should update visibleRows, data and dataLength on server pagination', () => {
-    const dataSource = new PsTableDataSource<any>(filter => {
+    const dataSource = new PsTableDataSource<any>((triggerData, filter) => {
       return of({ Items: [{ prop: filter.currentPage }], TotalItems: 100 });
     }, 'server');
     dataSource.tableReady = true;
@@ -608,7 +608,7 @@ describe('PsTableDataSource', () => {
   });
 
   it('should fix pageIndex when currentPage would have no items on server pagination', () => {
-    const dataSource = new PsTableDataSource<any>(filter => {
+    const dataSource = new PsTableDataSource<any>((triggerData, filter) => {
       return of({ Items: [{ prop: filter.currentPage }], TotalItems: 1 });
     }, 'server');
     dataSource.tableReady = true;
