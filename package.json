@@ -24,7 +24,7 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
-    "ngx-mat-select-search": "^1.7.6",
+    "ngx-mat-select-search": "^2.2.0",
     "nouislider": "^14.0.2",
     "rxjs": "~6.5.2",
     "tslib": "^1.9.0",

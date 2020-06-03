@@ -27,7 +27,14 @@ import { PsSelectService } from './select.service';
   selector: 'ps-select-data',
   template: `
     <mat-option class="ps-select-data__search">
-      <ngx-mat-select-search [formControl]="filterCtrl" [searching]="loading"></ngx-mat-select-search>
+      <ngx-mat-select-search
+        [formControl]="filterCtrl"
+        [searching]="loading"
+        [showToggleAllCheckbox]="true"
+        [toggleAllCheckboxChecked]="toggleAllCheckboxChecked"
+        [toggleAllCheckboxIndeterminate]="toggleAllCheckboxIndeterminate"
+        (toggleAll)="onToggleAll($event)"
+      ></ngx-mat-select-search>
     </mat-option>
     <mat-option *ngIf="showEmptyInput" class="ps-select-data__empty-option">
       --
@@ -102,6 +109,9 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
 
   /** The items to display */
   public items: PsSelectItem<T>[] | ReadonlyArray<PsSelectItem<T>> = [];
+
+  public toggleAllCheckboxChecked = false;
+  public toggleAllCheckboxIndeterminate = false;
 
   /** true while the options are loading */
   public get loading() {
@@ -197,6 +207,11 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
     return `${item.value}#${item.label}`;
   }
 
+  public onToggleAll(state: boolean) {
+    const newValue = state ? (this.items as PsSelectItem<T>[]).map(x => x.value) : [];
+    this.control.patchValue(newValue);
+  }
+
   private _updateCompareWithBindings() {
     if (!this.dataSource) {
       return;
@@ -225,6 +240,7 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
       values = value ? [value] : [];
     }
     this.dataSource.selectedValuesChanged(values);
+    this._updateToggleAllCheckbox();
   }
 
   /** Set up a subscription for the data provided by the data source. */
@@ -253,7 +269,16 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
       .pipe(takeUntil(this._ngUnsubscribe$))
       .subscribe(items => {
         this.items = items || [];
+        this._updateToggleAllCheckbox();
         this.cd.markForCheck();
       });
+  }
+
+  private _updateToggleAllCheckbox() {
+    if (this.select.multiple && this.items && this.select.value) {
+      const selectedValueCount = this.select.value.length;
+      this.toggleAllCheckboxChecked = this.items.length === selectedValueCount;
+      this.toggleAllCheckboxIndeterminate = selectedValueCount > 0;
+    }
   }
 }

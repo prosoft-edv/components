@@ -24,7 +24,8 @@ import { of, Observable } from 'rxjs';
 })
 export class SelectWithMultiselectComponent {
   public items$: Observable<any[]> = of(
-    Array.from(Array(50).keys()).map(i => ({
+    // TODO: 304 works. With 305 the toggle all works only the first 2 times, then the checkboxes of the items stop updating
+    Array.from(Array(305).keys()).map(i => ({
       value: `id${i}`,
       label: `Item ${i}`,
     }))
