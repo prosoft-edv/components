@@ -30,7 +30,7 @@ import { PsSelectService } from './select.service';
       <ngx-mat-select-search
         [formControl]="filterCtrl"
         [searching]="loading"
-        [showToggleAllCheckbox]="true"
+        [showToggleAllCheckbox]="showToggleAll"
         [toggleAllCheckboxChecked]="toggleAllCheckboxChecked"
         [toggleAllCheckboxIndeterminate]="toggleAllCheckboxIndeterminate"
         (toggleAll)="onToggleAll($event)"
@@ -96,8 +96,11 @@ export class PsSelectDataComponent<T = any> implements AfterViewInit, OnDestroy 
     this._updateCompareWithBindings();
   }
 
-  /** If true, then there will be a empty option available to deselect any values (only singel select mode) */
+  /** If true, then there will be a empty option available to deselect any values (only single select mode) */
   @Input() public clearable = true;
+
+  /** If true, then there will be a toggle all checkbox available (only multiple select mode) */
+  @Input() public showToggleAll = true;
 
   @Input() public optionTemplate: TemplateRef<any> | null = null;
 
