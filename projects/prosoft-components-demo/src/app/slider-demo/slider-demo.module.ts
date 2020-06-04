@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import { FormControl, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -13,6 +13,7 @@ import { PsSliderModule } from '@prosoft/components/slider';
 import { Observable, of } from 'rxjs';
 import { SliderDemoComponent } from './slider-demo.component';
 
+@Injectable()
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
   public isErrorState(control: FormControl | null, _: FormGroupDirective | NgForm | null): boolean {
     return !!(control && control.invalid);
