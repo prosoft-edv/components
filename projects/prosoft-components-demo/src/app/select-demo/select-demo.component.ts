@@ -230,8 +230,8 @@ export class SelectDemoComponent implements OnInit {
   }
 
   public getPsSelectLoadTrigger() {
-    // tslint:disable-next-line: no-bitwise
     return (
+      // tslint:disable-next-line: no-bitwise
       (this.loadTriggerInitial && PsSelectLoadTrigger.Initial) |
       (this.loadTriggerFirstPanelOpen && PsSelectLoadTrigger.FirstPanelOpen) |
       (this.loadTriggerEveryPanelOpen && PsSelectLoadTrigger.EveryPanelOpen)
