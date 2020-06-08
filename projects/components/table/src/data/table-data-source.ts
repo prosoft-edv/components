@@ -14,7 +14,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 
 export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadTrigger$?: Observable<TTrigger>;
-  loadDataFn: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
   mode?: PsTableMode;
 }
 
@@ -88,7 +88,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _updateDataTrigger$: Observable<any>;
 
-  private readonly _loadData: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>;
+  private readonly _loadData: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>;
 
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
@@ -118,13 +118,13 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
 
   constructor(options: PsTableDataSourceOptions<T, TTrigger>);
   constructor(
-    loadDataFn: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>,
+    loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>,
     mode?: PsTableMode
   );
   constructor(
     optionsOrLoadDataFn:
       | PsTableDataSourceOptions<T, TTrigger>
-      | ((filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>),
+      | ((updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>),
     mode?: PsTableMode
   ) {
     super();
@@ -301,8 +301,8 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       this._renderData.next([]);
       this._internalDetectChanges.next();
 
-      const filter = this.getUpdateDataInfo(true);
-      this._loadDataSubscription = this._loadData(filter)
+      const updateInfo = this.getUpdateDataInfo(true);
+      this._loadDataSubscription = this._loadData(updateInfo)
         .pipe(
           take(1),
           tap(() => (this._hasData = true)),
