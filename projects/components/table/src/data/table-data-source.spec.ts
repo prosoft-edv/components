@@ -477,7 +477,14 @@ describe('PsTableDataSource', () => {
 
   describe('getUpdateDataInfo', () => {
     it('should work', () => {
-      const dataSource = new PsTableDataSource<any>(() => of([]), 'client');
+      const loadTrigger$ = new Subject<string>();
+      const dataSource = new PsTableDataSource({
+        loadTrigger$: loadTrigger$,
+        loadDataFn: () => of([]),
+        mode: 'client',
+      });
+      dataSource.connect().subscribe();
+      loadTrigger$.next('triggered');
       dataSource.tableReady = true;
 
       dataSource.pageSize = 33;
@@ -507,6 +514,17 @@ describe('PsTableDataSource', () => {
         sortColumn: 'a',
         sortDirection: 'asc',
       });
+
+      expect(dataSource.getUpdateDataInfo(true)).toEqual({
+        pageSize: 5,
+        currentPage: 3,
+        searchText: null,
+        sortColumn: 'a',
+        sortDirection: 'asc',
+        triggerData: 'triggered',
+      });
+
+      dataSource.disconnect();
     });
   });
 
