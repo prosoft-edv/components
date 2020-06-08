@@ -4,7 +4,7 @@ import { BehaviorSubject, NEVER, Observable, of, Subject, Subscription } from 'r
 import { catchError, finalize, map, take, tap } from 'rxjs/operators';
 
 import { _isNumberValue } from '../helper/table.helper';
-import { IPsTableUpdateDataInfo } from '../models';
+import { IPsTableUpdateDataInfo, IExtendedPsTableUpdateDataInfo } from '../models';
 
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
@@ -14,7 +14,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 
 export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadTrigger$?: Observable<TTrigger>;
-  loadDataFn: (triggerData: TTrigger, filter: IPsTableUpdateDataInfo) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  loadDataFn: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
   mode?: PsTableMode;
 }
 
@@ -88,7 +88,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _updateDataTrigger$: Observable<any>;
 
-  private readonly _loadData: (triggerData: TTrigger, filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>;
+  private readonly _loadData: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>;
 
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
@@ -118,13 +118,13 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
 
   constructor(options: PsTableDataSourceOptions<T, TTrigger>);
   constructor(
-    loadDataFn: (triggerData: TTrigger, filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>,
+    loadDataFn: (filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>,
     mode?: PsTableMode
   );
   constructor(
     optionsOrLoadDataFn:
       | PsTableDataSourceOptions<T, TTrigger>
-      | ((triggerData: TTrigger, filter: IPsTableUpdateDataInfo) => Observable<T[] | IPsTableFilterResult<T>>),
+      | ((filter: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>),
     mode?: PsTableMode
   ) {
     super();
@@ -268,14 +268,20 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /**
    * Returns the current page, sort and filter state
    */
-  public getUpdateDataInfo() {
-    return <IPsTableUpdateDataInfo>{
+  public getUpdateDataInfo(extended?: false): IPsTableUpdateDataInfo;
+  public getUpdateDataInfo(extended: true): IExtendedPsTableUpdateDataInfo<TTrigger>;
+  public getUpdateDataInfo(extended = false): IPsTableUpdateDataInfo | IExtendedPsTableUpdateDataInfo<TTrigger> {
+    const data: IPsTableUpdateDataInfo = {
       pageSize: this.pageSize,
       currentPage: this.pageIndex,
       searchText: this.filter,
       sortColumn: this.sortColumn,
       sortDirection: this.sortDirection,
     };
+    if (extended) {
+      (data as IExtendedPsTableUpdateDataInfo<TTrigger>).triggerData = this._lastLoadTriggerData;
+    }
+    return data;
   }
 
   /**
@@ -295,8 +301,8 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       this._renderData.next([]);
       this._internalDetectChanges.next();
 
-      const filter = this.getUpdateDataInfo();
-      this._loadDataSubscription = this._loadData(this._lastLoadTriggerData, filter)
+      const filter = this.getUpdateDataInfo(true);
+      this._loadDataSubscription = this._loadData(filter)
         .pipe(
           take(1),
           tap(() => (this._hasData = true)),
