@@ -26,7 +26,7 @@ import { PsNumberInputModule } from '@prosoft/components/number-input';
 | `min: number`                          | Sets the lowest selectable number.                                    |
 | `max: number`                          | Sets the highest selectable number.                                   |
 | `stepSize: number`                     | Sets the step size of each click on the up/down buttons.              |
-| `decimals: number`                     | Sets the number of allowed decimals.                                  |
+| `decimals: number`                     | Sets the number of allowed decimal places.                            |
 | `formatInput: boolean`                 | `true` if the shown value should be formated on blur.                 |
 | `placeholder: string`                  | The input placeholder.                                                |
 | `required: boolean`                    | `true` if the input should be required (for ngModel binding).         |

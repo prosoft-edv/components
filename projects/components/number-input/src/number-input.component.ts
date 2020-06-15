@@ -83,7 +83,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
   /** When present, formats the user input at blur event. */
   @Input() formatInput: boolean;
 
-  /** Number of digits in the decimal section. */
+  /** Number of allowed decimal places. */
   @Input() decimals: number;
 
   /** Step factor to increment/decrement the value. */
