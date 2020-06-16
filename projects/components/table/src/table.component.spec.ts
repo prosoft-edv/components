@@ -611,7 +611,7 @@ describe('PsTableComponent', () => {
         flush();
         fixture.detectChanges();
         flush();
-        expect(component.table.flipContainer.show).toEqual('back');
+        expect(component.table.flipContainer._active).toEqual('back');
         fixture.whenRenderingDone().then(() => {
           const tableSettingsDbg = psTableDbg.query(By.directive(PsTableSettingsComponent));
           // *psTableCustomSettings
