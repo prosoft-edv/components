@@ -78,12 +78,6 @@
       ]
     }
   },
-  "prettier": {
-    "printWidth": 140,
-    "tabWidth": 2,
-    "singleQuote": true,
-    "trailingComma": "es5"
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"

@@ -8,12 +8,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import type { ElementRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { IPsFormButton, IPsFormDataSource, IPsFormDataSourceConnectOptions, IPsFormException } from './form-data-source';
+
+import type { ElementRef } from '@angular/core';
 
 export const dependencies = {
   IntersectionObserver: IntersectionObserver,

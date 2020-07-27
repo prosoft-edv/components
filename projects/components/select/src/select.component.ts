@@ -15,11 +15,13 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import type { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
+
 import { PsSelectOptionTemplateDirective } from './select-option-template.directive';
 import { PsSelectTriggerTemplateDirective } from './select-trigger-template.directive';
+
+import type { ErrorStateMatcher } from '@angular/material/core';
 
 @Component({
   selector: 'ps-select',

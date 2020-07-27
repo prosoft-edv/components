@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+
 import type { ElementRef } from '@angular/core';
 
 @Component({

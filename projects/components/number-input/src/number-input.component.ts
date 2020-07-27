@@ -25,11 +25,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import type { ElementRef } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorState, CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
+
+import type { ElementRef } from '@angular/core';
 
 let nextUniqueId = 0;
 

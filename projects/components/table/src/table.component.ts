@@ -19,7 +19,6 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import type { QueryList } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPsTableIntlTexts, PsExceptionMessageExtractor, PsIntlService } from '@prosoft/components/core';
@@ -40,6 +39,8 @@ import {
 import { PsTableStateManager, PsTableUrlStateManager } from './helper/state-manager';
 import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
+
+import type { QueryList } from '@angular/core';
 
 @Component({
   selector: 'ps-table',

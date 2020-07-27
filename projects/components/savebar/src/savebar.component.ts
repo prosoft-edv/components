@@ -15,12 +15,14 @@ import {
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
-import type { FormGroup } from '@angular/forms';
 import { IPsSavebarIntlTexts, PsIntlService } from '@prosoft/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
+
 import { IPsSavebarMode } from './models';
 import { PsSavebarRightContentDirective } from './savebar-right-content.directive';
+
+import type { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ps-savebar',

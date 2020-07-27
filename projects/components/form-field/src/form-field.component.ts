@@ -1,30 +1,31 @@
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ContentChild,
   ContentChildren,
   ElementRef,
   HostBinding,
-  Input,
-  OnDestroy,
-  ViewChild,
-  ViewEncapsulation,
-  InjectionToken,
   Inject,
+  InjectionToken,
+  Input,
+  OnChanges,
+  OnDestroy,
   Optional,
   SimpleChanges,
-  OnChanges,
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
-import type { QueryList } from '@angular/core';
 import { FormControl, NgControl } from '@angular/forms';
 import { FloatLabelType } from '@angular/material/core';
 import { MatFormField, MatFormFieldAppearance, MatFormFieldControl, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { hasRequiredField, IPsFormError, PsFormService } from '@prosoft/components/form-base';
 import { Observable, of, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
 import { DummyMatFormFieldControl } from './dummy-mat-form-field-control';
+
+import type { QueryList } from '@angular/core';
 
 export declare type PsFormFieldSubscriptType = 'bubble' | 'resize' | 'single-line';
 
