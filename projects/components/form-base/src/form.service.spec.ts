@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
@@ -6,6 +7,7 @@ import { BasePsFormService } from './form.service';
 import { getControlType } from './helpers';
 import { IPsFormError, IPsFormErrorData } from './models';
 
+@Injectable()
 class TestPsFormService extends BasePsFormService {
   public getLabel(formControl: FormControl): Observable<string> | null {
     return null;

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Injectable, QueryList, ViewChild } from '@angular/core';
 import { async, ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { PageEvent } from '@angular/material/paginator';
 import { MatSelect } from '@angular/material/select';
@@ -8,6 +8,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, convertToParamMap, ParamMap, Params, Router } from '@angular/router';
 import { IPsTableIntlTexts, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { PsTableDataSource } from './data/table-data-source';
 import { PsTableColumnDirective } from './directives/table.directives';
 import { IPsTableSortDefinition } from './models';
@@ -19,8 +21,8 @@ import { PsTableSearchComponent } from './subcomponents/table-search.component';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
 import { PsTableComponent } from './table.component';
 import { PsTableModule } from './table.module';
-import { map } from 'rxjs/operators';
 
+@Injectable()
 class TestSettingsService extends PsTableSettingsService {
   public settings$ = new BehaviorSubject<{ [id: string]: IPsTableSetting }>({});
   public pageSizeOptions = [1, 5, 25, 50];
