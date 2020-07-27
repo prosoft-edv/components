@@ -437,8 +437,8 @@ describe('PsTableComponent', () => {
 
     it('should update view when view/content children change', fakeAsync(() => {
       spyOn(cd, 'markForCheck');
-      const table = createTableInstance() as PsTableComponent & { updateTableState: () => void };
-      spyOn(table, 'updateTableState').and.callThrough();
+      const table = createTableInstance() as PsTableComponent;
+      spyOn(table as any, 'updateTableState').and.callThrough();
 
       table.customHeader = null;
       expect(cd.markForCheck).toHaveBeenCalledTimes(1);

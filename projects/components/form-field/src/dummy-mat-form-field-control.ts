@@ -4,6 +4,7 @@ import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
+// TODO: Add Angular decorator.
 export class DummyMatFormFieldControl extends MatFormFieldControl<string> implements OnDestroy {
   public get required() {
     return this._required;
