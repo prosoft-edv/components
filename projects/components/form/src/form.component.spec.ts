@@ -48,7 +48,7 @@ class TestPsFormService extends BasePsFormService {
 })
 export class TestDataSourceComponent {
   public dataSource: IPsFormDataSource;
-  @ViewChild(PsFormComponent, { static: false }) formComponent: PsFormComponent;
+  @ViewChild(PsFormComponent) formComponent: PsFormComponent;
 }
 
 describe('PsFormComponent', () => {

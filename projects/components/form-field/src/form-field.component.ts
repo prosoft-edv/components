@@ -232,13 +232,13 @@ export class PsFormFieldComponent implements OnChanges, AfterContentInit, OnDest
   @ViewChild(MatFormField, { static: true }) public _matFormField: MatFormField;
 
   /** We can get the FromControl from this */
-  @ContentChild(NgControl, { static: false }) public _ngControl: NgControl | null;
+  @ContentChild(NgControl) public _ngControl: NgControl | null;
 
   /** The MatFormFieldControl or null, if it is no MatFormFieldControl */
-  @ContentChild(MatFormFieldControl, { static: false }) public _control: MatFormFieldControl<any> | null;
+  @ContentChild(MatFormFieldControl) public _control: MatFormFieldControl<any> | null;
 
   /** The MatLabel, if it is set or null */
-  @ContentChild(MatLabel, { static: false }) public set labelChild(value: MatLabel) {
+  @ContentChild(MatLabel) public set labelChild(value: MatLabel) {
     this._labelChild = value;
     this.updateLabel();
     if (this._matFormField) {

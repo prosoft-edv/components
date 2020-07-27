@@ -87,7 +87,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   @ViewChild(PsFlipContainerComponent, { static: true }) public flipContainer: PsFlipContainerComponent | null = null;
 
-  @ContentChild(PsTableCustomHeaderDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableCustomHeaderDirective, { read: TemplateRef })
   public set customHeader(value: TemplateRef<any> | null) {
     this._customHeader = value;
     this.cd.markForCheck();
@@ -97,7 +97,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
   private _customHeader: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableCustomSettingsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableCustomSettingsDirective, { read: TemplateRef })
   public set customSettings(value: TemplateRef<any> | null) {
     this._customSettings = value;
     this.cd.markForCheck();
@@ -107,7 +107,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
   private _customSettings: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableTopButtonSectionDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableTopButtonSectionDirective, { read: TemplateRef })
   public set topButtonSection(value: TemplateRef<any> | null) {
     this._topButtonSection = value;
     this.cd.markForCheck();
@@ -117,7 +117,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
   private _topButtonSection: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableListActionsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableListActionsDirective, { read: TemplateRef })
   public set listActions(value: TemplateRef<any> | null) {
     this._listActions = value;
     this.updateTableState();
@@ -127,7 +127,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
   private _listActions: TemplateRef<any> | null = null;
 
-  @ContentChild(PsTableRowActionsDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsTableRowActionsDirective, { read: TemplateRef })
   public set rowActions(value: TemplateRef<any> | null) {
     this._rowActions = value;
     this.updateTableState();
@@ -145,7 +145,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
 
   @HostBinding('class.ps-table--row-detail')
-  @ContentChild(PsTableRowDetailDirective, { static: false })
+  @ContentChild(PsTableRowDetailDirective)
   public set rowDetail(value: PsTableRowDetailDirective | null) {
     this._rowDetail = value;
     this.updateTableState();

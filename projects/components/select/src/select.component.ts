@@ -60,10 +60,10 @@ export class PsSelectComponent<T = any> implements ControlValueAccessor, MatForm
   public static nextId = 0;
   @HostBinding() public id = `ps-select-${PsSelectComponent.nextId++}`;
 
-  @ContentChild(PsSelectOptionTemplateDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsSelectOptionTemplateDirective, { read: TemplateRef })
   public optionTemplate: TemplateRef<any> | null = null;
 
-  @ContentChild(PsSelectTriggerTemplateDirective, { read: TemplateRef, static: false })
+  @ContentChild(PsSelectTriggerTemplateDirective, { read: TemplateRef })
   public triggerTemplate: TemplateRef<any> | null = null;
 
   @ViewChild(MatSelect, { static: true }) public set setMatSelect(select: MatSelect) {

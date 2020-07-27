@@ -85,7 +85,7 @@ export class PsFormComponent implements AfterViewInit, OnDestroy {
     return this.dataSource.exception;
   }
 
-  @ViewChild('errorCardWrapper', { static: false }) public errorCardWrapper: ElementRef | null;
+  @ViewChild('errorCardWrapper') public errorCardWrapper: ElementRef | null;
 
   private _dataSourceSub = Subscription.EMPTY;
   private _errorCardObserver: IntersectionObserver;
