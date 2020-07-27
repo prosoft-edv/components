@@ -343,7 +343,7 @@ describe('PsTableComponent', () => {
       expect(table.showSorting).toBe(true);
       expect(table.sortDefinitions).toEqual([customSortDef]);
 
-      table.sortDefinitions = [];
+      table.sortDefinitions = null;
       expect(table.showSorting).toBe(false);
       expect(table.sortDefinitions).toEqual([]);
     }));
@@ -370,7 +370,7 @@ describe('PsTableComponent', () => {
       expect(router.navigate).toHaveBeenCalledWith([], { queryParams: expectedQueryParams, relativeTo: route });
     });
 
-    it('should set locale and update data if data source changes', fakeAsync(() => {
+    it('should set locale on the data source', fakeAsync(() => {
       const initialDataSource = new PsTableDataSource(() => of([]), 'client');
       spyOn(initialDataSource, 'updateData');
       const newDataSource = new PsTableDataSource(() => of([]), 'client');
@@ -378,21 +378,12 @@ describe('PsTableComponent', () => {
 
       const table = createTableInstance();
       table.dataSource = initialDataSource;
-      table.ngOnChanges({ dataSource: new SimpleChange(null, initialDataSource, true) });
       table.ngOnInit();
       table.ngAfterContentInit();
 
       tick(1);
 
       expect(initialDataSource.locale).toBe('de');
-
-      table.dataSource = newDataSource;
-      table.ngOnChanges({ dataSource: new SimpleChange(null, newDataSource, false) });
-
-      expect(newDataSource.locale).toBe('de');
-
-      expect(initialDataSource.updateData).toHaveBeenCalledTimes(1);
-      expect(newDataSource.updateData).toHaveBeenCalledTimes(1);
     }));
 
     it('should update state when sort changes', fakeAsync(() => {
@@ -429,17 +420,48 @@ describe('PsTableComponent', () => {
 
       const table = createTableInstance();
       table.tableId = 'tableId';
-      table.flipContainer = { toggleFlip: () => {} } as any;
-      spyOn(table.flipContainer, 'toggleFlip');
+      table.flipContainer = { showFront: () => {} } as any;
+      spyOn(table.flipContainer, 'showFront');
 
       table.onSettingsSaved();
 
-      expect(table.flipContainer.toggleFlip).toHaveBeenCalledTimes(1);
+      expect(table.flipContainer.showFront).toHaveBeenCalledTimes(1);
       const expectedQueryParams = {
         existingParam: '0815',
       };
       expect(router.navigate).toHaveBeenCalledWith([], { queryParams: expectedQueryParams, relativeTo: route });
       tick(1);
+    }));
+
+    it('should update view when view/content children change', fakeAsync(() => {
+      spyOn(cd, 'markForCheck');
+      const table = createTableInstance() as PsTableComponent & { updateTableState: () => void };
+      spyOn(table, 'updateTableState').and.callThrough();
+
+      table.customHeader = null;
+      expect(cd.markForCheck).toHaveBeenCalledTimes(1);
+
+      table.customSettings = null;
+      expect(cd.markForCheck).toHaveBeenCalledTimes(2);
+
+      table.topButtonSection = null;
+      expect(cd.markForCheck).toHaveBeenCalledTimes(3);
+
+      table.listActions = null;
+      expect((table as any).updateTableState).toHaveBeenCalledTimes(1);
+      expect(cd.markForCheck).toHaveBeenCalledTimes(4);
+
+      table.rowActions = null;
+      expect((table as any).updateTableState).toHaveBeenCalledTimes(2);
+      expect(cd.markForCheck).toHaveBeenCalledTimes(5);
+
+      table.columnDefsSetter = new QueryList();
+      expect((table as any).updateTableState).toHaveBeenCalledTimes(3);
+      expect(cd.markForCheck).toHaveBeenCalledTimes(6);
+
+      table.rowDetail = null;
+      expect((table as any).updateTableState).toHaveBeenCalledTimes(4);
+      expect(cd.markForCheck).toHaveBeenCalledTimes(7);
     }));
   });
 
@@ -503,7 +525,8 @@ describe('PsTableComponent', () => {
       expect(fixture.debugElement.query(By.css('h2')).nativeElement.textContent.trim()).toEqual('title');
 
       // ps-table[cardLayout]
-      expect(psTableDbg.classes['mat-elevation-z3']).toEqual(true);
+      expect(psTableDbg.classes['mat-elevation-z1']).toEqual(true);
+      expect(psTableDbg.classes['ps-table--card']).toEqual(true);
 
       // ps-table[striped]
       expect(psTableDbg.classes['ps-table--striped']).toEqual(true);
@@ -619,7 +642,7 @@ describe('PsTableComponent', () => {
         flush();
         fixture.detectChanges();
         flush();
-        expect(component.table.flipContainer.show).toEqual('back');
+        expect(component.table.flipContainer.active).toEqual('back');
         fixture.whenRenderingDone().then(() => {
           const tableSettingsDbg = psTableDbg.query(By.directive(PsTableSettingsComponent));
           // *psTableCustomSettings

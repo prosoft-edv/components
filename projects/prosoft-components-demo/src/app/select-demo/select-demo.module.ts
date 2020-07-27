@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { RouterModule } from '@angular/router';
 import { DefaultPsSelectService, PsSelectModule } from '@prosoft/components/select';
@@ -41,6 +43,8 @@ import { SelectDemoComponent } from './select-demo.component';
     MatFormFieldModule,
     MatRadioModule,
     MatCheckboxModule,
+    MatCardModule,
+    MatInputModule,
     RouterModule.forChild([
       {
         path: '',

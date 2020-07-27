@@ -3,6 +3,103 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.21](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.20...@prosoft/components@0.1.0-alpha.21) (2020-06-19)
+
+
+### Features
+
+* **select:** items can be disabled ([#112](https://github.com/prosoft-edv/components/issues/112)) ([2cfd6e0](https://github.com/prosoft-edv/components/commit/2cfd6e0))
+
+
+
+
+
+
+# [0.1.0-alpha.20](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.19...@prosoft/components@0.1.0-alpha.20) (2020-06-18)
+
+
+### Bug Fixes
+
+* **number-input:** formatting permanently active in apps locale ([#110](https://github.com/prosoft-edv/components/issues/110)) ([328a5e4](https://github.com/prosoft-edv/components/commit/328a5e4))
+* **table:** view now updates when view/content children change ([#111](https://github.com/prosoft-edv/components/issues/111)) ([1fe4d4f](https://github.com/prosoft-edv/components/commit/1fe4d4f)), closes [#108](https://github.com/prosoft-edv/components/issues/108)
+
+
+### Features
+
+* **flip-container:** added methods to flip to back/front ([#109](https://github.com/prosoft-edv/components/issues/109)) ([113d6ab](https://github.com/prosoft-edv/components/commit/113d6ab)), closes [#107](https://github.com/prosoft-edv/components/issues/107)
+
+
+### BREAKING CHANGES
+
+* **flip-container:** show property is now named active
+* **number-input:** formatInput removed
+
+
+
+
+
+# [0.1.0-alpha.19](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.18...@prosoft/components@0.1.0-alpha.19) (2020-06-15)
+
+
+### Bug Fixes
+
+* **block-ui:** no flickering in fixed size parents with overflow auto ([#105](https://github.com/prosoft-edv/components/issues/105)) ([7e589e6](https://github.com/prosoft-edv/components/commit/7e589e6))
+* **table:** actions always stay right aligned ([#104](https://github.com/prosoft-edv/components/issues/104)) ([aed0d6a](https://github.com/prosoft-edv/components/commit/aed0d6a)), closes [#103](https://github.com/prosoft-edv/components/issues/103)
+
+
+### Features
+
+* **number-input:** new input for number values ([#101](https://github.com/prosoft-edv/components/issues/101)) ([9e81016](https://github.com/prosoft-edv/components/commit/9e81016))
+
+
+
+
+
+
+# [0.1.0-alpha.18](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.17...@prosoft/components@0.1.0-alpha.18) (2020-06-09)
+
+
+### Bug Fixes
+
+* style fixes for table and form ([#102](https://github.com/prosoft-edv/components/issues/102)) ([559b257](https://github.com/prosoft-edv/components/commit/559b257))
+
+
+### Features
+
+* **table:** pass loadTrigger data to loadFn ([#95](https://github.com/prosoft-edv/components/issues/95)) ([0224210](https://github.com/prosoft-edv/components/commit/0224210))
+
+
+
+
+
+
+# [0.1.0-alpha.17](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.16...@prosoft/components@0.1.0-alpha.17) (2020-06-08)
+
+
+### Bug Fixes
+
+* elevation and border radius adjustments ([#94](https://github.com/prosoft-edv/components/issues/94)) ([448ba16](https://github.com/prosoft-edv/components/commit/448ba16)), closes [#93](https://github.com/prosoft-edv/components/issues/93)
+
+
+### Code Refactoring
+
+* **savebar:** remove prev/next button support ([#83](https://github.com/prosoft-edv/components/issues/83)) ([9904423](https://github.com/prosoft-edv/components/commit/9904423))
+
+
+### Features
+
+* **select:** added sortBy option to default datasource ([#98](https://github.com/prosoft-edv/components/issues/98)) ([1d8e92f](https://github.com/prosoft-edv/components/commit/1d8e92f))
+
+
+### BREAKING CHANGES
+
+* **savebar:** removed prev/next button support
+
+
+
+
+
+
 # [0.1.0-alpha.16](https://github.com/prosoft-edv/components/compare/@prosoft/components@0.1.0-alpha.15...@prosoft/components@0.1.0-alpha.16) (2020-05-23)
 
 

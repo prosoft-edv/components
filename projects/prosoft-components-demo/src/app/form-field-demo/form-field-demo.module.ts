@@ -11,24 +11,11 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { RouterModule } from '@angular/router';
-import { BasePsFormService, IPsFormError, IPsFormErrorData, PsFormBaseModule } from '@prosoft/components/form-base';
+import { PsFormBaseModule } from '@prosoft/components/form-base';
 import { PsFormFieldModule } from '@prosoft/components/form-field';
-import { Observable, of } from 'rxjs';
+import { DemoPsFormsService } from '../common/demo-ps-form-service';
+import { InvalidErrorStateMatcher } from '../common/invalid-error-state-matcher';
 import { FormFieldDemoComponent, ReferenceColumnComponent } from './form-field-demo.component';
-
-export class DemoPsFormsService extends BasePsFormService {
-  public getLabel(formControl: any): Observable<string> {
-    return formControl.psLabel ? of(formControl.psLabel) : null;
-  }
-  protected mapDataToError(errorData: IPsFormErrorData[]): Observable<IPsFormError[]> {
-    return of(
-      errorData.map(data => ({
-        errorText: `${data.controlPath} - ${data.errorKey} - ${JSON.stringify(data.errorValue)}`,
-        data: data,
-      }))
-    );
-  }
-}
 
 @Injectable()
 export class CustomErrorStateMatcher implements ErrorStateMatcher {
@@ -60,6 +47,6 @@ export class CustomErrorStateMatcher implements ErrorStateMatcher {
     MatSliderModule,
   ],
   declarations: [FormFieldDemoComponent, ReferenceColumnComponent],
-  providers: [{ provide: ErrorStateMatcher, useClass: CustomErrorStateMatcher }],
+  providers: [{ provide: ErrorStateMatcher, useClass: InvalidErrorStateMatcher }],
 })
 export class FormFieldDemoModule {}
