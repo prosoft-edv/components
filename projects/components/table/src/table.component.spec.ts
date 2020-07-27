@@ -488,7 +488,7 @@ describe('PsTableComponent', () => {
       const component = fixture.componentInstance;
       expect(component).toBeDefined();
 
-      const intlService: PsIntlServiceEn = TestBed.get(PsIntlService);
+      const intlService = TestBed.inject(PsIntlService);
       const defaultTableIntl = intlService.get('table');
       fixture.detectChanges();
 
