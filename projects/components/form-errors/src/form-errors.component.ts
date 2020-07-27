@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import type { FormGroup } from '@angular/forms';
 import { IPsFormError, PsFormService } from '@prosoft/components/form-base';
 import { Observable } from 'rxjs';
 

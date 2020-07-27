@@ -1,13 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  ViewChild,
-  ViewEncapsulation,
-  AfterViewInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, ViewChild, ViewEncapsulation, AfterViewInit } from '@angular/core';
+import type { ElementRef } from '@angular/core';
 
 @Component({
   selector: 'ps-block-ui',

@@ -14,12 +14,12 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  QueryList,
   SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import type { QueryList } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPsTableIntlTexts, PsExceptionMessageExtractor, PsIntlService } from '@prosoft/components/core';
@@ -268,7 +268,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   public ngOnDestroy(): void {
     if (this.subscriptions) {
-      this.subscriptions.forEach(s => s.unsubscribe());
+      this.subscriptions.forEach((s) => s.unsubscribe());
     }
 
     if (this._intlChangesSub) {
@@ -356,9 +356,9 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
     this.sortDirection = urlSettings.sortDirection || tableSettings.sortDirection || 'asc';
     this.filterText = urlSettings.searchText || '';
 
-    this.displayedColumns = this.columnDefs.map(x => x.property);
+    this.displayedColumns = this.columnDefs.map((x) => x.property);
     if (tableSettings.columnBlacklist && tableSettings.columnBlacklist.length) {
-      this.displayedColumns = this.displayedColumns.filter(x => !tableSettings.columnBlacklist.includes(x));
+      this.displayedColumns = this.displayedColumns.filter((x) => !tableSettings.columnBlacklist.includes(x));
     }
 
     // Row Detail Expander aktivieren
@@ -381,8 +381,8 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   private mergeSortDefinitions() {
     const sortableColumns = this.columnDefs
-      .filter(def => def.sortable)
-      .map(def => <IPsTableSortDefinition>{ prop: def.property, displayName: def.header });
+      .filter((def) => def.sortable)
+      .map((def) => <IPsTableSortDefinition>{ prop: def.property, displayName: def.header });
 
     this._mergedSortDefinitions = sortableColumns
       .concat(this._sortDefinitions)

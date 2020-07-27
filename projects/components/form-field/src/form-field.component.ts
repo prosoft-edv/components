@@ -9,7 +9,6 @@ import {
   HostBinding,
   Input,
   OnDestroy,
-  QueryList,
   ViewChild,
   ViewEncapsulation,
   InjectionToken,
@@ -18,6 +17,7 @@ import {
   SimpleChanges,
   OnChanges,
 } from '@angular/core';
+import type { QueryList } from '@angular/core';
 import { FormControl, NgControl } from '@angular/forms';
 import { FloatLabelType } from '@angular/material/core';
 import { MatFormField, MatFormFieldAppearance, MatFormFieldControl, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
@@ -343,7 +343,7 @@ export class PsFormFieldComponent implements OnChanges, AfterContentInit, OnDest
       }
 
       this.errors$ = this.formsService.getControlErrors(this.formControl).pipe(
-        tap(errors => {
+        tap((errors) => {
           this.hasError = !!errors.length;
         })
       );
@@ -381,7 +381,7 @@ export class PsFormFieldComponent implements OnChanges, AfterContentInit, OnDest
     if (this.labelTextSubscription) {
       this.labelTextSubscription.unsubscribe();
     }
-    this.labelTextSubscription = labelText$.subscribe(label => {
+    this.labelTextSubscription = labelText$.subscribe((label) => {
       if (this.controlType.startsWith('mat-checkbox')) {
         const labelNode = this._elementRef.nativeElement.querySelectorAll('.mat-checkbox-label')[0];
         if (!labelNode.innerText.trim()) {

@@ -14,7 +14,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { ErrorStateMatcher, MatOption } from '@angular/material/core';
+import { MatOption } from '@angular/material/core';
+import type { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { PsSelectOptionTemplateDirective } from './select-option-template.directive';
@@ -178,7 +179,7 @@ export class PsSelectComponent<T = any> implements ControlValueAccessor, MatForm
   public get tooltip(): string {
     // MatSelect is not fully initialized in the beginning, so we need to skip this here until it is ready
     if (this.multiple && this._matSelect && this._matSelect._selectionModel && this._matSelect.selected) {
-      return (<MatOption[]>this._matSelect.selected).map(x => x.viewValue).join(', ');
+      return (<MatOption[]>this._matSelect.selected).map((x) => x.viewValue).join(', ');
     }
     return '';
   }

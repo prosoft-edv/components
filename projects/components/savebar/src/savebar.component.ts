@@ -15,7 +15,7 @@ import {
   TemplateRef,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import type { FormGroup } from '@angular/forms';
 import { IPsSavebarIntlTexts, PsIntlService } from '@prosoft/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { startWith, takeUntil } from 'rxjs/operators';
@@ -76,15 +76,10 @@ export class PsSavebarComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private intlService: PsIntlService, private renderer: Renderer2, private ngZone: NgZone, public cd: ChangeDetectorRef) {}
 
   public ngOnInit() {
-    this.intlService.intlChanged$
-      .pipe(
-        startWith(null as any),
-        takeUntil(this.ngUnsubscribe$)
-      )
-      .subscribe(() => {
-        this.updateIntl();
-        this.cd.markForCheck();
-      });
+    this.intlService.intlChanged$.pipe(startWith(null as any), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+      this.updateIntl();
+      this.cd.markForCheck();
+    });
 
     this.updateSaveKeyListener();
   }
