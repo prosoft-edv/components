@@ -1,0 +1,11 @@
+{
+  "$schema": "../../../node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "table-card-layout-to-layout": {
+      "version": "0.1.0-alpha.23",
+      "description": "Add my library to the project.",
+      "factory": "./table-card-layout-to-layout/index"
+    }
+  },
+  "test": {}
+}
