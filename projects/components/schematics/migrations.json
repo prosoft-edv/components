@@ -3,9 +3,8 @@
   "schematics": {
     "table-card-layout-to-layout": {
       "version": "0.1.0-alpha.23",
-      "description": "Add my library to the project.",
+      "description": "Replace ps-table input 'cardLayout' with 'layout'.",
       "factory": "./table-card-layout-to-layout/index"
     }
-  },
-  "test": {}
+  }
 }
