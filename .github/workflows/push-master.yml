@@ -19,7 +19,7 @@ jobs:
     - name: Build
       run: |
         npm ci
-        npm run ng -- build components
+        npm run build:components
         npm run ng -- build --prod --baseHref=https://prosoft-edv.github.io/components/
         cp dist/prosoft-components-demo/index.html dist/prosoft-components-demo/404.html
       env:
