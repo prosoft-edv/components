@@ -53,6 +53,7 @@ const route: ActivatedRoute = <any>{
       if (prop === 'queryParamMap') {
         return obj.value;
       }
+      return null;
     },
   }),
   queryParamMap: queryParams$,
@@ -156,9 +157,9 @@ export class TestComponent {
   @ViewChild(PsTableComponent, { static: true }) table: PsTableComponent;
   @ViewChild(PsTablePaginationComponent, { static: true }) paginator: PsTablePaginationComponent;
 
-  public onPage(event: any) {}
-  public onCustomListActionClick(slectedItems: any[]) {}
-  public onCustomRowActionClick(item: any) {}
+  public onPage(_event: any) {}
+  public onCustomListActionClick(_slectedItems: any[]) {}
+  public onCustomRowActionClick(_item: any) {}
 }
 
 describe('PsTableComponent', () => {
@@ -534,19 +535,19 @@ describe('PsTableComponent', () => {
       // ps-table[layout]
       expect(psTableDbg.classes['mat-elevation-z1']).toEqual(true);
       expect(psTableDbg.classes['ps-table--card']).toEqual(true);
-      expect(psTableDbg.classes['ps-table--border']).toEqual(false);
+      expect(psTableDbg.classes['ps-table--border']).toBeFalsy();
 
       component.table.layout = 'border';
       fixture.detectChanges();
-      expect(psTableDbg.classes['mat-elevation-z1']).toEqual(false);
-      expect(psTableDbg.classes['ps-table--card']).toEqual(false);
+      expect(psTableDbg.classes['mat-elevation-z1']).toBeFalsy();
+      expect(psTableDbg.classes['ps-table--card']).toBeFalsy();
       expect(psTableDbg.classes['ps-table--border']).toEqual(true);
 
       component.table.layout = 'flat';
       fixture.detectChanges();
-      expect(psTableDbg.classes['mat-elevation-z1']).toEqual(false);
-      expect(psTableDbg.classes['ps-table--card']).toEqual(false);
-      expect(psTableDbg.classes['ps-table--border']).toEqual(false);
+      expect(psTableDbg.classes['mat-elevation-z1']).toBeFalsy();
+      expect(psTableDbg.classes['ps-table--card']).toBeFalsy();
+      expect(psTableDbg.classes['ps-table--border']).toBeFalsy();
 
       // ps-table[striped]
       expect(psTableDbg.classes['ps-table--striped']).toEqual(true);
