@@ -2,9 +2,8 @@ import { DataSource, SelectionModel } from '@angular/cdk/collections';
 import { TrackByFunction } from '@angular/core';
 import { BehaviorSubject, NEVER, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, finalize, map, take, tap } from 'rxjs/operators';
-
 import { _isNumberValue } from '../helper/table.helper';
-import { IPsTableUpdateDataInfo, IExtendedPsTableUpdateDataInfo } from '../models';
+import { IExtendedPsTableUpdateDataInfo, IPsTableUpdateDataInfo } from '../models';
 
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
@@ -291,12 +290,11 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
     if (!this.tableReady) {
       return;
     }
-    this._loadDataSubscription.unsubscribe();
-
-    this.error = null;
-    this.selectionModel.clear();
 
     if (this.mode === 'server' || forceReload || !this._hasData) {
+      this.selectionModel.clear();
+      this._loadDataSubscription.unsubscribe();
+      this.error = null;
       this.loading = true;
       this._renderData.next([]);
       this._internalDetectChanges.next();
@@ -328,7 +326,8 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
             this._checkPageValidity(filterResult.totalItems);
           }
         });
-    } else {
+    } else if (!this.loading) {
+      this.selectionModel.clear();
       this._data.next(this.data);
       this._internalDetectChanges.next();
     }

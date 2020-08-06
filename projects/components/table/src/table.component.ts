@@ -19,13 +19,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import type { QueryList } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPsTableIntlTexts, PsExceptionMessageExtractor, PsIntlService } from '@prosoft/components/core';
 import { PsFlipContainerComponent } from '@prosoft/components/flip-container';
 import { combineLatest, Subject, Subscription } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
-
 import { PsTableDataSource } from './data/table-data-source';
 import {
   PsTableColumnDirective,
@@ -40,12 +40,16 @@ import { PsTableStateManager, PsTableUrlStateManager } from './helper/state-mana
 import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 
-import type { QueryList } from '@angular/core';
-
 @Component({
   selector: 'ps-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  // tslint:disable-next-line: no-host-metadata-property
+  host: {
+    '[class.mat-elevation-z1]': `layout === 'card'`,
+    '[class.ps-table--card]': `layout === 'card'`,
+    '[class.ps-table--border]': `layout === 'border'`,
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
@@ -70,13 +74,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   @Input() public pageDebounce: number;
 
   @Input()
-  @HostBinding('class.mat-elevation-z1')
-  public cardLayout = true;
-
-  @HostBinding('class.ps-table--card')
-  public get cardLayoutBinding() {
-    return this.cardLayout;
-  }
+  public layout: 'card' | 'border' | 'flat' = 'card';
 
   @Input()
   @HostBinding('class.ps-table--striped')

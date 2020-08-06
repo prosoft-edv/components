@@ -29,7 +29,7 @@ class TestSettingsService extends PsTableSettingsService {
   public settingsEnabled = false;
 
   public getStream(tableId: string): Observable<IPsTableSetting> {
-    return this.settings$.pipe(map(settings => settings[tableId]));
+    return this.settings$.pipe(map((settings) => settings[tableId]));
   }
 
   public save(id: string, settings: IPsTableSetting): Observable<void> {
@@ -78,7 +78,7 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
       [refreshable]="refreshable"
       [filterable]="filterable"
       [showSettings]="showSettings"
-      [cardLayout]="cardLayout"
+      [layout]="layout"
       [striped]="striped"
       [sortDefinitions]="sortDefinitions"
       (page)="onPage($event)"
@@ -133,7 +133,12 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
 export class TestComponent {
   public caption = 'title';
   public dataSource = new PsTableDataSource(
-    () => of([{ id: 1, str: 'item 1' }, { id: 2, str: 'item 2' }, { id: 3, str: 'item 3' }]),
+    () =>
+      of([
+        { id: 1, str: 'item 1' },
+        { id: 2, str: 'item 2' },
+        { id: 3, str: 'item 3' },
+      ]),
     'client'
   );
   public tableId = 'tableId';
@@ -141,7 +146,7 @@ export class TestComponent {
   public refreshable = true;
   public filterable = true;
   public showSettings = true;
-  public cardLayout = true;
+  public layout = 'card';
   public striped = true;
   public sortDefinitions: IPsTableSortDefinition[] = [{ prop: '__virtual', displayName: 'Virtual Column' }];
 
@@ -526,9 +531,22 @@ describe('PsTableComponent', () => {
       // ps-table[caption]
       expect(fixture.debugElement.query(By.css('h2')).nativeElement.textContent.trim()).toEqual('title');
 
-      // ps-table[cardLayout]
+      // ps-table[layout]
       expect(psTableDbg.classes['mat-elevation-z1']).toEqual(true);
       expect(psTableDbg.classes['ps-table--card']).toEqual(true);
+      expect(psTableDbg.classes['ps-table--border']).toEqual(false);
+
+      component.table.layout = 'border';
+      fixture.detectChanges();
+      expect(psTableDbg.classes['mat-elevation-z1']).toEqual(false);
+      expect(psTableDbg.classes['ps-table--card']).toEqual(false);
+      expect(psTableDbg.classes['ps-table--border']).toEqual(true);
+
+      component.table.layout = 'flat';
+      fixture.detectChanges();
+      expect(psTableDbg.classes['mat-elevation-z1']).toEqual(false);
+      expect(psTableDbg.classes['ps-table--card']).toEqual(false);
+      expect(psTableDbg.classes['ps-table--border']).toEqual(false);
 
       // ps-table[striped]
       expect(psTableDbg.classes['ps-table--striped']).toEqual(true);
@@ -595,9 +613,9 @@ describe('PsTableComponent', () => {
 
       // sort
       spyOn(component.table, 'onSortChanged');
-      useMatSelect(fixture, 'ps-table-sort', matOptionNodes => {
+      useMatSelect(fixture, 'ps-table-sort', (matOptionNodes) => {
         // ps-table[sortDefinitions] + ps-table-column[sortable]
-        expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['', 'id', 'Virtual Column']);
+        expect(Array.from(matOptionNodes).map((x) => x.textContent.trim())).toEqual(['', 'id', 'Virtual Column']);
 
         // sort change
         const itemNode = matOptionNodes.item(2);
@@ -609,9 +627,9 @@ describe('PsTableComponent', () => {
       });
 
       // *psTableRowActions
-      useMatMenu(fixture, '.ps-table-data__options-column button', rowActionButtonEls => {
+      useMatMenu(fixture, '.ps-table-data__options-column button', (rowActionButtonEls) => {
         spyOn(component, 'onCustomRowActionClick');
-        expect(Array.from(rowActionButtonEls).map(x => x.textContent.trim())).toEqual(['item 1 custom row actions']);
+        expect(Array.from(rowActionButtonEls).map((x) => x.textContent.trim())).toEqual(['item 1 custom row actions']);
         rowActionButtonEls.item(0).dispatchEvent(new MouseEvent('click'));
         flush();
         expect(component.onCustomRowActionClick).toHaveBeenCalledWith({ id: 1, str: 'item 1' });
@@ -621,10 +639,10 @@ describe('PsTableComponent', () => {
       const firstRowCheckboxEl = rowEls[0].querySelector('mat-checkbox input');
       firstRowCheckboxEl.dispatchEvent(new MouseEvent('click'));
 
-      useMatMenu(fixture, '.ps-table-data__options-column-header button', listActionButtonEls => {
+      useMatMenu(fixture, '.ps-table-data__options-column-header button', (listActionButtonEls) => {
         // *psTableListActions
         spyOn(component, 'onCustomListActionClick');
-        expect(Array.from(listActionButtonEls).map(x => x.textContent.trim())).toEqual([
+        expect(Array.from(listActionButtonEls).map((x) => x.textContent.trim())).toEqual([
           'custom list actions',
           'refresh Refresh list',
           'settings List settings',
@@ -657,8 +675,8 @@ describe('PsTableComponent', () => {
         listActionButtonEls = getMatMenuNodes();
         expect(
           Array.from(listActionButtonEls)
-            .map(x => x.textContent.trim())
-            .filter(x => x.includes('refresh'))
+            .map((x) => x.textContent.trim())
+            .filter((x) => x.includes('refresh'))
         ).toEqual([]);
       });
     }));
@@ -680,7 +698,7 @@ describe('PsTableComponent', () => {
       const pageSelect = paginationComponent.queryAll(By.directive(MatSelect));
 
       expect(pageSelect.length).toEqual(2);
-      expect(pageSelect.find(x => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))).toBeDefined();
+      expect(pageSelect.find((x) => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))).toBeDefined();
     }));
 
     it('should not show "GoToPage"-Select, if there are less then 3 pages', fakeAsync(() => {
@@ -700,7 +718,7 @@ describe('PsTableComponent', () => {
 
       expect(pageSelect.length).toEqual(1);
       expect(
-        pageSelect.find(x => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))
+        pageSelect.find((x) => (x.nativeElement as HTMLElement).classList.contains('ps-table-pagination__page-select'))
       ).not.toBeDefined();
     }));
 
@@ -717,8 +735,8 @@ describe('PsTableComponent', () => {
       tick(1);
       fixture.detectChanges();
 
-      useMatSelect(fixture, '.ps-table-pagination__page-select', matOptionNodes => {
-        expect(Array.from(matOptionNodes).map(x => x.textContent.trim())).toEqual(['1', '2', '3', '4']);
+      useMatSelect(fixture, '.ps-table-pagination__page-select', (matOptionNodes) => {
+        expect(Array.from(matOptionNodes).map((x) => x.textContent.trim())).toEqual(['1', '2', '3', '4']);
 
         const itemNode = matOptionNodes.item(2);
         itemNode.dispatchEvent(new Event('click'));
