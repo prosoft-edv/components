@@ -246,15 +246,15 @@ export class PsSelectComponent<T = any> implements ControlValueAccessor, MatForm
     // This method is overwritten in setMatSelect
   }
 
-  public registerOnChange(fn: () => void) {
+  public registerOnChange(_fn: () => void) {
     // This method is overwritten in setMatSelect
   }
 
-  public registerOnTouched(fn: any): void {
+  public registerOnTouched(_fn: any): void {
     // This method is overwritten in setMatSelect
   }
 
-  public setDisabledState(isDisabled: boolean): void {
+  public setDisabledState(_isDisabled: boolean): void {
     // This method is overwritten in setMatSelect
   }
 

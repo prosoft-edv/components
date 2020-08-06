@@ -236,7 +236,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
   @ViewChild('inputfield', { static: true })
   _inputfieldViewChild: ElementRef<HTMLInputElement>;
 
-  _onModelChange = (val: any) => {};
+  _onModelChange = (_val: any) => {};
   _onModelTouched = () => {};
 
   constructor(
@@ -337,7 +337,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
     }
   }
 
-  _spin(event: Event, dir: number) {
+  _spin(_event: Event, dir: number) {
     const step = this.stepSize * dir;
     const newValue = this._fixNumber(this.value + step);
     this.value = newValue;
@@ -414,13 +414,13 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
     }
   }
 
-  _onUpButtonMouseup(event: Event) {
+  _onUpButtonMouseup(_event: Event) {
     if (!this.disabled) {
       this._clearTimer();
     }
   }
 
-  _onUpButtonMouseleave(event: Event) {
+  _onUpButtonMouseleave(_event: Event) {
     if (!this.disabled) {
       this._clearTimer();
     }
@@ -434,13 +434,13 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
     }
   }
 
-  _onDownButtonMouseup(event: Event) {
+  _onDownButtonMouseup(_event: Event) {
     if (!this.disabled) {
       this._clearTimer();
     }
   }
 
-  _onDownButtonMouseleave(event: Event) {
+  _onDownButtonMouseleave(_event: Event) {
     if (!this.disabled) {
       this._clearTimer();
     }
@@ -459,7 +459,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
     }
   }
 
-  _onInput(event: KeyboardEvent) {
+  _onInput(event: Event) {
     this._value = this._parseValue((<HTMLInputElement>event.target).value);
     this.stateChanges.next();
     this._onModelChange(this.value);

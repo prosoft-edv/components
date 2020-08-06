@@ -51,7 +51,7 @@ import type { QueryList } from '@angular/core';
 })
 export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, OnDestroy {
   @Input() public caption: string;
-  @Input() public dataSource: PsTableDataSource<{ [key: string]: any }>;
+  @Input() public dataSource: PsTableDataSource<any, any>;
   @Input() public tableId: string;
   @Input() public intlOverride: Partial<IPsTableIntlTexts>;
   @Input()
