@@ -211,7 +211,6 @@ describe('PsSelectDataComponent', () => {
     spyOn(dataSource, 'selectedValuesChanged');
 
     const initialSelectedValue = { value: 42, label: 'init' };
-    (<FormControl>(<unknown>matSelect.ngControl)).patchValue(initialSelectedValue);
     matSelect.writeValue(initialSelectedValue);
     component.ngAfterViewInit();
     expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([initialSelectedValue]);
