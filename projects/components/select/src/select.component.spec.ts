@@ -345,13 +345,13 @@ describe('PsSelectComponent', () => {
 
     // mat-select-search
     expect(matOptionNodes.item(0).classList.contains('mat-option-disabled')).toBeTruthy();
-    expect(matOptionNodes.item(0).classList.contains('ps-select-data__search')).toBeTruthy();
+    expect(matOptionNodes.item(0).classList.contains('ps-select__search')).toBeTruthy();
 
     // empty input
-    expect(matOptionNodes.item(1).classList.contains('ps-select-data__empty-option')).toBeTruthy();
+    expect(matOptionNodes.item(1).classList.contains('ps-select__empty-option')).toBeTruthy();
 
     // items
-    expect(matOptionNodes.item(2).classList.contains('ps-select-data__option')).toBeTruthy();
+    expect(matOptionNodes.item(2).classList.contains('ps-select__option')).toBeTruthy();
   });
 
   it('should set multiple css class for multiple mode', async () => {
@@ -452,3 +452,15 @@ async function closeBackdrop<T>(fixture: ComponentFixture<T>) {
   fixture.detectChanges();
   await fixture.whenRenderingDone();
 }
+
+/**
+ * TODO:
+ * test für indeterminate checkbox
+ * select data tests
+ *
+ *
+ *
+ * kaputt:
+ * sort on close
+ * ??? options entfernen wenn was anderes selected wird
+ */
