@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl, NgForm, FormGroupDirective } from '@angular/forms';
 import { MatOption, mixinErrorState, mixinDisabled, CanDisableCtor, CanUpdateErrorStateCtor } from '@angular/material/core';
-import type { ErrorStateMatcher } from '@angular/material/core';
+import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -142,12 +142,12 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
   @Output() public openedChange = new EventEmitter<boolean>();
   @Output() public selectionChange = new EventEmitter<MatSelectChange>();
 
-  public get empty() {
-    return this._matSelect.empty;
-  }
+  public empty = true;
+
   public get shouldLabelFloat() {
     return this._matSelect.shouldLabelFloat;
   }
+
   public get focused() {
     // tslint:disable-next-line: deprecation
     return this._matSelect.focused;
@@ -156,6 +156,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
   public get compareWith(): (o1: any, o2: any) => boolean {
     return this._dataSourceInstance?.compareWith ?? DEFAULT_COMPARER;
   }
+
   public readonly controlType = 'ps-select';
 
   /** FormControl for the search filter */
@@ -242,15 +243,15 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
   private _onChange: (value: any) => void = () => {};
 
   constructor(
-    _defaultErrorStateMatcher: ErrorStateMatcher,
     elementRef: ElementRef,
+    defaultErrorStateMatcher: ErrorStateMatcher,
     private selectService: PsSelectService,
     private cd: ChangeDetectorRef,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
     @Optional() @Self() public ngControl: NgControl
   ) {
-    super(elementRef, _defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+    super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
@@ -283,6 +284,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
   public onContainerClick(_: MouseEvent): void {
     this._matSelect.onContainerClick();
   }
+
   public setDescribedByIds(ids: string[]): void {
     this._matSelect.setDescribedByIds(ids);
   }
@@ -328,6 +330,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
 
   private _propagateValueChange(value: any, source: ValueChangeSource) {
     this._value = value;
+    this.empty = this._matSelect.empty;
     this._updateToggleAllCheckbox();
     this._pushSelectedValuesToDataSource(value);
     if (source !== ValueChangeSource.ValueInput) {
@@ -340,13 +343,16 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
   }
 
   private _pushSelectedValuesToDataSource(value: any): void {
+    if (!this._dataSourceInstance) {
+      return;
+    }
     let values: any[];
     if (this._matSelect.multiple) {
       values = Array.isArray(value) ? value : [];
     } else {
       values = value ? [value] : [];
     }
-    this.dataSource.selectedValuesChanged(values);
+    this._dataSourceInstance.selectedValuesChanged(values);
   }
 
   /** Set up a subscription for the data provided by the data source. */
