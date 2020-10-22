@@ -4,6 +4,7 @@ import {
   Component,
   ContentChild,
   DoCheck,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -15,11 +16,16 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  ElementRef,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl, NgForm, FormGroupDirective } from '@angular/forms';
-import { MatOption, mixinErrorState, mixinDisabled, CanDisableCtor, CanUpdateErrorStateCtor } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import {
+  CanDisableCtor,
+  CanUpdateErrorStateCtor,
+  ErrorStateMatcher,
+  MatOption,
+  mixinDisabled,
+  mixinErrorState,
+} from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -367,6 +373,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
     }
 
     this._dataSourceInstance.searchTextChanged(this.filterCtrl.value);
+    this._dataSourceInstance.panelOpenChanged(this._matSelect.panelOpen);
     this._pushSelectedValuesToDataSource(this._value);
 
     this._renderChangeSubscription = this._dataSourceInstance.connect().subscribe((items) => {

@@ -1,23 +1,22 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
-import { ChangeDetectorRef, Component, OnDestroy, Type, ViewChild, QueryList } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, QueryList, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormGroupDirective, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { MatOptionHarness, OptionHarnessFilters } from '@angular/material/core/testing';
 import { MatSelect } from '@angular/material/select';
-import { MatSelectHarness } from '@angular/material/select/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { Subject, Subscription, of, throwError } from 'rxjs';
+import { Observable, of, ReplaySubject, Subject, Subscription, throwError } from 'rxjs';
 import { DefaultPsSelectDataSource } from './defaults/default-select-data-source';
 import { DefaultPsSelectService } from './defaults/default-select-service';
+import { PsSelectItem } from './models';
+import { PsSelectDataSource } from './select-data-source';
 import { PsSelectComponent } from './select.component';
 import { PsSelectModule } from './select.module';
-import { OptionHarnessFilters, MatOptionHarness } from '@angular/material/core/testing';
-import { _PsSliderMixinBase } from 'dist/components/slider/src/slider.component';
 import { PsSelectService } from './select.service';
-import { PsSelectDataSource } from './select-data-source';
-import { PsSelectItem } from './models';
+import { PsSelectHarness } from './testing/select.harness';
 
 function createFakeMatSelect(): MatSelect {
   const matSelect = <any>{
@@ -46,7 +45,7 @@ function createFakeMatSelect(): MatSelect {
   return matSelect;
 }
 
-function createSelectService(): PsSelectService {
+function createFakeSelectService(): PsSelectService {
   const service = <PsSelectService>{
     createDataSource: (ds: any) => ds,
   };
@@ -54,7 +53,7 @@ function createSelectService(): PsSelectService {
   return service;
 }
 
-function createDataSource(items: PsSelectItem[] = []): PsSelectDataSource {
+function createFakeDataSource(items: PsSelectItem[] = []): PsSelectDataSource {
   const dataSource = <PsSelectDataSource>{
     connect: () => of<PsSelectItem[]>(items),
     disconnect: () => {},
@@ -68,9 +67,11 @@ function createDataSource(items: PsSelectItem[] = []): PsSelectDataSource {
 
 function createPsSelect(options?: { dataSource?: PsSelectDataSource; service: PsSelectService }) {
   const matSelect = createFakeMatSelect();
-  const dataSource = options?.dataSource ?? createDataSource();
-  const service = options?.service ?? createSelectService();
-  const component = new PsSelectComponent(null, null, service, <any>{ markForCheck: () => {} }, null, null, <any>{ control: null });
+  const dataSource = options?.dataSource ?? createFakeDataSource();
+  const service = options?.service ?? createFakeSelectService();
+  const component = new PsSelectComponent({ nativeElement: {} }, null, service, <any>{ markForCheck: () => {} }, null, null, <any>{
+    control: null,
+  });
   component.setMatSelect = matSelect;
   component.dataSource = dataSource;
   return { component: component, matSelect: matSelect, service: service, dataSource: dataSource };
@@ -91,10 +92,7 @@ function createPsSelect(options?: { dataSource?: PsSelectDataSource; service: Ps
   `,
 })
 export class TestComponent implements OnDestroy {
-  dataSource: any = [
-    { value: 1, label: 'item1' },
-    { value: 2, label: 'item2' },
-  ];
+  dataSource: any = [ITEMS.RED, ITEMS.GREEN, ITEMS.BLUE];
   control = new FormControl(null, [Validators.required]);
   form = new FormGroup({
     select: this.control,
@@ -118,21 +116,33 @@ export class TestComponent implements OnDestroy {
   }
 }
 
+const ITEMS = {
+  RED: { value: 'red', label: 'Red' },
+  GREEN: { value: 'green', label: 'Green' },
+  BLUE: { value: 'blue', label: 'Blue' },
+};
+
 @Component({
   selector: 'ps-test-multiple-component',
   template: ` <ps-select [(ngModel)]="value" [dataSource]="dataSource" [multiple]="true" [showToggleAll]="showToggleAll"></ps-select> `,
 })
 export class TestMultipleComponent {
   showToggleAll = true;
-  dataSource: any = [
-    { value: 1, label: 'item1' },
-    { value: 2, label: 'item2' },
-  ];
+  dataSource: any = [ITEMS.RED, ITEMS.GREEN, ITEMS.BLUE];
   value: any = null;
 
   @ViewChild(PsSelectComponent, { static: true }) select: PsSelectComponent;
 
   constructor(public cd: ChangeDetectorRef) {}
+}
+
+@Component({
+  selector: 'ps-test-value',
+  template: `<ps-select [(value)]="value" [dataSource]="items"></ps-select>`,
+})
+export class TestValueComponent {
+  public items = [ITEMS.RED, ITEMS.GREEN, ITEMS.BLUE];
+  public value: any = null;
 }
 
 @Component({
@@ -151,67 +161,50 @@ export class TestMultipleComponent {
   `,
 })
 export class TestCustomTemplateComponent {
-  public items = [
-    {
-      value: `red`,
-      label: `Red`,
-    },
-    {
-      value: `green`,
-      label: `Green`,
-    },
-    {
-      value: `blue`,
-      label: `Blue`,
-    },
-  ];
+  public items = [ITEMS.RED, ITEMS.GREEN, ITEMS.BLUE];
   public value: any = null;
 }
 
-async function initTest<T>(type: Type<T>): Promise<{ fixture: ComponentFixture<T>; component: T; loader: HarnessLoader }> {
+async function initTest<T>(
+  type: Type<T>
+): Promise<{ fixture: ComponentFixture<T>; component: T; loader: HarnessLoader; psSelect: PsSelectHarness }> {
   await TestBed.configureTestingModule({
     imports: [NoopAnimationsModule, PsSelectModule.forRoot(DefaultPsSelectService), FormsModule, ReactiveFormsModule],
-    declarations: [TestComponent, TestMultipleComponent, TestCustomTemplateComponent],
+    declarations: [TestComponent, TestMultipleComponent, TestCustomTemplateComponent, TestValueComponent],
   });
   const fixture = TestBed.createComponent(type);
   const component = fixture.componentInstance;
   expect(component).toBeDefined();
 
-  fixture.detectChanges();
-  await fixture.whenStable();
-  fixture.detectChanges();
-
+  const loader = TestbedHarnessEnvironment.loader(fixture);
   return {
     fixture: fixture,
     component: component,
-    loader: TestbedHarnessEnvironment.loader(fixture),
+    loader: loader,
+    psSelect: await loader.getHarness(PsSelectHarness),
   };
 }
 
-function createInstance() {
-  return new PsSelectComponent(null, {} as ErrorStateMatcher, null, null, null, null, null);
-}
-
-fdescribe('PsSelectComponent', () => {
+describe('PsSelectComponent', () => {
   it('should use right default values', () => {
-    const cmp = createInstance();
+    const { component } = createPsSelect();
 
-    expect(cmp.clearable).toBe(true);
-    expect(cmp.showToggleAll).toBe(true);
-    expect(cmp.multiple).toBe(false);
-    expect(cmp.errorStateMatcher).toBe(null);
-    expect(cmp.panelClass).toBe(null);
-    expect(cmp.placeholder).toBe(null);
-    expect(cmp.required).toBe(false);
-    expect(cmp.disabled).toBe(false);
+    expect(component.clearable).toBe(true);
+    expect(component.showToggleAll).toBe(true);
+    expect(component.multiple).toBe(false);
+    expect(component.errorStateMatcher).toBe(null);
+    expect(component.panelClass).toBe(null);
+    expect(component.placeholder).toBe(null);
+    expect(component.required).toBe(false);
+    expect(component.disabled).toBe(false);
   });
 
   // Probably unneccessary now
   xit('should fix MatSelect.close() not emitting stateChanges', fakeAsync(() => {
     const matSelect = createFakeMatSelect();
 
-    const psSelect = createInstance();
-    psSelect.setMatSelect = matSelect;
+    const { component } = createPsSelect();
+    component.setMatSelect = matSelect;
 
     spyOn(matSelect.stateChanges, 'next');
 
@@ -221,74 +214,60 @@ fdescribe('PsSelectComponent', () => {
   }));
 
   it('should update disabled property when calling setDisabledState', () => {
-    const psSelect = createInstance();
-    psSelect.disabled = true;
+    const { component } = createPsSelect();
+    component.disabled = true;
 
-    psSelect.setDisabledState(false);
-    expect(psSelect.disabled).toBe(false);
+    component.setDisabledState(false);
+    expect(component.disabled).toBe(false);
 
-    psSelect.setDisabledState(true);
-    expect(psSelect.disabled).toBe(true);
+    component.setDisabledState(true);
+    expect(component.disabled).toBe(true);
+  });
+
+  it("should not switch dataSource when dataSource input doesn't change", async () => {
+    const { component, service } = createPsSelect();
+    const items = [{ value: 1, label: 'i1', hidden: false }];
+    const ds = createFakeDataSource(items);
+    spyOn(service, 'createDataSource').and.returnValue(ds);
+
+    component.dataSource = 'a';
+    expect(service.createDataSource).toHaveBeenCalledTimes(1);
+
+    component.dataSource = 'lookup';
+    expect(service.createDataSource).toHaveBeenCalledTimes(2);
+
+    component.dataSource = 'lookup';
+    expect(service.createDataSource).toHaveBeenCalledTimes(2);
+
+    expect(component.items).toEqual(items);
+    expect(component.dataSource).toBe(ds);
   });
 
   it('should work with ngModel', async () => {
-    const { fixture, component, loader } = await initTest(TestMultipleComponent);
-
-    // Update value from ps-select
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
-    const options = await matSelect.getOptions();
-    await last(options).click();
-
-    fixture.detectChanges();
-    expect(component.value).toEqual([2]);
-    const selectedOptions = await matSelect.getOptions({ isSelected: true });
-    expect(selectedOptions.length).toBe(1);
-    expect(await selectedOptions[0].getText()).toEqual('item2');
+    const { component, psSelect } = await initTest(TestMultipleComponent);
+    await psSelect.clickOptions({ text: ITEMS.GREEN.label });
+    expect(component.value).toEqual([ITEMS.GREEN.value]);
   });
 
   it('should work with value binding', async () => {
-    const { fixture, component, loader } = await initTest(TestCustomTemplateComponent);
-
-    // Update value from ps-select
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
-    const redOption = (await matSelect.getOptions({ text: /.*Red.*/ }))[0];
-    await redOption.click();
-
-    fixture.detectChanges();
-    expect(component.value).toEqual('red');
+    const { component, psSelect } = await initTest(TestValueComponent);
+    await psSelect.clickOptions({ text: ITEMS.RED.label });
+    expect(component.value).toEqual(ITEMS.RED.value);
   });
 
   it('should emit only once when selecting an option', async () => {
-    const { component, loader } = await initTest(TestComponent);
-
-    const matSelect = await loader.getHarness(MatSelectHarness);
-
-    // select item 2
-    {
-      await matSelect.open();
-      const options = await matSelect.getOptions();
-      await last(options).click();
-      expect(component.emittedValues).toEqual([2]);
-    }
-
-    // select the clear item
-    {
-      await matSelect.open();
-      component.emittedValues = [];
-      const options = await matSelect.getOptions({ text: '--' });
-      await options[0].click();
-      expect(component.emittedValues).toEqual([undefined]);
-    }
+    const { component, psSelect } = await initTest(TestComponent);
+    await psSelect.clickOptions({ text: ITEMS.GREEN.label });
+    await psSelect.clickOptions({ text: '--' });
+    expect(component.emittedValues).toEqual([ITEMS.GREEN.value, undefined]);
   });
 
   it('should use the error state matcher input', async () => {
-    const { fixture, component } = await initTest(TestComponent);
+    const { component, psSelect } = await initTest(TestComponent);
 
     // Default matcher
-    expect(component.control.value).toBe(null);
-    expect(component.select.errorState).toBe(false);
+    component.control.patchValue(null);
+    expect(await psSelect.isErrorState()).toBe(false);
 
     // Custom matcher - empty value
     component.errorStateMatcher = {
@@ -296,74 +275,50 @@ fdescribe('PsSelectComponent', () => {
         return !!(control && control.invalid);
       },
     };
-    fixture.detectChanges();
-    expect(component.select.errorState).toBe(true);
+    expect(await psSelect.isErrorState()).toBe(true);
 
     // Custom matcher - item 1
     component.control.patchValue(1);
-    fixture.detectChanges();
-    expect(component.select.errorState).toBe(false);
+    expect(await psSelect.isErrorState()).toBe(false);
   });
 
   it('should use clearable input', async () => {
-    const { fixture, component, loader } = await initTest(TestComponent);
+    const { component, psSelect } = await initTest(TestComponent);
     component.clearable = true;
-    fixture.detectChanges();
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
-
-    expect(await isEmptyOptionVisible()).toBeTruthy();
-
+    await psSelect.open();
+    expect(await psSelect.getEmptyOption()).toBeTruthy();
     component.clearable = false;
-    fixture.detectChanges();
-
-    expect(await isEmptyOptionVisible()).toBeFalsy();
-
-    async function isEmptyOptionVisible() {
-      const options = await matSelect.getOptions({ text: '--' });
-      return options.length > 0;
-    }
+    expect(await psSelect.getEmptyOption()).toBeFalsy();
   });
 
   it('toggle all functionality should work', async () => {
-    const { fixture, component, loader } = await initTest(TestMultipleComponent);
-    const matSelect = await loader.getHarness(MatSelectHarness);
+    const { component, psSelect } = await initTest(TestMultipleComponent);
     component.showToggleAll = true;
-    fixture.detectChanges();
-    await matSelect.open();
-    expect(await getOptionIsSelected(matSelect)).toEqual([false, false]);
+    await psSelect.open();
+    const selectSearch = await psSelect.getPanelHeader();
+    const toggle = await selectSearch.getToggleAll();
+    expect(await getOptionIsSelected(psSelect)).toEqual([false, false, false]);
 
-    let toggleAllCbx = await getToggleAllInputCbx(fixture);
-    expect(toggleAllCbx).toBeTruthy();
+    await toggle.check();
+    expect(await getOptionIsSelected(psSelect)).toEqual([true, true, true]);
 
-    toggleAllCbx.click();
-    fixture.detectChanges();
-    expect(await getOptionIsSelected(matSelect)).toEqual([true, true]);
-    expect(toggleAllCbx.checked).toBe(true);
+    await toggle.uncheck();
+    expect(await getOptionIsSelected(psSelect)).toEqual([false, false, false]);
 
-    toggleAllCbx.click();
-    fixture.detectChanges();
-    expect(await getOptionIsSelected(matSelect)).toEqual([false, false]);
-    expect(toggleAllCbx.checked).toBe(false);
-
-    const options = await matSelect.getOptions();
+    const options = await psSelect.getOptions();
     await last(options).click();
-    expect(await getOptionIsSelected(matSelect)).toEqual([false, true]);
-    expect((toggleAllCbx.parentNode.parentNode.parentNode as any).classList.contains('mat-checkbox-indeterminate')).toBe(true);
+    expect(await getOptionIsSelected(psSelect)).toEqual([false, false, true]);
+    expect(await toggle.isIndeterminate()).toBe(true);
 
-    toggleAllCbx.click();
-    fixture.detectChanges();
-    expect(await getOptionIsSelected(matSelect)).toEqual([true, true]);
-    expect(toggleAllCbx.checked).toBe(true);
+    await toggle.check();
+    expect(await getOptionIsSelected(psSelect)).toEqual([true, true, true]);
 
     component.showToggleAll = false;
-    fixture.detectChanges();
-    toggleAllCbx = await getToggleAllInputCbx(fixture);
-    expect(toggleAllCbx).toBeFalsy();
+    expect(await selectSearch.getToggleAll()).toBeFalsy();
   });
 
   it('should set the right css classes', async () => {
-    const { fixture, component, loader } = await initTest(TestComponent);
+    const { fixture, component, psSelect } = await initTest(TestComponent);
 
     let errorState = false;
     component.errorStateMatcher = {
@@ -372,15 +327,13 @@ fdescribe('PsSelectComponent', () => {
       },
     };
 
-    fixture.detectChanges();
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
+    await psSelect.open();
 
     // Empty
     assertPsSelectCssClasses(fixture, ['ps-select', 'ps-select-empty']);
 
     // Item selected
-    const options = await matSelect.getOptions();
+    const options = await psSelect.getOptions();
     await last(options).click();
     fixture.detectChanges();
     assertPsSelectCssClasses(fixture, ['ps-select']);
@@ -458,7 +411,7 @@ fdescribe('PsSelectComponent', () => {
   });
 
   it('should disable matOption for item with disable', async () => {
-    const { fixture, component, loader } = await initTest(TestMultipleComponent);
+    const { component, psSelect } = await initTest(TestMultipleComponent);
     component.dataSource = new DefaultPsSelectDataSource({
       mode: 'id',
       labelKey: 'label',
@@ -471,19 +424,14 @@ fdescribe('PsSelectComponent', () => {
       ],
     });
 
-    fixture.detectChanges();
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
-    expect(await (await matSelect.getOptions({ text: 'disabled' }))[0].isDisabled()).toBeTruthy();
-    expect(await (await matSelect.getOptions({ text: 'active' }))[0].isDisabled()).toBeFalsy();
-    expect(await (await matSelect.getOptions({ text: 'default' }))[0].isDisabled()).toBeFalsy();
+    await psSelect.open();
+    expect(await (await psSelect.getOptions({ text: 'disabled' }))[0].isDisabled()).toBeTruthy();
+    expect(await (await psSelect.getOptions({ text: 'active' }))[0].isDisabled()).toBeFalsy();
+    expect(await (await psSelect.getOptions({ text: 'default' }))[0].isDisabled()).toBeFalsy();
   });
 
   it('should take DataSource compareWith function', async () => {
-    const { fixture, component, loader } = await initTest(TestComponent);
+    const { component, psSelect } = await initTest(TestComponent);
     component.dataSource = new DefaultPsSelectDataSource({
       mode: 'id',
       labelKey: 'label',
@@ -499,17 +447,15 @@ fdescribe('PsSelectComponent', () => {
       return a === 1 && b === 2;
     };
     component.control.patchValue(2);
-    fixture.detectChanges();
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
+    await psSelect.open();
 
-    const optionTexts = await getOptionData(matSelect, (o) => o.getText(), { isSelected: true });
+    const optionTexts = await getOptionData(psSelect, (o) => o.getText(), { isSelected: true });
     expect(optionTexts).toEqual(['1']);
     expect(calledCount).toBeGreaterThan(0);
   });
 
   it('should switch to new dataSource when new dataSource is set', async () => {
-    const { fixture, component, loader } = await initTest(TestComponent);
+    const { fixture, component, psSelect } = await initTest(TestComponent);
     component.dataSource = new DefaultPsSelectDataSource({
       mode: 'id',
       labelKey: 'label',
@@ -523,13 +469,14 @@ fdescribe('PsSelectComponent', () => {
 
     fixture.detectChanges();
 
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
+    await psSelect.open();
+    const selectSearch = await psSelect.getPanelHeader();
+    const filter = await selectSearch.getFilter();
 
     {
-      // TODO filter nach '2'
+      await filter.setValue('2');
 
-      const optionTexts = await getOptionData(matSelect, (o) => o.getText(), { isSelected: true });
+      const optionTexts = await getOptionData(psSelect, (o) => o.getText(), { isSelected: true });
       expect(optionTexts).toEqual(['2']);
     }
 
@@ -539,22 +486,30 @@ fdescribe('PsSelectComponent', () => {
         labelKey: 'label',
         idKey: 'value',
         items: [
+          { label: '3', value: 3 },
           { label: '1', value: 1 },
-          { label: 'new label 2', value: 2 },
+          // selected label missing
         ],
       });
       fixture.detectChanges();
 
-      const optionTexts = await getOptionData(matSelect, (o) => o.getText(), { isSelected: true });
-      expect(optionTexts).toEqual(['new label 2']);
+      const selectedOptionTexts = await getOptionData(psSelect, (o) => o.getText(), { isSelected: true });
+      expect(selectedOptionTexts.length).toBe(1);
+      expect(selectedOptionTexts[0]).toContain('???'); // missing options got created
 
-      // TODO: option 1 nicht sichtbar wegen filter
-      // TODO: testen, ob value, panelopen und searchvalue weitergegeben wurde an die datasource
+      const options1 = await psSelect.getOptions({ text: '1' });
+      expect(await (await options1[0].host()).hasClass('ps-option-hidden')).toBe(true); // filter got applied
+
+      const optionTexts = await getOptionData(psSelect, (o) => o.getText());
+      // sorting is correct
+      expect(optionTexts[0]).toContain('2');
+      expect(optionTexts[1]).toBe('1');
+      expect(optionTexts[2]).toBe('3');
     }
   });
 
   it('should show load errors as disabled option, but still show selected option', async () => {
-    const { fixture, component, loader } = await initTest(TestComponent);
+    const { fixture, component, psSelect } = await initTest(TestComponent);
     component.dataSource = new DefaultPsSelectDataSource({
       mode: 'id',
       labelKey: 'label',
@@ -565,10 +520,9 @@ fdescribe('PsSelectComponent', () => {
 
     fixture.detectChanges();
 
-    const matSelect = await loader.getHarness(MatSelectHarness);
-    await matSelect.open();
+    await psSelect.open();
 
-    let options = await getOptions(matSelect);
+    let options = await psSelect.getOptions();
     expect(options.length).toBe(3);
 
     expect(await options[0].getText()).toBe('my error');
@@ -582,140 +536,49 @@ fdescribe('PsSelectComponent', () => {
     expect(await options[2].isSelected()).toBe(true);
 
     await options[1].click();
-    await matSelect.open();
+    await psSelect.open();
 
-    options = await getOptions(matSelect);
+    options = await psSelect.getOptions();
     expect(options.length).toBe(1);
 
     expect(await options[0].getText()).toBe('my error');
     expect(await options[0].isDisabled()).toBe(true);
   });
 
-  it("should not switch dataSource when dataSource input doesn't change", async () => {
-    const { component, service } = createPsSelect();
-    const items = [{ value: 1, label: 'i1', hidden: false }];
-    const ds = createDataSource(items);
-    spyOn(service, 'createDataSource').and.returnValue(ds);
+  it('should show loading spinner while loading and open', async () => {
+    const { component, psSelect } = await initTest(TestComponent);
+    const items$ = new ReplaySubject(1);
+    component.dataSource = new DefaultPsSelectDataSource({
+      mode: 'id',
+      labelKey: 'label',
+      idKey: 'value',
+      items: () => items$ as Observable<any>,
+    });
 
-    component.dataSource = 'a';
-    expect(service.createDataSource).toHaveBeenCalledTimes(1);
+    await psSelect.open();
+    const header = await psSelect.getPanelHeader();
+    expect(await header.isLoading()).toBe(true);
 
-    component.dataSource = 'lookup';
-    expect(service.createDataSource).toHaveBeenCalledTimes(2);
+    items$.next([]);
+    await delay(); // the datasource debounces the items...
 
-    component.dataSource = 'lookup';
-    expect(service.createDataSource).toHaveBeenCalledTimes(2);
+    expect(await header.isLoading()).toBe(false);
 
-    expect(component.items).toEqual(items);
-    expect(component.dataSource).toBe(ds);
+    items$.complete();
   });
-
-  // it('should use loading of dataSource', fakeAsync(() => {
-  //   dataSource.loading = false;
-  //   expect(component.loading).toEqual(false);
-  //   dataSource.loading = true;
-  //   expect(component.loading).toEqual(true);
-  // }));
-
-  // it('should pass panel open/close to DataSource', fakeAsync(() => {
-  //   component.ngAfterViewInit();
-
-  //   spyOn(dataSource, 'panelOpenChanged');
-  //   matSelect.openedChange.next(true);
-
-  //   expect(dataSource.panelOpenChanged).toHaveBeenCalledWith(true);
-
-  //   component.ngOnDestroy();
-  // }));
-
-  // it('should pass filter value to DataSource', fakeAsync(() => {
-  //   component.ngAfterViewInit();
-
-  //   spyOn(dataSource, 'searchTextChanged');
-  //   component.filterCtrl.patchValue('asdf');
-
-  //   expect(dataSource.searchTextChanged).toHaveBeenCalledWith('asdf');
-
-  //   component.ngOnDestroy();
-  // }));
-
-  // it('should pass selected values to DataSource', fakeAsync(() => {
-  //   spyOn(dataSource, 'selectedValuesChanged');
-
-  //   const initialSelectedValue = { value: 42, label: 'init' };
-  //   matSelect.writeValue(initialSelectedValue);
-  //   component.ngAfterViewInit();
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([initialSelectedValue]);
-
-  //   const newSelectedValue = { value: 1, label: '1' };
-
-  //   matSelect.writeValue(newSelectedValue);
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([newSelectedValue]);
-
-  //   matSelect.writeValue(null);
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([]);
-
-  //   matSelect.multiple = true;
-  //   matSelect.writeValue(newSelectedValue);
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([newSelectedValue]);
-
-  //   matSelect._onChange(null);
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([]);
-
-  //   matSelect._onChange(newSelectedValue);
-  //   expect(dataSource.selectedValuesChanged).toHaveBeenCalledWith([newSelectedValue]);
-
-  //   component.ngOnDestroy();
-  // }));
-
-  // it('should pass selected values, searchText and panel open when switching to new DataSource', fakeAsync(() => {
-  //   component.ngAfterViewInit();
-
-  //   const selectedValue = { value: 1, label: '1' };
-  //   const comparer = () => true;
-
-  //   component.compareWith = comparer;
-  //   component.filterCtrl.patchValue('filter');
-  //   matSelect.writeValue(selectedValue);
-
-  //   const newDataSource = createDataSource();
-  //   spyOn(newDataSource, 'selectedValuesChanged');
-  //   spyOn(newDataSource, 'searchTextChanged');
-
-  //   component.dataSource = newDataSource;
-
-  //   expect(newDataSource.compareWith).toBe(comparer);
-  //   expect(newDataSource.selectedValuesChanged).toHaveBeenCalledWith([selectedValue]);
-  //   expect(newDataSource.searchTextChanged).toHaveBeenCalledWith('filter');
-
-  //   component.ngOnDestroy();
-  // }));
 });
 
-async function getOptionIsSelected(matSelect: MatSelectHarness) {
-  return getOptionData(matSelect, (o) => o.isSelected());
+async function getOptionIsSelected(psSelect: PsSelectHarness) {
+  return getOptionData(psSelect, (o) => o.isSelected());
 }
 
 async function getOptionData<T>(
-  matSelect: MatSelectHarness,
+  psSelect: PsSelectHarness,
   transform: (option: MatOptionHarness) => Promise<T>,
   filter?: Omit<OptionHarnessFilters, 'ancestor'>
 ) {
-  const options = await getOptions(matSelect, filter);
+  const options = await psSelect.getOptions(filter);
   return Promise.all(options.map((o) => transform(o)));
-}
-
-async function getOptions(matSelect: MatSelectHarness, filter?: Omit<OptionHarnessFilters, 'ancestor'>) {
-  const options = await matSelect.getOptions(filter);
-  const result = [];
-  for (const option of options) {
-    const host = await option.host();
-    if (await host.hasClass('ps-select__search')) {
-      continue;
-    }
-    result.push(option);
-  }
-  return result;
 }
 
 function getPsSelectCssClasses(fixture: ComponentFixture<any>) {
@@ -733,12 +596,14 @@ function assertPsSelectCssClasses(fixture: ComponentFixture<any>, exprectedClass
   expect(classes).toEqual(exprectedClasses.sort());
 }
 
-async function getToggleAllInputCbx<T>(_fixture: ComponentFixture<T>): Promise<HTMLInputElement> {
-  const selectPanelNode = document.querySelector('.mat-select-panel');
-  const toggleAllElement = selectPanelNode.querySelector('.mat-select-search-toggle-all-checkbox input') as HTMLInputElement;
-  return toggleAllElement;
-}
-
 function last<T>(a: T[]): T {
   return a[a.length - 1];
+}
+
+function delay(duration = 0) {
+  return new Promise((resolve, _) => {
+    setTimeout(() => {
+      resolve();
+    }, duration);
+  });
 }
