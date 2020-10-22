@@ -336,7 +336,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
 
   private _propagateValueChange(value: any, source: ValueChangeSource) {
     this._value = value;
-    this.empty = this._matSelect.empty;
+    this.empty = this.multiple ? !value?.length : value == null;
     this._updateToggleAllCheckbox();
     this._pushSelectedValuesToDataSource(value);
     if (source !== ValueChangeSource.ValueInput) {
@@ -353,7 +353,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
       return;
     }
     let values: any[];
-    if (this._matSelect.multiple) {
+    if (this.multiple) {
       values = Array.isArray(value) ? value : [];
     } else {
       values = value ? [value] : [];
