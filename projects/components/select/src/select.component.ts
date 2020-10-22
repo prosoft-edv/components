@@ -181,7 +181,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
 
   /** true when there was an error while loading the options */
   public get hasError(): boolean {
-    return !!this._dataSourceInstance?.error;
+    return !!this.error;
   }
 
   /** the error that occured while loading the options */
@@ -340,10 +340,10 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
     this._updateToggleAllCheckbox();
     this._pushSelectedValuesToDataSource(value);
     if (source !== ValueChangeSource.ValueInput) {
-      this.valueChange.emit(value); // nicht wenn über input
+      this.valueChange.emit(value);
     }
     if (source !== ValueChangeSource.WriteValue) {
-      this._onChange(value); // nicht wenn über writevalue
+      this._onChange(value);
     }
     this.cd.markForCheck();
   }

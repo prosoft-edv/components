@@ -498,7 +498,7 @@ describe('PsSelectComponent', () => {
       expect(selectedOptionTexts[0]).toContain('???'); // missing options got created
 
       const options1 = await psSelect.getOptions({ text: '1' });
-      expect(await (await options1[0].host()).hasClass('ps-option-hidden')).toBe(true); // filter got applied
+      expect(await (await options1[0].host()).hasClass('ps-select__option--hidden')).toBe(true); // filter got applied
 
       const optionTexts = await getOptionData(psSelect, (o) => o.getText());
       // sorting is correct
