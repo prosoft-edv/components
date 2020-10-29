@@ -53,7 +53,6 @@ export const PS_FORM_FIELD_CONFIG = new InjectionToken<PsFormFieldConfig>('PS_FO
       [floatLabel]="floatLabel"
       [hintLabel]="visibleHint"
       [appearance]="appearance"
-      [hideRequiredMarker]="hideRequiredMarker"
     >
       <mat-label *ngIf="_labelChild">
         <ng-content select="mat-label"></ng-content>
@@ -237,7 +236,6 @@ export class PsFormFieldComponent implements OnChanges, AfterContentInit, OnDest
   @Input() public appearance: MatFormFieldAppearance = this.matDefaults?.appearance || 'legacy';
   @Input() public subscriptType: PsFormFieldSubscriptType = this.defaults ? this.defaults.subscriptType : 'resize';
   @Input() public hintToggle: boolean | null = null;
-  @Input() public hideRequiredMarker: boolean = this.matDefaults?.hideRequiredMarker != null ? this.matDefaults.hideRequiredMarker : true;
 
   @ViewChild(MatFormField, { static: true }) public _matFormField: MatFormField;
 

@@ -378,7 +378,6 @@ describe('PsFormFieldComponent', () => {
       expect(component).toBeDefined();
 
       expect(component.formField.appearance).toEqual('legacy');
-      expect(component.formField.hideRequiredMarker).toBeTruthy();
       expect(component.formField.floatLabel).toEqual('auto');
     }));
 
@@ -397,7 +396,6 @@ describe('PsFormFieldComponent', () => {
       expect(component).toBeDefined();
 
       expect(component.formField.appearance).toEqual('outline');
-      expect(component.formField.hideRequiredMarker).toBeFalsy();
       expect(component.formField.floatLabel).toEqual('always');
     }));
   });
