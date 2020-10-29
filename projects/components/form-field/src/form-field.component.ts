@@ -237,10 +237,7 @@ export class PsFormFieldComponent implements OnChanges, AfterContentInit, OnDest
   @Input() public appearance: MatFormFieldAppearance = this.matDefaults?.appearance || 'legacy';
   @Input() public subscriptType: PsFormFieldSubscriptType = this.defaults ? this.defaults.subscriptType : 'resize';
   @Input() public hintToggle: boolean | null = null;
-  @Input() public hideRequiredMarker: boolean =
-    this.matDefaults?.hideRequiredMarker !== null && this.matDefaults?.hideRequiredMarker !== undefined
-      ? this.matDefaults.hideRequiredMarker
-      : true;
+  @Input() public hideRequiredMarker: boolean = this.matDefaults?.hideRequiredMarker != null ? this.matDefaults.hideRequiredMarker : true;
 
   @ViewChild(MatFormField, { static: true }) public _matFormField: MatFormField;
 
