@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-//TODO Vielleicht mit dem interface aus ps-form mergen und in beiden verwenden
+// TODO Maybe we could merge IPsViewException with IPsFormException because they share the same properties (breaking change!)
 export interface IPsViewException {
   errorObject: any;
   icon?: string;

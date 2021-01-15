@@ -24,7 +24,7 @@ export class TestDataSourceComponent {
   @ViewChild(PsViewComponent) formComponent: PsViewComponent;
 }
 
-fdescribe('PsViewComponent', () => {
+describe('PsViewComponent', () => {
   describe('integration with dataSource', () => {
     let fixture: ComponentFixture<TestDataSourceComponent>;
     let component: TestDataSourceComponent;
