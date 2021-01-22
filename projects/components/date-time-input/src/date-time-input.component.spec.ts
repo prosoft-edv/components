@@ -56,7 +56,7 @@ export class TestDataSourceComponent {
   @ViewChild(PsDateTimeInputComponent) public dateTimeInputComponent: PsDateTimeInputComponent;
 }
 
-fdescribe('DateTimeInputComponent', () => {
+describe('DateTimeInputComponent', () => {
   let fixture: ComponentFixture<TestDataSourceComponent>;
   let component: TestDataSourceComponent;
   let loader: HarnessLoader;
