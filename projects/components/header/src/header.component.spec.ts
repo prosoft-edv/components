@@ -33,7 +33,7 @@ export class TestDataSourceComponent {
   @ViewChild(PsHeaderComponent) headerComponent: PsHeaderComponent;
 }
 
-fdescribe('PsHeaderComponent', () => {
+describe('PsHeaderComponent', () => {
   let fixture: ComponentFixture<TestDataSourceComponent>;
   let component: TestDataSourceComponent;
   let loader: HarnessLoader;

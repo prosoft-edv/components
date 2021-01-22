@@ -1,7 +1,7 @@
 <ps-header
+  *ngIf="caption || captionSection || description || descriptionSection || topButtonSection"
   [caption]="caption"
   [description]="description"
-  *ngIf="caption || captionSection || description || descriptionSection || topButtonSection"
 >
   <ng-container *psHeaderCaptionSection [ngTemplateOutlet]="captionSection"></ng-container>
   <ng-container *psHeaderDescriptionSection [ngTemplateOutlet]="descriptionSection"></ng-container>
