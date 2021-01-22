@@ -14,6 +14,10 @@ export const enum PsCardSection {
 export class PsCardHarness extends ContentContainerComponentHarness<PsCardSection> {
   static hostSelector = 'ps-card';
 
+  private _header = this.locatorForOptional(PsHeaderHarness);
+  private _actionsChildren = this.locatorForAll(PsCardSection.ACTIONS + ' > *');
+  private _footerChildren = this.locatorForAll(PsCardSection.FOOTER + ' > *');
+
   static with(options: PsCardHarnessFilters = {}): HarnessPredicate<PsCardHarness> {
     return new HarnessPredicate(PsCardHarness, options)
       .addOption('caption', options.caption, (harness, title) => HarnessPredicate.stringMatches(harness.getCaptionText(), title))
@@ -21,10 +25,6 @@ export class PsCardHarness extends ContentContainerComponentHarness<PsCardSectio
         HarnessPredicate.stringMatches(harness.getDescriptionText(), subtitle)
       );
   }
-
-  private _header = this.locatorForOptional(PsHeaderHarness);
-  private _actionsChildren = this.locatorForAll(PsCardSection.ACTIONS + ' > *');
-  private _footerChildren = this.locatorForAll(PsCardSection.FOOTER + ' > *');
 
   async getCaptionText(): Promise<string> {
     return (await this._header())?.getCaptionText() ?? '';

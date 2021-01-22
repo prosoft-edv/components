@@ -14,6 +14,12 @@ export const enum PsHeaderSection {
 export class PsHeaderHarness extends ContentContainerComponentHarness<PsHeaderSection> {
   static hostSelector = 'ps-header';
 
+  private _caption = this.locatorForOptional(PsHeaderSection.CAPTION);
+  private _captionChildren = this.locatorForAll(PsHeaderSection.CAPTION + ' > *');
+  private _description = this.locatorForOptional(PsHeaderSection.DESCRIPTION);
+  private _descriptionChildren = this.locatorForAll(PsHeaderSection.DESCRIPTION + ' > *');
+  private _actionsChildren = this.locatorForAll(PsHeaderSection.ACTIONS + ' > *');
+
   static with(options: PsHeaderHarnessFilters = {}): HarnessPredicate<PsHeaderHarness> {
     return new HarnessPredicate(PsHeaderHarness, options)
       .addOption('caption', options.caption, (harness, title) => HarnessPredicate.stringMatches(harness.getCaptionText(), title))
@@ -21,12 +27,6 @@ export class PsHeaderHarness extends ContentContainerComponentHarness<PsHeaderSe
         HarnessPredicate.stringMatches(harness.getDescriptionText(), subtitle)
       );
   }
-
-  private _caption = this.locatorForOptional(PsHeaderSection.CAPTION);
-  private _captionChildren = this.locatorForAll(PsHeaderSection.CAPTION + ' > *');
-  private _description = this.locatorForOptional(PsHeaderSection.DESCRIPTION);
-  private _descriptionChildren = this.locatorForAll(PsHeaderSection.DESCRIPTION + ' > *');
-  private _actionsChildren = this.locatorForAll(PsHeaderSection.ACTIONS + ' > *');
 
   async getCaptionText(): Promise<string> {
     return (await this._caption())?.text() ?? '';
