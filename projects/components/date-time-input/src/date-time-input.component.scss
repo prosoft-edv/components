@@ -1,0 +1,11 @@
+.ps-date-time__grid-container {
+  display: grid;
+  grid-template-columns: 2fr min-content minmax(min-content, 1fr);
+  grid-gap: 1px;
+  margin-bottom: -0.7em;
+  margin-top: -0.7em;
+}
+
+.mat-form-field-suffix {
+  top: 0;
+}

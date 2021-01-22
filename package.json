@@ -36,6 +36,7 @@
     "@angular/router": "~10.0.5",
     "ngx-mat-select-search": "^3.0.1",
     "nouislider": "^14.0.2",
+    "date-fns": "2.16.1",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
