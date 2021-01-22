@@ -1,11 +1,14 @@
 import { Platform } from '@angular/cdk/platform';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { getLocaleFirstDayOfWeek } from '@angular/common';
-import { Inject, Injectable, LOCALE_ID } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component, Inject, Injectable, LOCALE_ID, ViewChild } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DateAdapter, MatDateFormats, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
 import { parseHumanInput } from '@prosoft/components/utils';
-import { PsDateTimeComponent } from './date-time-input.component';
-import { dateTimeModuleImports } from './date-time-input.module';
+import { PsDateTimeInputComponent } from './date-time-input.component';
+import { PsDateTimeInputModule } from './date-time-input.module';
+import { PsDateTimeInputHarness } from './testing/date-time-input.harness';
 
 export const TEST_DATE_FORMATS: MatDateFormats = {
   parse: {
@@ -44,35 +47,47 @@ export class TestDateTimeAdapter extends NativeDateAdapter {
   }
 }
 
-describe('DateTimeInputComponent', () => {
-  let component: PsDateTimeComponent;
-  let fixture: ComponentFixture<PsDateTimeComponent>;
+@Component({
+  selector: 'ps-test-component',
+  template: ` <ps-date-time-input [disabled]="disabled"></ps-date-time-input> `,
+})
+export class TestDataSourceComponent {
+  public disabled = false;
+  @ViewChild(PsDateTimeInputComponent) public dateTimeInputComponent: PsDateTimeInputComponent;
+}
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: dateTimeModuleImports,
-      declarations: [PsDateTimeComponent],
+fdescribe('DateTimeInputComponent', () => {
+  let fixture: ComponentFixture<TestDataSourceComponent>;
+  let component: TestDataSourceComponent;
+  let loader: HarnessLoader;
+  let dateTimeInput: PsDateTimeInputHarness;
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [PsDateTimeInputModule],
+      declarations: [TestDataSourceComponent],
       providers: [
         { provide: DateAdapter, useClass: TestDateTimeAdapter },
         { provide: MAT_DATE_FORMATS, useValue: TEST_DATE_FORMATS },
       ],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(PsDateTimeComponent);
+    });
+    fixture = TestBed.createComponent(TestDataSourceComponent);
     component = fixture.componentInstance;
-  }));
+    expect(component).toBeDefined();
 
-  it('Should be disabled', () => {
+    loader = TestbedHarnessEnvironment.loader(fixture);
+    dateTimeInput = await loader.getHarness(PsDateTimeInputHarness);
+  });
+
+  it('Should be disabled', async () => {
+    expect(await dateTimeInput.isDisabled()).toEqual(false);
     component.disabled = true;
-
-    expect(component.dateInputEl.nativeElement.disabled).toEqual(true);
-    expect(component.timeInputEl.nativeElement.disabled).toEqual(true);
+    expect(await dateTimeInput.isDisabled()).toEqual(true);
   });
 
   it('Should return valid date', () => {
-    component.datum = new Date();
-    component.uhrzeit = '11:11';
-    const value = component.convertToDate();
+    component.dateTimeInputComponent.datum = new Date();
+    component.dateTimeInputComponent.uhrzeit = '11:11';
+    const value = component.dateTimeInputComponent.convertToDate();
 
     const expectedValue = new Date();
     expectedValue.setHours(11, 11);
@@ -80,9 +95,9 @@ describe('DateTimeInputComponent', () => {
   });
 
   it('Should return invalid Date', () => {
-    component.datum = new Date();
-    component.uhrzeit = null;
-    const value = component.convertToDate();
+    component.dateTimeInputComponent.datum = new Date();
+    component.dateTimeInputComponent.uhrzeit = null;
+    const value = component.dateTimeInputComponent.convertToDate();
 
     expect(value.getTime()).toEqual(NaN);
   });

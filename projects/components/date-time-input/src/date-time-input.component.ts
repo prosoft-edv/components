@@ -35,7 +35,7 @@ export const _PsDateTimeMixinBase: CanUpdateErrorStateCtor & typeof PsDateTimeIn
   selector: 'ps-date-time-input',
   templateUrl: './date-time-input.component.html',
   styleUrls: ['./date-time-input.component.scss'],
-  providers: [{ provide: MatFormFieldControl, useExisting: PsDateTimeComponent }],
+  providers: [{ provide: MatFormFieldControl, useExisting: PsDateTimeInputComponent }],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // tslint:disable-next-line: no-host-metadata-property
   host: {
@@ -51,7 +51,7 @@ export const _PsDateTimeMixinBase: CanUpdateErrorStateCtor & typeof PsDateTimeIn
     '[attr.aria-required]': 'required.toString()',
   },
 })
-export class PsDateTimeComponent extends _PsDateTimeMixinBase
+export class PsDateTimeInputComponent extends _PsDateTimeMixinBase
   implements MatFormFieldControl<Date>, OnDestroy, ControlValueAccessor, DoCheck, OnInit {
   @Input()
   public shouldLabelFloat = true;
