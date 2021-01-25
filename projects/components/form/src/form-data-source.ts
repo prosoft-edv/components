@@ -1,22 +1,24 @@
 import { FormGroup } from '@angular/forms';
-import { ThemePalette } from '@angular/material/core';
+import { IPsException } from '@prosoft/components/core';
+import { IPsButton } from '@prosoft/components/core/src/button';
 import { IPsSavebarMode } from '@prosoft/components/savebar';
 import { Observable } from 'rxjs';
 
-export interface IPsFormButton {
-  label?: string;
-  type: 'raised' | 'stroked' | 'icon';
-  color: ThemePalette;
-  icon?: string;
-  disabled?: () => boolean;
-  click: () => void;
-}
+/**
+ * @deprecated Will be replaced with IPsBtton
+ * @export
+ * @interface IPsFormButton
+ * @extends {IPsButton}
+ */
+export interface IPsFormButton extends IPsButton {}
 
-export interface IPsFormException {
-  errorObject: any;
-  icon?: string;
-  alignCenter?: boolean;
-}
+/**
+ * @deprecated Will be replaced with IPsException
+ * @export
+ * @interface IPsFormException
+ * @extends {IPsException}
+ */
+export interface IPsFormException extends IPsException {}
 
 export interface IPsFormDataSourceConnectOptions {
   errorInView$: Observable<boolean>;
