@@ -17,7 +17,7 @@ ps-dialog-wrapper {
   max-width: calc(80vw - 48px);
   /*
   Hier nicht fix eine Breite setzen, da z.B. der Confirm Dialog sicht auf das automatische Breite setzen von Material verlässt.
-  Wenn ein Dialog eine fixe Breite haben soll, dann direkt beim Dialog auf das <po-dialog-wrapper> Tag setzen.
+  Wenn ein Dialog eine fixe Breite haben soll, dann direkt beim Dialog auf das <ps-dialog-wrapper> Tag setzen.
   */
 
   .mat-dialog-actions {
