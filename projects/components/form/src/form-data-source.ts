@@ -1,6 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { IPsException } from '@prosoft/components/core';
-import { IPsButton } from '@prosoft/components/core/src/button';
+import { IPsButton, IPsException } from '@prosoft/components/core';
 import { IPsSavebarMode } from '@prosoft/components/savebar';
 import { Observable } from 'rxjs';
 
@@ -28,10 +27,10 @@ export interface IPsFormDataSourceConnectOptions {
 export interface IPsFormDataSource {
   readonly form: FormGroup;
   readonly autocomplete: 'on' | 'off';
-  readonly buttons: IPsFormButton[];
+  readonly buttons: IPsButton[];
   readonly contentVisible: boolean;
   readonly contentBlocked: boolean;
-  readonly exception: IPsFormException;
+  readonly exception: IPsException;
   readonly savebarMode: IPsSavebarMode;
   connect(options: IPsFormDataSourceConnectOptions): Observable<void>;
   disconnect(): void;
