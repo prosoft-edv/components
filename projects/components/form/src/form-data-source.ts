@@ -5,18 +5,14 @@ import { Observable } from 'rxjs';
 
 /**
  * @deprecated Will be replaced with IPsBtton
- * @export
- * @interface IPsFormButton
- * @extends {IPsButton}
  */
+// tslint:disable-next-line:no-empty-interface
 export interface IPsFormButton extends IPsButton {}
 
 /**
  * @deprecated Will be replaced with IPsException
- * @export
- * @interface IPsFormException
- * @extends {IPsException}
  */
+// tslint:disable-next-line:no-empty-interface
 export interface IPsFormException extends IPsException {}
 
 export interface IPsFormDataSourceConnectOptions {

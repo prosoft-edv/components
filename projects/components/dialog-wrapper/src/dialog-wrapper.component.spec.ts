@@ -59,7 +59,7 @@ export class TestDialogWrapperDataSource implements IPsDialogWrapperDataSource {
 }
 
 @Component({
-  selector: 'app-ps-dialog-wrapper-dialog',
+  selector: 'ps-dialog-wrapper-dialog',
   template: `
     <ps-dialog-wrapper [dataSource]="dataSource">
       <span>dialogContent</span>
@@ -74,13 +74,14 @@ export class PsDialogWrapperTestDialog {
     cancelFn: () => this.cancelFunction(),
   });
 
+  private _cancelFunctionCalled: number;
+
   constructor(public dialogRef: MatDialogRef<PsDialogWrapperTestDialog>) {}
 
   public actionFunction() {
     return of();
   }
 
-  private _cancelFunctionCalled: number;
   public cancelFunction() {
     this._cancelFunctionCalled = this._cancelFunctionCalled + 1;
     this.dialogRef.close();
@@ -88,7 +89,7 @@ export class PsDialogWrapperTestDialog {
 }
 
 @Component({
-  selector: 'app-ps-dialog-wrapper-test',
+  selector: 'ps-dialog-wrapper-test',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsDialogWrapperTestComponent {
