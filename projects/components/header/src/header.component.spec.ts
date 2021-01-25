@@ -64,7 +64,10 @@ describe('PsHeaderComponent', () => {
     component.addCaptionTemplate = true;
     const nodes = await header.getCaptionTemplateNodes();
     expect(nodes.length).toEqual(1);
-    expect(await nodes[0].text()).toEqual('caption text');
+
+    const captionNode = nodes[0];
+    expect(await captionNode.matchesSelector('h1')).toEqual(true);
+    expect(await captionNode.text()).toEqual('caption text');
   });
 
   it('should show caption text when input and template are set at the same time', async () => {
@@ -91,7 +94,10 @@ describe('PsHeaderComponent', () => {
     component.addDescriptionTemplate = true;
     const nodes = await header.getDescriptionTemplateNodes();
     expect(nodes.length).toEqual(1);
-    expect(await nodes[0].text()).toEqual('description text');
+
+    const descriptionNode = nodes[0];
+    expect(await descriptionNode.matchesSelector('span')).toEqual(true);
+    expect(await descriptionNode.text()).toEqual('description text');
   });
 
   it('should show description text when input and template are set at the same time', async () => {

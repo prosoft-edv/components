@@ -4,7 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
 import { PsHeaderHarness } from '@prosoft/components/header/src/testing/header.harness';
-import { PsCardComponent } from '..';
+import { PsCardComponent } from './card.component';
 import { PsCardModule } from './card.module';
 import { PsCardHarness } from './testing/card.harness';
 
@@ -60,8 +60,8 @@ describe('PsCardComponent', () => {
     expect(component).toBeDefined();
 
     loader = TestbedHarnessEnvironment.loader(fixture);
-    header = await loader.getHarness(PsHeaderHarness);
     card = await loader.getHarness(PsCardHarness);
+    header = await card.getHeader();
   });
 
   it('should show caption text', async () => {
@@ -77,7 +77,10 @@ describe('PsCardComponent', () => {
     component.addCaptionTemplate = true;
     const nodes = await header.getCaptionTemplateNodes();
     expect(nodes.length).toEqual(1);
-    expect(await nodes[0].text()).toEqual('customCaption');
+
+    const captionNode = nodes[0];
+    expect(await captionNode.matchesSelector('h1')).toEqual(true);
+    expect(await captionNode.text()).toEqual('customCaption');
   });
 
   it('should show caption text when input and template are set at the same time', async () => {
@@ -104,7 +107,10 @@ describe('PsCardComponent', () => {
     component.addDescriptionTemplate = true;
     const nodes = await header.getDescriptionTemplateNodes();
     expect(nodes.length).toEqual(1);
-    expect(await nodes[0].text()).toEqual('customDescription');
+
+    const descriptionNode = nodes[0];
+    expect(await descriptionNode.matchesSelector('span')).toEqual(true);
+    expect(await descriptionNode.text()).toEqual('customDescription');
   });
 
   it('should show description text when input and template are set at the same time', async () => {
@@ -125,6 +131,9 @@ describe('PsCardComponent', () => {
     component.addTopButton = true;
     nodes = await header.getActionTemplateNodes();
     expect(nodes.length).toBe(1);
+
+    const buttonNodes = nodes[0];
+    expect(await buttonNodes.matchesSelector('button')).toEqual(true);
     expect(await nodes[0].text()).toEqual('testTopButton');
   });
 
@@ -138,7 +147,7 @@ describe('PsCardComponent', () => {
     expect(await nodes[0].text()).toEqual('testActionButton');
   });
 
-  it('should show action buttons', async () => {
+  it('should show footer template', async () => {
     let nodes = await card.getFooterTemplateNodes();
     expect(nodes.length).toBe(0);
 

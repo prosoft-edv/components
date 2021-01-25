@@ -26,12 +26,8 @@ export class PsCardHarness extends ContentContainerComponentHarness<PsCardSectio
       );
   }
 
-  async getCaptionText(): Promise<string> {
-    return (await this._header())?.getCaptionText() ?? '';
-  }
-
-  async getDescriptionText(): Promise<string> {
-    return (await this._header())?.getDescriptionText() ?? '';
+  async getHeader(): Promise<PsHeaderHarness> {
+    return await this._header();
   }
 
   async getActionTemplateNodes(): Promise<TestElement[]> {
@@ -40,5 +36,13 @@ export class PsCardHarness extends ContentContainerComponentHarness<PsCardSectio
 
   async getFooterTemplateNodes(): Promise<TestElement[]> {
     return (await this._footerChildren()) ?? [];
+  }
+
+  private async getCaptionText(): Promise<string> {
+    return (await this._header())?.getCaptionText() ?? '';
+  }
+
+  private async getDescriptionText(): Promise<string> {
+    return (await this._header())?.getDescriptionText() ?? '';
   }
 }
