@@ -1,157 +1,119 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { IPsFormException } from '@prosoft/components/form';
-import { IPsViewDataSource } from '@prosoft/components/view';
-import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, map, take } from 'rxjs/operators';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { IPsButton, IPsException } from '@prosoft/components/core';
+import { IPsDialogWrapperDataSource } from '@prosoft/components/dialog-wrapper';
+import { Observable, of, Subject } from 'rxjs';
 
-export interface PsViewDataSourceOptions<TParams, TData> {
-  loadTrigger$: Observable<TParams>;
-  loadFn: (params: TParams) => Observable<TData>;
+interface IDemoDialogWrapperDataSourceOptions {
+  dialogTitle: string;
+  actionFn: () => Observable<any>;
+  cancelFn: () => void;
 }
 
-class DemoPsViewDataSource<TParams, TData> implements IPsViewDataSource {
-  public get contentVisible(): boolean {
-    return !this._hasLoadError;
-  }
-  public get contentBlocked(): boolean {
-    return this._loading || this._blockView;
-  }
-  public exception: IPsFormException;
+export class DemoDialogWrapperDataSource implements IPsDialogWrapperDataSource {
+  dialogTitle = this.options.dialogTitle;
+  buttons = [
+    {
+      label: 'Ok',
+      type: 'raised',
+      color: 'primary',
+      disabled: () => false,
+      click: () => this.confirm(),
+    } as IPsButton,
+    {
+      label: 'Cancel',
+      type: 'stroked',
+      color: null,
+      disabled: () => false,
+      click: () => this.close(),
+    } as IPsButton,
+  ];
+  contentVisible = true;
+  contentBlocked = false;
+  exception: IPsException;
 
-  private _loading = false;
-  private _hasLoadError = false;
-  private _blockView = false;
-  private stateChanges$ = new Subject<void>();
+  public somethingChanged$ = new Subject<void>();
 
-  private _loadingSub = Subscription.EMPTY;
-  private _connectSub = Subscription.EMPTY;
-  constructor(private options: PsViewDataSourceOptions<TParams, TData>) {}
+  constructor(private options: IDemoDialogWrapperDataSourceOptions) {}
 
-  public connect(): Observable<void> {
-    this._connectSub = this.options.loadTrigger$.subscribe((params) => {
-      this.loadData(params);
-    });
-    return this.stateChanges$;
-  }
-
-  public disconnect(): void {
-    this._connectSub.unsubscribe();
-    this._loadingSub.unsubscribe();
-  }
-
-  public setViewBlocked(value: boolean) {
-    this._blockView = value;
-    this.stateChanges$.next();
+  connect(): Observable<void> {
+    return this.somethingChanged$;
   }
 
-  private loadData(params: TParams) {
-    this._loadingSub.unsubscribe();
-    this._loading = true;
-    this._hasLoadError = false;
-    this.exception = null;
-    this.stateChanges$.next();
+  disconnect(): void {}
 
-    this._loadingSub = this.options
-      .loadFn(params)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this._loading = false;
-          this.stateChanges$.next();
-        },
-        error: (err) => {
-          this._loading = false;
-          this._hasLoadError = true;
-          this.exception = {
-            errorObject: err,
-            alignCenter: true,
-            icon: 'sentiment_very_dissatisfied',
-          };
-          this.stateChanges$.next();
-        },
-      });
+  confirm() {
+    return this.options.actionFn();
+  }
+
+  close() {
+    this.options.cancelFn();
+  }
+}
+
+@Component({
+  selector: 'app-dialog-wrapper-demo',
+  template: ` <button mat-raised-button color="accent" (click)="openDialog()">Open Dialog</button> `,
+  styles: [``],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DialogWrapperDemoComponent {
+  constructor(public dialog: MatDialog) {}
+  public openDialog() {
+    this.dialog.open(DialogWrapperDemoDialog);
   }
 }
 
 @Component({
   selector: 'app-dialog-wrapper-demo',
   template: `
-    <mat-card class="app-view-data-source-demo__settings">
-      <mat-checkbox [(ngModel)]="loadError">load error</mat-checkbox>
-      <button mat-flat-button type="button" color="accent" (click)="reload()">reload</button>
-    </mat-card>
-    <div class="app-form-data-source-demo__grid">
-      <ps-view [dataSource]="dataSource">
-        <mat-card>
-          <pre>{{ item | json }}</pre>
-        </mat-card>
-        <mat-card style="height: 500px; margin-top: 1em;">dummy card</mat-card>
-      </ps-view>
-      <mat-card class="app-view-data-source-demo__logs">
-        <div *ngFor="let log of logs" class="app-view-data-source-demo__log-item">{{ log | json }}</div>
-      </mat-card>
-    </div>
+    <ps-dialog-wrapper [dataSource]="dataSource">
+      <div style="margin: 1em;">
+        <div>Action function called: {{ actionFunctionCalled }}</div>
+        <button type="button" mat-button (click)="toggleError()">Create error</button>
+        <button type="button" mat-stroked-button (click)="block()">Block for 2 seconds</button>
+      </div>
+    </ps-dialog-wrapper>
   `,
-  styles: [
-    `
-      .app-view-data-source-demo__settings {
-        margin-bottom: 1em;
-      }
-
-      .app-view-data-source-demo__settings mat-checkbox {
-        margin: 1em;
-      }
-
-      .app-view-data-source-demo__grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        grid-gap: 1em;
-      }
-
-      .app-view-data-source-demo__logs {
-        margin-top: 1em;
-      }
-
-      .app-view-data-source-demo__log-item {
-        margin-bottom: 0.25em;
-        padding-bottom: 0.25em;
-        border-bottom: 1px solid #ccc;
-        font-size: 0.95em;
-      }
-    `,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DialogWrapperDemoComponent {
-  public loadError = false;
-  public counter = 0;
-  public logs: any[] = [];
-  public item: any;
-
-  public loadTrigger$ = new BehaviorSubject(this.counter);
-
-  public dataSource = new DemoPsViewDataSource({
-    loadTrigger$: this.loadTrigger$, // could be route params in a real application
-    loadFn: (count) => {
-      this.logs.push({ type: 'load', params: count });
-      return of({
-        loadCount: count,
-        time: new Date(),
-      }).pipe(
-        delay(1000),
-        map((x) => {
-          if (this.loadError) {
-            throw new Error('this is the server error (loading)');
-          }
-
-          this.item = x;
-          return x;
-        })
-      );
-    },
+export class DialogWrapperDemoDialog {
+  public actionFunctionCalled = 0;
+  public dataSource = new DemoDialogWrapperDataSource({
+    actionFn: () => this.actionFunction(),
+    dialogTitle: 'My Dialog Title',
+    cancelFn: () => this.cancelFunction(),
   });
 
-  public reload() {
-    this.loadTrigger$.next(++this.counter);
+  constructor(public dialogRef: MatDialogRef<DialogWrapperDemoDialog>) {}
+
+  public actionFunction() {
+    this.actionFunctionCalled = this.actionFunctionCalled + 1;
+    return of(null);
+  }
+
+  public cancelFunction() {
+    this.dialogRef.close();
+  }
+
+  public toggleError() {
+    if (!this.dataSource.exception) {
+      this.dataSource.exception = {
+        errorObject: { message: 'I am an evil error' },
+      } as IPsException;
+    } else {
+      this.dataSource.exception = null;
+    }
+
+    this.dataSource.somethingChanged$.next();
+  }
+
+  public block() {
+    this.dataSource.contentBlocked = true;
+    this.dataSource.somethingChanged$.next();
+    setTimeout(() => {
+      this.dataSource.contentBlocked = false;
+      this.dataSource.somethingChanged$.next();
+    }, 2000);
   }
 }

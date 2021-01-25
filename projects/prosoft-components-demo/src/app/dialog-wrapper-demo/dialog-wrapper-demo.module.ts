@@ -1,16 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule } from '@angular/router';
-import { PsViewModule } from '@prosoft/components/view';
-import { DialogWrapperDemoComponent } from './dialog-wrapper-demo.component';
+import { PsDialogWrapperModule } from '@prosoft/components/dialog-wrapper';
+import { DialogWrapperDemoComponent, DialogWrapperDemoDialog } from './dialog-wrapper-demo.component';
 
 @NgModule({
   imports: [
-    FormsModule,
     CommonModule,
     RouterModule.forChild([
       {
@@ -18,11 +14,9 @@ import { DialogWrapperDemoComponent } from './dialog-wrapper-demo.component';
         component: DialogWrapperDemoComponent,
       },
     ]),
-    MatCardModule,
-    MatCheckboxModule,
     MatButtonModule,
-    PsViewModule,
+    PsDialogWrapperModule,
   ],
-  declarations: [DialogWrapperDemoComponent],
+  declarations: [DialogWrapperDemoComponent, DialogWrapperDemoDialog],
 })
 export class DialogWrapperDemoModule {}
