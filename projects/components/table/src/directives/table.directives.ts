@@ -35,6 +35,9 @@ export class PsTableTopButtonSectionDirective {
   constructor(public el: ElementRef) {}
 }
 
+/**
+ * @deprecated Please use actions from PsTableDataSource
+ */
 @Directive({
   selector: '[psTableListActions]',
 })
@@ -42,6 +45,9 @@ export class PsTableListActionsDirective {
   constructor(public el: ElementRef) {}
 }
 
+/**
+ * @deprecated Please use actions from PsTableDataSource
+ */
 @Directive({
   selector: '[psTableRowActions]',
 })

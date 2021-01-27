@@ -26,6 +26,7 @@ import {
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
+import { PsTableActionsToRenderPipe } from './pipes/table-actions-to-render.pipe';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
 import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
@@ -55,6 +56,7 @@ import { PsTableComponent } from './table.component';
     PsTableRowDetailDirective,
     PsTableRowDetailTemplateDirective,
     PsTableCustomSettingsDirective,
+    PsTableActionsToRenderPipe,
   ],
   imports: [
     CommonModule,

@@ -65,13 +65,48 @@
       </mat-menu>
     </th>
     <td class="ps-table-data__options-column" mat-cell *matCellDef="let element">
-      <button *ngIf="rowActions" mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #rowMenu="matMenu">
-        <!--Dynamic RowActions-->
-        <ng-container [ngTemplateOutlet]="rowActions" [ngTemplateOutletContext]="{ $implicit: element }"></ng-container>
-      </mat-menu>
+      <ng-container *ngIf="dataSource.rowActions.length; else rowActionsTemplate">
+        <ng-container *ngIf="dataSource.rowActions | psTableActionsToRender: element as visibleActions">
+          <ng-container *ngIf="visibleActions.length >= dataSource.moreMenuThreshold">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #rowMenu="matMenu">
+              <button
+                type="button"
+                mat-menu-item
+                *ngFor="let action of visibleActions"
+                [disabled]="action.isDisabledFnc && action.isDisabledFnc([element])"
+                (click)="action.actionFnc([element])"
+              >
+                <mat-icon>{{ action.icon }}</mat-icon>
+                {{ action.label }}
+              </button>
+            </mat-menu>
+          </ng-container>
+          <ng-container *ngIf="visibleActions.length < dataSource.moreMenuThreshold">
+            <button
+              type="button"
+              mat-icon-button
+              *ngFor="let action of visibleActions"
+              [disabled]="action.isDisabledFnc && action.isDisabledFnc([element])"
+              (click)="action.actionFnc([element])"
+            >
+              <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
+            </button>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <!-- TODO extract to component + childrenHandling -->
+      <ng-template #rowActionsTemplate>
+        <button *ngIf="rowActions" mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #rowMenu="matMenu">
+          <ng-container [ngTemplateOutlet]="rowActions" [ngTemplateOutletContext]="{ $implicit: element }"></ng-container>
+        </mat-menu>
+      </ng-template>
     </td>
   </ng-container>
 

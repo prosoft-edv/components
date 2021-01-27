@@ -3,8 +3,7 @@ import { TrackByFunction } from '@angular/core';
 import { BehaviorSubject, NEVER, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, finalize, map, take, tap } from 'rxjs/operators';
 import { _isNumberValue } from '../helper/table.helper';
-import { IExtendedPsTableUpdateDataInfo, IPsTableUpdateDataInfo } from '../models';
-
+import { IExtendedPsTableUpdateDataInfo, IPsTableAction, IPsTableUpdateDataInfo, PsTableActionScope } from '../models';
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
  * flaky browser support and the value not being defined in Closure's typings.
@@ -14,6 +13,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadTrigger$?: Observable<TTrigger>;
   loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  actions: IPsTableAction<TData>[];
   mode?: PsTableMode;
 }
 
@@ -84,6 +84,15 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /** Controls if the data sould be paged, filtered and sorted on the client or the server */
   public readonly mode: PsTableMode;
 
+  /** List of actions which can be executed for a single row */
+  public readonly rowActions: IPsTableAction<T>[];
+
+  /** List of actions which can be executed for a selection of rows */
+  public readonly listActions: IPsTableAction<T>[];
+
+  /** TODO maybe better name */
+  public readonly moreMenuThreshold = 3;
+
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _updateDataTrigger$: Observable<any>;
 
@@ -116,6 +125,9 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   private _renderChangesSubscription = Subscription.EMPTY;
 
   constructor(options: PsTableDataSourceOptions<T, TTrigger>);
+  /**
+   * @deprecated Please use {options: PsTableDataSourceOptions<T, TTrigger>}
+   */
   constructor(
     loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>,
     mode?: PsTableMode
@@ -128,9 +140,11 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   ) {
     super();
     const options: PsTableDataSourceOptions<T, TTrigger> =
-      'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, mode: mode };
+      'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, actions: [], mode: mode };
 
     this.mode = options.mode || 'client';
+    this.rowActions = options.actions.filter((a) => a.scope & PsTableActionScope.row);
+    this.listActions = options.actions.filter((a) => a.scope & PsTableActionScope.list);
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
     this._loadData = options.loadDataFn;
 
