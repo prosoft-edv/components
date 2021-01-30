@@ -1,0 +1,19 @@
+http://userguide.icu-project.org/formatparse/messages
+https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Global_Objects/Intl
+https://messageformat.github.io/messageformat/
+https://github.com/google/closure-library/blob/master/closure/goog/i18n/messageformat_test.js
+https://github.com/messageformat/messageformat/blob/master/test/messageformat.js
+
+
+Escape:
+    Use '' for escaping: '{0}'
+    To escape a ' double it (like '')
+    Examples:
+        '{0}' -> {0}
+        ''{0}'' -> 'value'
+        '''{0}''' -> '{0}'
+        This '{isn''t}' obvious -> This {isn't} obvious
+
+    https://stackoverflow.com/a/32152170/2416833
+    The recommendation from ICU is to use the ASCII apostrophe (' U+0027) only for escaping syntax characters,
+    and use the pretty single quote (’ U+2019) for actual apostrophes and single quotes in a message pattern.
