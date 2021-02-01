@@ -143,7 +143,9 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, actions: [], mode: mode };
 
     this.mode = options.mode || 'client';
+    // tslint:disable-next-line:no-bitwise
     this.rowActions = options.actions?.filter((a) => a.scope & PsTableActionScope.row) || [];
+    // tslint:disable-next-line:no-bitwise
     this.listActions = options.actions?.filter((a) => a.scope & PsTableActionScope.list) || [];
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
     this._loadData = options.loadDataFn;
