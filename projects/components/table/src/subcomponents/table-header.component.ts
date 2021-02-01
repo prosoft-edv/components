@@ -79,12 +79,10 @@ export class PsTableHeaderComponent {
   @Input() public topButtonSection: TemplateRef<any> | null;
   @Input() public customHeader: TemplateRef<any> | null;
   @Input() public selectedRows: any[];
-
   @Input() public showSorting: boolean;
   @Input() public sortColumn: string;
   @Input() public sortDirection: 'asc' | 'desc';
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];
-
   @Input() public filterable: boolean;
   @Input() public searchText: string;
 

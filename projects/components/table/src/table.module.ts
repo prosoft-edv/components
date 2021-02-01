@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { PsFlipContainerModule } from '@prosoft/components/flip-container';
 import { PsSavebarModule } from '@prosoft/components/savebar';
 import {
@@ -76,6 +77,7 @@ import { PsTableComponent } from './table.component';
     MatInputModule,
     MatCardModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
     PsFlipContainerModule,
     PsSavebarModule,
   ],

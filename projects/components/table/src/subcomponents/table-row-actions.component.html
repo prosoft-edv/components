@@ -3,7 +3,7 @@
     <button mat-icon-button type="button" [matMenuTriggerFor]="rowActionsComponent.menu">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <ps-table-actions #rowActionsComponent [actions]="actions" [data]="itemAsArray">
+    <ps-table-actions #rowActionsComponent [actions]="actions" [items]="itemAsArray">
       <ng-container [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
     </ps-table-actions>
   </ng-container>
@@ -13,8 +13,9 @@
         type="button"
         *ngIf="!action.children?.length; else rowIconBtnWithChildren"
         mat-icon-button
-        [disabled]="action.isDisabledFnc && action.isDisabledFnc(itemAsArray)"
-        (click)="action.actionFnc(itemAsArray)"
+        [disabled]="action.isDisabledFn && action.isDisabledFn(itemAsArray)"
+        (click)="action.actionFn(itemAsArray)"
+        [matTooltip]="action.label"
       >
         <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
       </button>
@@ -23,12 +24,13 @@
           type="button"
           *ngIf="action.children?.length"
           mat-icon-button
-          [disabled]="action.isDisabledFnc && action.isDisabledFnc(itemAsArray)"
+          [disabled]="action.isDisabledFn && action.isDisabledFn(itemAsArray)"
           [matMenuTriggerFor]="iconActions.menu"
+          [matTooltip]="action.label"
         >
           <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
         </button>
-        <ps-table-actions #iconActions [actions]="action.children" [data]="itemAsArray"></ps-table-actions>
+        <ps-table-actions #iconActions [actions]="action.children" [items]="itemAsArray"></ps-table-actions>
       </ng-template>
     </ng-container>
   </ng-template>

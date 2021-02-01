@@ -1,22 +1,32 @@
-<!-- https://github.com/angular/components/issues/16457#issuecomment-548547659 -->
+<!--
+  https://github.com/angular/components/issues/16457#issuecomment-548547659
+-->
 <mat-menu #menu>
-  <ng-container *ngFor="let item of actions">
+  <ng-container *ngFor="let action of actions">
     <button
-      *ngIf="!item.children; else branch"
+      *ngIf="!action.children; else branch"
       mat-menu-item
-      [disabled]="item.isDisabledFnc && item.isDisabledFnc(data)"
-      (click)="item.actionFnc(data)"
+      [disabled]="action.isDisabledFn && action.isDisabledFn(items)"
+      (click)="action.actionFn(items)"
     >
-      <mat-icon>{{ item.icon }}</mat-icon>
-      {{ item.label }}
+      <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
+      {{ action.label }}
     </button>
     <ng-template #branch>
       <button mat-menu-item [matMenuTriggerFor]="innerPanel.menu">
-        <mat-icon>{{ item.icon }}</mat-icon>
-        {{ item.label }}
+        <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
+        {{ action.label }}
       </button>
-      <ps-table-actions #innerPanel [actions]="item.children | psTableActionsToRender: data" [data]="data"></ps-table-actions>
+      <ps-table-actions #innerPanel [actions]="action.children | psTableActionsToRender: items" [items]="items"></ps-table-actions>
     </ng-template>
   </ng-container>
   <ng-content></ng-content>
+  <button *ngIf="refreshable" type="button" mat-menu-item (click)="refreshData.emit()">
+    <mat-icon>refresh</mat-icon>
+    {{ intl.refreshListLabel }}
+  </button>
+  <button *ngIf="settingsEnabled" type="button" mat-menu-item (click)="showSettings.emit()">
+    <mat-icon>settings</mat-icon>
+    {{ intl.settingsLabel }}
+  </button>
 </mat-menu>

@@ -11,6 +11,6 @@ import { IPsTableAction } from '../models';
 export class PsTableActionsToRenderPipe implements PipeTransform {
   transform<T>(actions: IPsTableAction<T>[], ...args: [T | T[]]): any {
     const elements = Array.isArray(args[0]) ? args[0] : [args[0]];
-    return actions.filter((a) => !a.isHiddenFnc || !a.isHiddenFnc(elements));
+    return actions.filter((a) => !a.isHiddenFn || !a.isHiddenFn(elements));
   }
 }

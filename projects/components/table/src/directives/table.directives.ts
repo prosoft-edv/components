@@ -81,7 +81,7 @@ export class PsTableRowDetailTemplateDirective {
 export class PsTableRowDetailDirective {
   /** Gibt an, ob die Row Details initial expanded sein sollen */
   @Input() public expanded = false;
-  @Input() public showToggleColumn = true;
+  @Input() public showToggleColumn: boolean | ((row: any) => boolean) = true;
 
   @ContentChild(PsTableRowDetailTemplateDirective, { read: TemplateRef })
   public template: TemplateRef<any> | null = null;

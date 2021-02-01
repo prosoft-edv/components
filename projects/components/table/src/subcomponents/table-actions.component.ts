@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatMenu } from '@angular/material/menu';
+import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { IPsTableAction } from '../models';
 
 @Component({
@@ -9,7 +10,13 @@ import { IPsTableAction } from '../models';
 })
 export class PsTableActionsComponent {
   @Input() public actions: IPsTableAction<any>[];
-  @Input() public data: any[];
+  @Input() public items: any[];
+  @Input() public refreshable: boolean;
+  @Input() public settingsEnabled: boolean;
+  @Input() public intl: IPsTableIntlTexts;
+
+  @Output() public refreshData = new EventEmitter<void>();
+  @Output() public showSettings = new EventEmitter<void>();
 
   @ViewChild('menu', { static: true }) menu: MatMenu;
 }
