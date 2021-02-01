@@ -91,25 +91,61 @@ export class TableDemoComponent {
         scope: PsTableActionScope.row,
       },
       {
-        label: 'rowAction 2 disabled',
-        icon: 'edit',
-        actionFnc: () => of(),
-        scope: PsTableActionScope.row,
-        isDisabledFnc: () => true,
-      },
-      {
-        label: 'rowAction 3 hidden',
+        label: 'rowAction 2',
         icon: 'cancel',
         actionFnc: () => of(),
         scope: PsTableActionScope.row,
         isHiddenFnc: () => Math.random() > 0.5,
       },
+      {
+        label: 'listAction 1',
+        icon: 'cancel',
+        actionFnc: () => of(),
+        scope: PsTableActionScope.list,
+      },
+      {
+        label: 'listAction 2',
+        icon: 'cancel',
+        actionFnc: () => of(),
+        scope: PsTableActionScope.list,
+        isDisabledFnc: () => true,
+      },
+      {
+        label: 'listAction 3',
+        icon: 'cancel',
+        actionFnc: () => of(),
+        scope: PsTableActionScope.list,
+        isHiddenFnc: () => Math.random() > 0.5,
+      },
+      {
+        label: 'allAction',
+        icon: 'cancel',
+        scope: PsTableActionScope.all,
+        children: [
+          {
+            label: 'allChildAction 1',
+            icon: 'cancel',
+            actionFnc: () => of(),
+            scope: PsTableActionScope.list,
+          },
+          {
+            label: 'allChildAction 2',
+            icon: 'cancel',
+            scope: PsTableActionScope.list,
+            children: [
+              {
+                label: 'allChildAction 2 Child 1',
+                icon: 'cancel',
+                actionFnc: () => of(),
+                scope: PsTableActionScope.list,
+              },
+            ],
+          },
+        ],
+      },
     ],
   });
 
-  //   () => {
-  //   return of(sampleData);
-  // }, 'client');
   public emptyDataSource = new PsTableDataSource<any>(() => of([]));
   public loadingDataSource = new PsTableDataSource<any>(() => NEVER);
   public errorDataSource = new PsTableDataSource<any>(() => {

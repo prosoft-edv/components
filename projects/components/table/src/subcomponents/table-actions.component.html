@@ -1,0 +1,22 @@
+<!-- https://github.com/angular/components/issues/16457#issuecomment-548547659 -->
+<mat-menu #menu>
+  <ng-container *ngFor="let item of actions">
+    <button
+      *ngIf="!item.children; else branch"
+      mat-menu-item
+      [disabled]="item.isDisabledFnc && item.isDisabledFnc(data)"
+      (click)="item.actionFnc(data)"
+    >
+      <mat-icon>{{ item.icon }}</mat-icon>
+      {{ item.label }}
+    </button>
+    <ng-template #branch>
+      <button mat-menu-item [matMenuTriggerFor]="innerPanel.menu">
+        <mat-icon>{{ item.icon }}</mat-icon>
+        {{ item.label }}
+      </button>
+      <ps-table-actions #innerPanel [actions]="item.children | psTableActionsToRender: data" [data]="data"></ps-table-actions>
+    </ng-template>
+  </ng-container>
+  <ng-content></ng-content>
+</mat-menu>

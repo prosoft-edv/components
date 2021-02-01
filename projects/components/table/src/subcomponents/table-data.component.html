@@ -47,66 +47,30 @@
   <!--Option Column-->
   <ng-container matColumnDef="options">
     <th class="ps-table-data__options-column-header" mat-header-cell *matHeaderCellDef>
-      <button *ngIf="showListActions" mat-icon-button type="button" [matMenuTriggerFor]="listMenu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #listMenu="matMenu">
-        <!--Dynamic ListActions-->
-        <ng-template [ngTemplateOutlet]="listActions" [ngTemplateOutletContext]="{ $implicit: getSelectedRows() }"></ng-template>
-
-        <button *ngIf="refreshable" type="button" mat-menu-item (click)="onRefreshDataClicked()">
-          <mat-icon>refresh</mat-icon>
-          {{ intl.refreshListLabel }}
-        </button>
-        <button *ngIf="settingsEnabled" type="button" mat-menu-item (click)="onShowSettingsClicked()">
-          <mat-icon>settings</mat-icon>
-          {{ intl.settingsLabel }}
-        </button>
-      </mat-menu>
-    </th>
-    <td class="ps-table-data__options-column" mat-cell *matCellDef="let element">
-      <ng-container *ngIf="dataSource.rowActions.length; else rowActionsTemplate">
-        <ng-container *ngIf="dataSource.rowActions | psTableActionsToRender: element as visibleActions">
-          <ng-container *ngIf="visibleActions.length >= dataSource.moreMenuThreshold">
-            <button mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #rowMenu="matMenu">
-              <button
-                type="button"
-                mat-menu-item
-                *ngFor="let action of visibleActions"
-                [disabled]="action.isDisabledFnc && action.isDisabledFnc([element])"
-                (click)="action.actionFnc([element])"
-              >
-                <mat-icon>{{ action.icon }}</mat-icon>
-                {{ action.label }}
-              </button>
-            </mat-menu>
-          </ng-container>
-          <ng-container *ngIf="visibleActions.length < dataSource.moreMenuThreshold">
-            <button
-              type="button"
-              mat-icon-button
-              *ngFor="let action of visibleActions"
-              [disabled]="action.isDisabledFnc && action.isDisabledFnc([element])"
-              (click)="action.actionFnc([element])"
-            >
-              <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
-            </button>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-
-      <!-- TODO extract to component + childrenHandling -->
-      <ng-template #rowActionsTemplate>
-        <button *ngIf="rowActions" mat-icon-button type="button" [matMenuTriggerFor]="rowMenu">
+      <ng-container *ngIf="showListActions">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="listActionsComponent.menu">
           <mat-icon>more_vert</mat-icon>
         </button>
-        <mat-menu #rowMenu="matMenu">
-          <ng-container [ngTemplateOutlet]="rowActions" [ngTemplateOutletContext]="{ $implicit: element }"></ng-container>
-        </mat-menu>
-      </ng-template>
+        <ps-table-actions #listActionsComponent [actions]="dataSource.listActions" [data]="getSelectedRows()">
+          <ng-template [ngTemplateOutlet]="listActions" [ngTemplateOutletContext]="{ $implicit: getSelectedRows() }"></ng-template>
+          <button *ngIf="refreshable" type="button" mat-menu-item (click)="onRefreshDataClicked()">
+            <mat-icon>refresh</mat-icon>
+            {{ intl.refreshListLabel }}
+          </button>
+          <button *ngIf="settingsEnabled" type="button" mat-menu-item (click)="onShowSettingsClicked()">
+            <mat-icon>settings</mat-icon>
+            {{ intl.settingsLabel }}
+          </button>
+        </ps-table-actions>
+      </ng-container>
+    </th>
+    <td class="ps-table-data__options-column" mat-cell *matCellDef="let element">
+      <ps-table-row-actions
+        [actions]="dataSource.rowActions"
+        [actionsTemplate]="rowActions"
+        [item]="element"
+        [moreMenuThreshold]="dataSource.moreMenuThreshold"
+      ></ps-table-row-actions>
     </td>
   </ng-container>
 

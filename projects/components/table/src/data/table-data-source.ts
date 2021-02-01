@@ -13,7 +13,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadTrigger$?: Observable<TTrigger>;
   loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
-  actions: IPsTableAction<TData>[];
+  actions?: IPsTableAction<TData>[];
   mode?: PsTableMode;
 }
 
@@ -143,8 +143,8 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, actions: [], mode: mode };
 
     this.mode = options.mode || 'client';
-    this.rowActions = options.actions.filter((a) => a.scope & PsTableActionScope.row);
-    this.listActions = options.actions.filter((a) => a.scope & PsTableActionScope.list);
+    this.rowActions = options.actions?.filter((a) => a.scope & PsTableActionScope.row) || [];
+    this.listActions = options.actions?.filter((a) => a.scope & PsTableActionScope.list) || [];
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
     this._loadData = options.loadDataFn;
 
