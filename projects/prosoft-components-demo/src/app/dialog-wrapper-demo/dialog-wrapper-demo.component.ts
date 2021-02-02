@@ -12,21 +12,21 @@ interface IDemoDialogWrapperDataSourceOptions {
 
 export class DemoDialogWrapperDataSource implements IPsDialogWrapperDataSource {
   dialogTitle = this.options.dialogTitle;
-  buttons = [
+  buttons: IPsButton[] = [
     {
       label: 'Ok',
       type: 'raised',
       color: 'primary',
       disabled: () => false,
       click: () => this.confirm(),
-    } as IPsButton,
+    },
     {
       label: 'Cancel',
       type: 'stroked',
       color: null,
       disabled: () => false,
       click: () => this.close(),
-    } as IPsButton,
+    },
   ];
   contentVisible = true;
   contentBlocked = false;

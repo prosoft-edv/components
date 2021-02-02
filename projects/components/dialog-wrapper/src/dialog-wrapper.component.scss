@@ -13,15 +13,10 @@
 
 ps-dialog-wrapper {
   display: block;
-  /* Breiter geht bei einem MatDialog nicht, ohne das ein horrizontaler Scrollbalken kommt. */
+  /** Max possible width a MatDialog can be without showing a horizontal scrollbar  */
   max-width: calc(80vw - 48px);
-  /*
-  Hier nicht fix eine Breite setzen, da z.B. der Confirm Dialog sicht auf das automatische Breite setzen von Material verlässt.
-  Wenn ein Dialog eine fixe Breite haben soll, dann direkt beim Dialog auf das <ps-dialog-wrapper> Tag setzen.
-  */
 
   .mat-dialog-actions {
-    /* Damit der Abstand der Buttons nach rechts und unten gleich ist */
     margin-bottom: -16px;
   }
 }

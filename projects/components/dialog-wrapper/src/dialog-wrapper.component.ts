@@ -29,13 +29,13 @@ export class PsDialogWrapperComponent implements OnDestroy {
   @Input() public set dataSource(value: IPsDialogWrapperDataSource) {
     if (this._dataSource) {
       this._dataSource.disconnect();
-      this.dataSourceSubscription.unsubscribe();
+      this._dataSourceSubscription.unsubscribe();
     }
 
     this._dataSource = value;
 
     if (this._dataSource) {
-      this.dataSourceSubscription = this._dataSource.connect().subscribe(() => {
+      this._dataSourceSubscription = this._dataSource.connect().subscribe(() => {
         this.cd.markForCheck();
       });
     }
@@ -45,15 +45,15 @@ export class PsDialogWrapperComponent implements OnDestroy {
   }
   private _dataSource: IPsDialogWrapperDataSource;
 
-  private dataSourceSubscription = Subscription.EMPTY;
-  private ngUnsubscribe$ = new Subject<void>();
+  private _dataSourceSubscription = Subscription.EMPTY;
+  private _ngUnsubscribe$ = new Subject<void>();
   constructor(private cd: ChangeDetectorRef) {}
 
   public ngOnDestroy() {
-    this.ngUnsubscribe$.next();
-    this.ngUnsubscribe$.complete();
+    this._ngUnsubscribe$.next();
+    this._ngUnsubscribe$.complete();
 
-    this.dataSourceSubscription.unsubscribe();
+    this._dataSourceSubscription.unsubscribe();
     if (this._dataSource) {
       this._dataSource.disconnect();
     }
