@@ -4,7 +4,7 @@ import { EMPTY, Observable, of } from 'rxjs';
 export interface IPsTableSetting {
   columnBlacklist: string[];
   sortColumn: string;
-  sortDirection: 'asc' | 'desc';
+  sortDirection: 'asc' | 'desc' | null;
   pageSize: number;
 }
 

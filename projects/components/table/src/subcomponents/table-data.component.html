@@ -1,4 +1,14 @@
-<table mat-table multiTemplateDataRows class="ps-table-data__table" [dataSource]="dataSource" [trackBy]="dataSource.trackBy">
+<table
+  mat-table
+  matSort
+  multiTemplateDataRows
+  class="ps-table-data__table"
+  [dataSource]="dataSource"
+  [trackBy]="dataSource.trackBy"
+  [matSortActive]="sortColumn"
+  [matSortDirection]="sortDirection"
+  (matSortChange)="onSortChanged($event)"
+>
   <!-- Checkbox Column -->
   <ng-container matColumnDef="select">
     <th mat-header-cell *matHeaderCellDef>
@@ -24,7 +34,14 @@
   <!-- Dynamic Columns -->
   <ng-container *ngFor="let columnDef of columnDefs">
     <ng-container [matColumnDef]="columnDef.property">
-      <th mat-header-cell *matHeaderCellDef [ngStyle]="columnDef.headerStyles" [style.width]="columnDef.width">
+      <th
+        mat-header-cell
+        [mat-sort-header]="columnDef.property"
+        [disabled]="!columnDef.sortable"
+        *matHeaderCellDef
+        [ngStyle]="columnDef.headerStyles"
+        [style.width]="columnDef.width"
+      >
         <ng-container *ngIf="!columnDef.headerTemplate">
           {{ columnDef.header }}
         </ng-container>

@@ -39,6 +39,7 @@ import {
 import { PsTableStateManager, PsTableUrlStateManager } from './helper/state-manager';
 import { IPsTableSortDefinition, IPsTableUpdateDataInfo } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'ps-table',
@@ -82,6 +83,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   @Input() stateManager: PsTableStateManager = new PsTableUrlStateManager(this.router, this.route);
 
+  /** @deprecated use the datasource to detect paginations */
   @Output() public page = new EventEmitter<PageEvent>();
 
   @ViewChild(PsFlipContainerComponent, { static: true }) public flipContainer: PsFlipContainerComponent | null = null;
@@ -159,10 +161,10 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
 
   public displayedColumns: string[] = [];
 
-  public get sortDirection(): 'asc' | 'desc' {
+  public get sortDirection(): 'asc' | 'desc' | null {
     return this.dataSource.sortDirection;
   }
-  public set sortDirection(value: 'asc' | 'desc') {
+  public set sortDirection(value: 'asc' | 'desc' | null) {
     this.dataSource.sortDirection = value;
   }
 
@@ -279,21 +281,24 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
   }
 
   public onSearchChanged(value: string) {
-    this.filterText = value;
-    this.requestUpdate();
+    this.requestUpdate({
+      searchText: value,
+    });
   }
 
-  public onSortChanged(event: { sortColumn: string; sortDirection: 'asc' | 'desc' }) {
-    this.sortColumn = event.sortColumn;
-    this.sortDirection = event.sortDirection;
-    this.requestUpdate();
+  public onSortChanged(event: Sort) {
+    this.requestUpdate({
+      sortColumn: event.active,
+      sortDirection: event.direction || null,
+    });
   }
 
   public onPage(event: PageEvent) {
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
     this.page.emit(event);
-    this.requestUpdate();
+    this.requestUpdate({
+      currentPage: event.pageIndex,
+      pageSize: event.pageSize,
+    });
   }
 
   public onRefreshDataClicked() {
@@ -313,8 +318,11 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
     this.rowDetail.toggle(item, open);
   }
 
-  private requestUpdate() {
-    const updateInfo = this.dataSource.getUpdateDataInfo();
+  private requestUpdate(data: Partial<IPsTableUpdateDataInfo>) {
+    const updateInfo = {
+      ...this.dataSource.getUpdateDataInfo(),
+      ...data,
+    };
     this.stateManager.requestUpdate(this.tableId, updateInfo);
   }
 
@@ -352,7 +360,7 @@ export class PsTableComponent implements OnInit, OnChanges, AfterContentInit, On
     this.pageIndex = Math.max(urlSettings.currentPage || 0, 0);
     this.pageSize = Math.max(urlSettings.pageSize || tableSettings.pageSize || 15, 1);
     this.sortColumn = urlSettings.sortColumn || tableSettings.sortColumn || null;
-    this.sortDirection = urlSettings.sortDirection || tableSettings.sortDirection || 'asc';
+    this.sortDirection = urlSettings.sortDirection || tableSettings.sortDirection || null;
     this.filterText = urlSettings.searchText || '';
 
     this.displayedColumns = this.columnDefs.map((x) => x.property);

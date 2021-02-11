@@ -64,7 +64,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   public sortColumn: string = null;
 
   /** The sort direction. Defaulted to asc. */
-  public sortDirection: 'asc' | 'desc' = 'asc';
+  public sortDirection: 'asc' | 'desc' | null = 'asc';
 
   /** The zero-based page index of the displayed list of items. Defaulted to 0. */
   public pageIndex = 0;
@@ -275,7 +275,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       currentPage: this.pageIndex,
       searchText: this.filter,
       sortColumn: this.sortColumn,
-      sortDirection: this.sortDirection,
+      sortDirection: this.sortDirection || null,
     };
     if (extended) {
       (data as IExtendedPsTableUpdateDataInfo<TTrigger>).triggerData = this._lastLoadTriggerData;
@@ -417,7 +417,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
 
     return this.sortData(data.slice(), {
       sortColumn: this.sortColumn,
-      sortDirection: this.sortDirection,
+      sortDirection: this.sortDirection || null,
     });
   }
 

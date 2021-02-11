@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Sort } from '@angular/material/sort';
 import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -63,12 +64,12 @@ export class PsTableSettingsComponent implements OnInit {
     return !settings.columnBlacklist.some((x) => x === columnDef.property);
   }
 
-  public onSortChanged(event: { sortColumn: string; sortDirection: 'asc' | 'desc' }, settings: IPsTableSetting) {
-    if (settings.sortColumn !== event.sortColumn) {
-      settings.sortColumn = event.sortColumn;
-      settings.columnBlacklist = settings.columnBlacklist.filter((x) => x !== event.sortColumn);
+  public onSortChanged(event: Sort, settings: IPsTableSetting) {
+    if (settings.sortColumn !== event.active) {
+      settings.sortColumn = event.active;
+      settings.columnBlacklist = settings.columnBlacklist.filter((x) => x !== event.active);
     }
-    settings.sortDirection = event.sortDirection;
+    settings.sortDirection = event.direction || null;
   }
 
   public onColumnVisibilityChange(event: MatCheckboxChange, settings: IPsTableSetting, columnDef: PsTableColumnDirective) {
