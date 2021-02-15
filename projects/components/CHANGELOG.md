@@ -3,18 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [2.0.0-alpha.8](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.5...@prosoft/components@2.0.0-alpha.8) (2020-12-03)
+# [2.0.0-alpha.11](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.10...@prosoft/components@2.0.0-alpha.11) (2021-02-11)
 
 
 ### Bug Fixes
 
-* **form-field:** fixes for appearances 'standard', 'fill' and 'outline' ([#142](https://github.com/prosoft-edv/components/issues/142)) ([697b70f](https://github.com/prosoft-edv/components/commit/697b70f))
+* made some typings better compatible to strict apps ([#163](https://github.com/prosoft-edv/components/issues/163)) ([44eec52](https://github.com/prosoft-edv/components/commit/44eec52))
+* **card:** header and content share unused space equally ([#162](https://github.com/prosoft-edv/components/issues/162)) ([6723c2b](https://github.com/prosoft-edv/components/commit/6723c2b))
+
+
+
+
+
+
+# [2.0.0-alpha.10](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.9...@prosoft/components@2.0.0-alpha.10) (2021-02-04)
+
+
+### Bug Fixes
+
+* **release:** broken typings ([#159](https://github.com/prosoft-edv/components/issues/159)) ([1a95a75](https://github.com/prosoft-edv/components/commit/1a95a75))
+
+
+
+
+
+
+# [2.0.0-alpha.9](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.8...@prosoft/components@2.0.0-alpha.9) (2021-02-04)
+
+
+### Features
+
+* **dialog-wrapper:** new ps-dialog-wrapper ([#153](https://github.com/prosoft-edv/components/issues/153)) ([de7f95c](https://github.com/prosoft-edv/components/commit/de7f95c))
+* new ps-card and ps-header components ([#151](https://github.com/prosoft-edv/components/issues/151)) ([d3d64dc](https://github.com/prosoft-edv/components/commit/d3d64dc))
+* **view:** added new PsViewComponent ([#149](https://github.com/prosoft-edv/components/issues/149)) ([37b1124](https://github.com/prosoft-edv/components/commit/37b1124))
+
+
+
+
+
+# [2.0.0-alpha.8](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.7...@prosoft/components@2.0.0-alpha.8) (2020-12-03)
+
+
+### Bug Fixes
+
 * **select:** outline gap calculated correctly with ps-select ([#146](https://github.com/prosoft-edv/components/issues/146)) ([26b7574](https://github.com/prosoft-edv/components/commit/26b7574))
-
-
-### Code Refactoring
-
-* fixes for non-standard material font sizes ([#144](https://github.com/prosoft-edv/components/issues/144)) ([bc26cdf](https://github.com/prosoft-edv/components/commit/bc26cdf))
 
 
 ### Features
@@ -27,20 +59,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **flip-container:** ps-table flip animation changed
 
 Co-authored-by: Michael Dorr <michael.dorr@prosoft.net>
-* Appearance fixes must now be defined outside now
-
-Co-authored-by: Michael Dorr <michael.dorr@prosoft.net>
 
 
 
 
 
-# [2.0.0-alpha.7](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.5...@prosoft/components@2.0.0-alpha.7) (2020-12-02)
-
-
-### Bug Fixes
-
-* **form-field:** fixes for appearances 'standard', 'fill' and 'outline' ([#142](https://github.com/prosoft-edv/components/issues/142)) ([697b70f](https://github.com/prosoft-edv/components/commit/697b70f))
+# [2.0.0-alpha.7](https://github.com/prosoft-edv/components/compare/@prosoft/components@2.0.0-alpha.6...@prosoft/components@2.0.0-alpha.7) (2020-12-02)
 
 
 ### Code Refactoring
