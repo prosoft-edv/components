@@ -1,4 +1,4 @@
-import { BaseHarnessFilters, ContentContainerComponentHarness, HarnessPredicate } from '@angular/cdk/testing';
+import { ContentContainerComponentHarness, HarnessPredicate } from '@angular/cdk/testing';
 
 export class PsTableSettingsHarness extends ContentContainerComponentHarness {
   static hostSelector = 'ps-table-settings';
