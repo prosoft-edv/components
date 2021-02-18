@@ -1,0 +1,31 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ caption }}</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <!-- <mat-tab-group>
+      <mat-tab label="OVERVIEW">
+        <div class="app-component-page-wrapper__tab-content-wrapper">
+          <ng-template [ngTemplateOutlet]="overview"></ng-template>
+        </div>
+      </mat-tab>
+      <mat-tab label="API">
+        <div class="app-component-page-wrapper__tab-content-wrapper">
+          <ng-template [ngTemplateOutlet]="api"></ng-template>
+        </div>
+      </mat-tab>
+      <mat-tab *ngIf="codeGeneration" label="CODE GENERATION">
+        <div class="app-component-page-wrapper__tab-content-wrapper">
+          <ng-template [ngTemplateOutlet]="codeGeneration"></ng-template>
+        </div>
+      </mat-tab>
+    </mat-tab-group> -->
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link [routerLink]="['overview']">OVERVIEW</a>
+      <a mat-tab-link [routerLink]="['api']">API</a>
+      <a mat-tab-link [routerLink]="['code-generation']">CODE GENERATION</a>
+      <a mat-tab-link *ngFor="let tab of additionalTabs" [routerLink]="tab.routerLink">OVERVIEW</a>
+    </nav>
+    <router-outlet></router-outlet>
+  </mat-card-content>
+</mat-card>
