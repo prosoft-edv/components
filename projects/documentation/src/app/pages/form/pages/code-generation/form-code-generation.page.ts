@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-form-code-generation-page',
-  template: 'FormCodeGenerationPage Works!!',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-form-code-generation',
+  templateUrl: './form-code-generation.page.html',
+  styleUrls: ['./form-code-generation.page.scss'],
 })
-export class FormCodeGenerationPage {}
+export class FormCodeGenerationPage implements OnInit {
+  constructor() {}
+
+  ngOnInit(): void {}
+}

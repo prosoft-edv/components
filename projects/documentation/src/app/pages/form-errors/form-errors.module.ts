@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ComponentPageWrapperComponent, COMPONENT_CAPTION } from '../../components/component-page-wrapper/component-page-wrapper.component';
 import { ComponentPageWrapperModule } from '../../components/component-page-wrapper/component-page-wrapper.module';
-import { FormApiPage } from './pages/api/form-api.page';
-import { FormCodeGenerationPage } from './pages/code-generation/form-code-generation.page';
-import { FormOverviewPage } from './pages/overview/form-overview.page';
+import { FormErrorsApiPage } from './pages/api/form-errors-api.page';
+import { FormErrorsCodeGenerationPage } from './pages/code-generation/form-errors-code-generation.page';
+import { FormErrorsOverviewPage } from './pages/overview/form-errors-overview.page';
 
 @NgModule({
-  declarations: [FormApiPage, FormCodeGenerationPage, FormOverviewPage],
+  declarations: [FormErrorsApiPage, FormErrorsCodeGenerationPage, FormErrorsOverviewPage],
   imports: [
     CommonModule,
     ComponentPageWrapperModule,
@@ -18,13 +18,13 @@ import { FormOverviewPage } from './pages/overview/form-overview.page';
         component: ComponentPageWrapperComponent,
         children: [
           { path: '', redirectTo: 'overview' },
-          { path: 'overview', component: FormOverviewPage },
-          { path: 'api', component: FormApiPage },
-          { path: 'code-generation', component: FormCodeGenerationPage },
+          { path: 'overview', component: FormErrorsOverviewPage },
+          { path: 'api', component: FormErrorsApiPage },
+          { path: 'code-generation', component: FormErrorsCodeGenerationPage },
         ],
       },
     ]),
   ],
-  providers: [{ provide: COMPONENT_CAPTION, useValue: 'Form' }],
+  providers: [{ provide: COMPONENT_CAPTION, useValue: 'Form errors' }],
 })
-export class FormModule {}
+export class FormErrorsModule {}

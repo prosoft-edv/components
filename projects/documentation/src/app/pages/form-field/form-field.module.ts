@@ -3,12 +3,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ComponentPageWrapperComponent, COMPONENT_CAPTION } from '../../components/component-page-wrapper/component-page-wrapper.component';
 import { ComponentPageWrapperModule } from '../../components/component-page-wrapper/component-page-wrapper.module';
-import { FormApiPage } from './pages/api/form-api.page';
-import { FormCodeGenerationPage } from './pages/code-generation/form-code-generation.page';
-import { FormOverviewPage } from './pages/overview/form-overview.page';
+import { FormFieldApiPage } from './pages/api/form-field-api.page';
+import { FormFieldCodeGenerationPage } from './pages/code-generation/form-field-code-generation.page';
+import { FormFieldOverviewPage } from './pages/overview/form-field-overview.page';
 
 @NgModule({
-  declarations: [FormApiPage, FormCodeGenerationPage, FormOverviewPage],
+  declarations: [FormFieldApiPage, FormFieldCodeGenerationPage, FormFieldOverviewPage],
   imports: [
     CommonModule,
     ComponentPageWrapperModule,
@@ -18,13 +18,13 @@ import { FormOverviewPage } from './pages/overview/form-overview.page';
         component: ComponentPageWrapperComponent,
         children: [
           { path: '', redirectTo: 'overview' },
-          { path: 'overview', component: FormOverviewPage },
-          { path: 'api', component: FormApiPage },
-          { path: 'code-generation', component: FormCodeGenerationPage },
+          { path: 'overview', component: FormFieldOverviewPage },
+          { path: 'api', component: FormFieldApiPage },
+          { path: 'code-generation', component: FormFieldCodeGenerationPage },
         ],
       },
     ]),
   ],
-  providers: [{ provide: COMPONENT_CAPTION, useValue: 'Form' }],
+  providers: [{ provide: COMPONENT_CAPTION, useValue: 'Form field' }],
 })
-export class FormModule {}
+export class FormFieldModule {}

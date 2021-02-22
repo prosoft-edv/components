@@ -1,8 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-form-overview-page',
-  template: 'FormOverviewPage Works!!',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-form-overview',
+  templateUrl: './form-overview.page.html',
+  styleUrls: ['./form-overview.page.scss'],
 })
-export class FormOverviewPage {}
+export class FormOverviewPage implements OnInit {
+  constructor() {}
+
+  ngOnInit(): void {}
+}
