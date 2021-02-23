@@ -15,6 +15,7 @@ export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
   actions?: IPsTableAction<TData>[];
   mode?: PsTableMode;
+  moreMenuThreshold?: number;
 }
 
 export interface IPsTableFilterResult<T> {
@@ -90,8 +91,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /** List of actions which can be executed for a selection of rows */
   public readonly listActions: IPsTableAction<T>[];
 
-  /** TODO maybe better name */
-  public readonly moreMenuThreshold = 3;
+  public readonly moreMenuThreshold: number;
 
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _updateDataTrigger$: Observable<any>;
@@ -149,6 +149,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
     this.listActions = options.actions?.filter((a) => a.scope & PsTableActionScope.list) || [];
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
     this._loadData = options.loadDataFn;
+    this.moreMenuThreshold = options.moreMenuThreshold || 3;
 
     this._initDataChangeSubscription();
   }
