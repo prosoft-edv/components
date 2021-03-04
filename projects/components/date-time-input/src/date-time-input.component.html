@@ -1,0 +1,29 @@
+<div class="ps-date-time__grid-container">
+  <!-- https://github.com/angular/material2/issues/5648 -->
+  <input
+    #dateInput
+    class="mat-input-element ps-date-time-picker__date-input"
+    [disabled]="disabled"
+    [(ngModel)]="datum"
+    (keyup)="onChanged()"
+    (dateChange)="onChanged()"
+    [matDatepicker]="publishPicker"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  />
+  <div class="mat-form-field-suffix"><mat-datepicker-toggle [for]="publishPicker"></mat-datepicker-toggle></div>
+  <input
+    #timeInput
+    class="mat-input-element ps-date-time-picker__time-input"
+    [disabled]="disabled"
+    type="time"
+    [(ngModel)]="uhrzeit"
+    (keyup)="onChanged()"
+    (change)="onChanged()"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+    step="60"
+  />
+</div>
+
+<mat-datepicker #publishPicker></mat-datepicker>

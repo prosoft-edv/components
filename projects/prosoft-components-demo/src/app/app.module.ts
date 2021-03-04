@@ -53,6 +53,10 @@ import { AppComponent } from './app.component';
         loadChildren: () => import('./number-input-demo/number-input-demo.module').then((m) => m.NumberInputDemoModule),
       },
       {
+        path: 'date-time-input',
+        loadChildren: () => import('./date-time-input-demo/date-time-input-demo.module').then((m) => m.DateTimeInputDemoModule),
+      },
+      {
         path: 'form',
         loadChildren: () => import('./form-demo/form-demo.module').then((m) => m.FormDemoModule),
       },
