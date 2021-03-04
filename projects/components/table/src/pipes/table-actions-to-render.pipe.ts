@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { IPsTableAction } from '../models';
 
 /**
- * TODO provide description
+ * Filters out hidden actions
  */
 @Pipe({
   name: 'psTableActionsToRender',

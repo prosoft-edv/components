@@ -1,5 +1,6 @@
 <!--
-  https://github.com/angular/components/issues/16457#issuecomment-548547659
+  mat-menu-item has to be in the same template as the parent mat-menu otherwise the arrow and hover action for child mat-menus breaks
+  https://github.com/angular/components/issues/16457
 -->
 <mat-menu #menu>
   <ng-container *ngFor="let action of actions">
@@ -20,6 +21,7 @@
       <ps-table-actions #innerPanel [actions]="action.children | psTableActionsToRender: items" [items]="items"></ps-table-actions>
     </ng-template>
   </ng-container>
+  <!-- ng-content is deprecated here, as it doesn't work correctly, if it contains a mat-menu-item with a child met-menu -->
   <ng-content></ng-content>
   <button *ngIf="refreshable" type="button" mat-menu-item (click)="refreshData.emit()">
     <mat-icon>refresh</mat-icon>

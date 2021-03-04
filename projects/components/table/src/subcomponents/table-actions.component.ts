@@ -9,8 +9,8 @@ import { IPsTableAction } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsTableActionsComponent {
-  @Input() public actions: IPsTableAction<any>[];
-  @Input() public items: any[];
+  @Input() public actions: IPsTableAction<unknown>[];
+  @Input() public items: unknown[];
   @Input() public refreshable: boolean;
   @Input() public settingsEnabled: boolean;
   @Input() public intl: IPsTableIntlTexts;

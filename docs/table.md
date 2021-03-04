@@ -71,7 +71,7 @@ import { PsTableModule } from '@prosoft/components/table';
 
 ## PsTableDataSource <a name="PsTableDataSource"></a>
 
-### (deprecated) Usage <a name="PsTableDataSourceUsage"></a>
+### Usage <a name="PsTableDataSourceUsage"></a>
 
 ```ts | js
 const dataSource = new PsTableDataSource<MyDataType>((filter: IPsTableUpdateDataInfo) => myDataService.getListData(filter), 'client');
@@ -167,7 +167,7 @@ const dataSource = new PsTableDataSource<MyDataType>({
 | `label: string`                          | The label which is shown in the rendered action MenuItem.                  |
 | `icon: string`                           | The icon which is shown in the rendered action MenuItem.                   |
 | `scope: PsTableActionScope`              | The scope on which the action performs.                                    |
-| `iconColor?: string`                     | (optional) The color of the Icon.                                          |
+| `iconColor?: string`                     | (optional) The color of the icon.                                          |
 | `children?: IPsTableAction[]`            | (optional) List of child actions. These will be rendered as submenu items. |
 | `isDisabledFn?: (items: T[]) => boolean` | (optional) Callback to set the action disabled.                            |
 | `isHiddenFn?: (items: T[]) => boolean`   | (optional) Callback to hide the action.                                    |
