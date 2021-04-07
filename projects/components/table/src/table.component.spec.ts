@@ -39,7 +39,9 @@ class TestSettingsService extends PsTableSettingsService {
 }
 
 const router: any = {
-  navigate: (_route: any, _options: any) => {},
+  navigate: (_route: any, options: any) => {
+    queryParams$.next(convertToParamMap(options.queryParams));
+  },
 };
 
 const queryParams$ = new BehaviorSubject<ParamMap>(convertToParamMap({ other: 'value' }));
@@ -162,13 +164,24 @@ describe('PsTableComponent', () => {
     const cd = <ChangeDetectorRef>{ markForCheck: () => {} };
 
     let settingsService: TestSettingsService;
-    function createTableInstance(): PsTableComponent {
+    function createTableInstance(hooks = false): PsTableComponent {
       settingsService = new TestSettingsService();
       const table = new PsTableComponent(intlService, settingsService, null, cd, route, router, 'de');
       table.tableId = 'tableid';
-      table.dataSource = new PsTableDataSource<any>(() => of([{ a: 'asdfg' }, { a: 'gasdf' }, { a: 'asdas' }, { a: '32424rw' }]));
+      table.dataSource = new PsTableDataSource<any>({
+        loadDataFn: () => of([{ a: 'asdfg' }, { a: 'gasdf' }, { a: 'asdas' }, { a: '32424rw' }]),
+      });
+      if(hooks){
+        table.ngOnChanges({});
+        table.ngOnInit();
+        table.ngAfterContentInit();
+      }
       return table;
     }
+
+    beforeEach(() => {
+      queryParams$.next(convertToParamMap({ other: 'value' }));
+    });
 
     it('should update table state from the settings service and the query params', fakeAsync(() => {
       const table = createTableInstance();
@@ -187,7 +200,7 @@ describe('PsTableComponent', () => {
       expect(table.pageIndex).toEqual(0);
       expect(table.filterText).toEqual('');
       expect(table.sortColumn).toEqual(null);
-      expect(table.sortDirection).toEqual('asc');
+      expect(table.sortDirection).toEqual(null);
       expect(table.displayedColumns).toEqual(['select', 'rowDetailExpander', 'prop1', 'prop2', 'options']);
       expect(settingsService.getStream).toHaveBeenCalledWith(table.tableId, false);
 
@@ -313,7 +326,7 @@ describe('PsTableComponent', () => {
     }));
 
     it('should merge sort definitions and disable sorting on empty', fakeAsync(() => {
-      const table = createTableInstance();
+      const table = createTableInstance(false);
       const customSortDef = { prop: 'custom', displayName: 'Custom' };
       const notSortableColDef = new PsTableColumnDirective();
       notSortableColDef.sortable = false;
@@ -389,27 +402,30 @@ describe('PsTableComponent', () => {
     }));
 
     it('should update state when sort changes', fakeAsync(() => {
-      const table = createTableInstance();
-      spyOn(<any>table, 'requestUpdate');
-      table.onSortChanged({ sortColumn: 'col', sortDirection: 'desc' });
+      const table = createTableInstance(true);
+      spyOn(<any>table, 'requestUpdate').and.callThrough();
+      table.onSortChanged({ active: 'col', direction: 'desc' });
+      expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
+      tick(1);
       expect(table.sortColumn).toEqual('col');
       expect(table.sortDirection).toEqual('desc');
-      expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
     }));
 
     it('should update state when filter changes', fakeAsync(() => {
-      const table = createTableInstance();
-      spyOn(<any>table, 'requestUpdate');
+      const table = createTableInstance(true);
+      spyOn(<any>table, 'requestUpdate').and.callThrough();
       table.onSearchChanged('test');
-      expect(table.filterText).toEqual('test');
       expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
+      tick(1);
+      expect(table.filterText).toEqual('test');
     }));
 
     it('should update state when page changes and emit output', fakeAsync(() => {
-      const table = createTableInstance();
+      const table = createTableInstance(true);
       spyOn(table.page, 'emit');
-      spyOn(<any>table, 'requestUpdate');
+      spyOn(<any>table, 'requestUpdate').and.callThrough();
       table.onPage({ pageIndex: 5, pageSize: 3, length: 20, previousPageIndex: 4 });
+      tick(1);
       expect(table.pageIndex).toEqual(5);
       expect(table.pageSize).toEqual(3);
       expect((<any>table).requestUpdate).toHaveBeenCalledTimes(1);
@@ -664,16 +680,16 @@ describe('PsTableComponent', () => {
         spyOn(component.table, 'onSortChanged');
         await sortSelect.clickOptions({ text: 'id' });
         expect(component.table.onSortChanged).toHaveBeenCalledWith({
-          sortColumn: 'id',
-          sortDirection: 'asc',
+          active: 'id',
+          direction: null,
         });
 
         const sortDirectionButtons = await table.getSortDirectionButtons();
         expect(sortDirectionButtons.length).toEqual(2);
         await sortDirectionButtons[0].click();
         expect(component.table.onSortChanged).toHaveBeenCalledWith({
-          sortColumn: 'id',
-          sortDirection: 'desc',
+          active: 'id',
+          direction: 'desc',
         });
       });
 
