@@ -17,6 +17,7 @@ import { PsTableSettingsComponent } from './table-settings.component';
 import { PsTableSortComponent } from './table-sort.component';
 import { By } from '@angular/platform-browser';
 import { delay } from 'rxjs/operators';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'ps-test-component',
@@ -202,8 +203,8 @@ describe('PsTableSettingsComponent', () => {
           sortDirection: sortDirection,
         } as Partial<IPsTableSetting>) as any;
       }
-      function createColumnDef(sortColumn: string, sortDirection: 'asc' | 'desc') {
-        return { sortColumn: sortColumn, sortDirection: sortDirection };
+      function createColumnDef(sortColumn: string, sortDirection: 'asc' | 'desc'): Sort {
+        return { active: sortColumn, direction: sortDirection };
       }
 
       it('should remove sort column from blacklist', fakeAsync(() => {

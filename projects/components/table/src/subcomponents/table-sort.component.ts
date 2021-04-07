@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
+import { Sort } from '@angular/material/sort';
 import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { IPsTableSortDefinition } from '../models';
 
@@ -19,7 +20,7 @@ import { IPsTableSortDefinition } from '../models';
       type="button"
       (click)="onSortSirectionChange('desc')"
       class="ps-table-sort__dir-button"
-      [class.ps-table-sort__dir-button--inactive]="sortDirection === 'asc'"
+      [class.ps-table-sort__dir-button--inactive]="sortDirection !== 'desc'"
     >
       <mat-icon>arrow_downward</mat-icon>
     </button>
@@ -28,7 +29,7 @@ import { IPsTableSortDefinition } from '../models';
       type="button"
       (click)="onSortSirectionChange('asc')"
       class="ps-table-sort__dir-button"
-      [class.ps-table-sort__dir-button--inactive]="sortDirection === 'desc'"
+      [class.ps-table-sort__dir-button--inactive]="sortDirection !== 'asc'"
     >
       <mat-icon>arrow_upward</mat-icon>
     </button>
@@ -64,9 +65,9 @@ import { IPsTableSortDefinition } from '../models';
 export class PsTableSortComponent {
   @Input() public intl: IPsTableIntlTexts;
   @Input() public sortColumn: string;
-  @Input() public sortDirection: 'asc' | 'desc';
+  @Input() public sortDirection: 'asc' | 'desc' | null;
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];
-  @Output() public sortChanged = new EventEmitter<{ sortColumn: string; sortDirection: 'asc' | 'desc' }>();
+  @Output() public sortChanged = new EventEmitter<Sort>();
 
   public onSortColumnChange(event: MatSelectChange) {
     if (this.sortColumn !== event.value) {
@@ -84,8 +85,8 @@ export class PsTableSortComponent {
 
   private emitChange() {
     this.sortChanged.emit({
-      sortColumn: this.sortColumn,
-      sortDirection: this.sortDirection,
+      active: this.sortColumn,
+      direction: this.sortDirection,
     });
   }
 }

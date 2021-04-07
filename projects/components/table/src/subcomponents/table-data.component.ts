@@ -14,6 +14,7 @@ import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { PsTableDataSource } from '../data/table-data-source';
 import { PsTableColumnDirective, PsTableRowDetailDirective } from '../directives/table.directives';
 import { Subscription } from 'rxjs';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'ps-table-data',
@@ -32,6 +33,8 @@ export class PsTableDataComponent implements OnChanges {
   @Input() public refreshable: boolean;
   @Input() public settingsEnabled: boolean;
   @Input() public displayedColumns: string[];
+  @Input() public sortColumn: string;
+  @Input() public sortDirection: 'asc' | 'desc' | null;
   /**
    * @deprecated Please use the action definition in PsTableDataSource
    */
@@ -44,6 +47,7 @@ export class PsTableDataComponent implements OnChanges {
 
   @Output() public showSettingsClicked = new EventEmitter<void>();
   @Output() public refreshDataClicked = new EventEmitter<void>();
+  @Output() public sortChanged = new EventEmitter<Sort>();
 
   private _dataSourceChangesSub = Subscription.EMPTY;
 
@@ -64,6 +68,10 @@ export class PsTableDataComponent implements OnChanges {
 
   public onRefreshDataClicked() {
     this.refreshDataClicked.emit();
+  }
+
+  public onSortChanged(sort: Sort) {
+    this.sortChanged.emit(sort);
   }
 
   public toggleRowDetail(item: { [key: string]: any }) {

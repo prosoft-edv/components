@@ -1,4 +1,4 @@
-<ps-flip-container [animation]="'fade'">
+<ps-flip-container [animation]="'fade'" [removeHiddenNodes]="true">
   <div *psFlipContainerFront>
     <ps-table-header
       [intl]="intl"
@@ -29,8 +29,11 @@
         [settingsEnabled]="settingsEnabled"
         [showListActions]="showListActions"
         [displayedColumns]="displayedColumns"
+        [sortColumn]="dataSource.sortColumn"
+        [sortDirection]="dataSource.sortDirection"
         (showSettingsClicked)="flipContainer.showBack()"
         (refreshDataClicked)="onRefreshDataClicked()"
+        (sortChanged)="onSortChanged($event)"
       ></ps-table-data>
 
       <div class="ps-table__no-entries-text" *ngIf="showNoEntriesText">{{ intl.noEntriesLabel }}</div>

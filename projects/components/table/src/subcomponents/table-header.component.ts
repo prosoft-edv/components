@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
   HostBinding,
 } from '@angular/core';
+import { Sort } from '@angular/material/sort';
 import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { IPsTableSortDefinition } from '../models';
 
@@ -83,12 +84,12 @@ export class PsTableHeaderComponent {
   @Input() public selectedRows: any[];
   @Input() public showSorting: boolean;
   @Input() public sortColumn: string;
-  @Input() public sortDirection: 'asc' | 'desc';
+  @Input() public sortDirection: 'asc' | 'desc' | null;
   @Input() public sortDefinitions: IPsTableSortDefinition[] = [];
   @Input() public filterable: boolean;
   @Input() public searchText: string;
 
-  @Output() public sortChanged = new EventEmitter<{ sortColumn: string; sortDirection: 'asc' | 'desc' }>();
+  @Output() public sortChanged = new EventEmitter<Sort>();
   @Output() public searchChanged = new EventEmitter<string>();
 
   @HostBinding('style.padding-top') public get paddingTop() {

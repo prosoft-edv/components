@@ -5,6 +5,7 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
+import { Sort } from '@angular/material/sort';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IPsTableSortDefinition } from '../models';
@@ -35,7 +36,7 @@ export class TestComponent {
 
   @ViewChild(PsTableSortComponent, { static: true }) tableSort: PsTableSortComponent;
 
-  public onSortChanged(_event: any) {}
+  public onSortChanged(_event: Sort) {}
 }
 
 describe('PsTableSortComponent', () => {
@@ -62,14 +63,14 @@ describe('PsTableSortComponent', () => {
 
     descButton.triggerEventHandler('click', new MouseEvent('click'));
     expect(component.onSortChanged).toHaveBeenCalledWith({
-      sortColumn: 'prop',
-      sortDirection: 'desc',
+      active: 'prop',
+      direction: 'desc',
     });
 
     ascButton.triggerEventHandler('click', new MouseEvent('click'));
     expect(component.onSortChanged).toHaveBeenCalledWith({
-      sortColumn: 'prop',
-      sortDirection: 'asc',
+      active: 'prop',
+      direction: 'asc',
     });
 
     component.sortDefinitions = [
@@ -87,8 +88,8 @@ describe('PsTableSortComponent', () => {
     const itemNode = matOptionNodes.item(1);
     itemNode.dispatchEvent(new Event('click'));
     expect(component.onSortChanged).toHaveBeenCalledWith({
-      sortColumn: 'newprop',
-      sortDirection: 'asc',
+      active: 'newprop',
+      direction: 'asc',
     });
   });
 

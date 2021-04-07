@@ -74,6 +74,7 @@ import { PsTableComponent } from './table.component';
     MatButtonModule,
     MatMenuModule,
     MatSelectModule,
+    MatSortModule,
     MatInputModule,
     MatCardModule,
     MatTooltipModule,
