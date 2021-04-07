@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { MatSelectChange } from '@angular/material/select';
 import { PsTableComponent, PsTableDataSource } from '@prosoft/components/table';
-import { NEVER, of, throwError } from 'rxjs';
+import { PsTableActionScope } from '@prosoft/components/table/src/models';
+import { of, timer } from 'rxjs';
+import { first, map } from 'rxjs/operators';
 
 interface ISampleData {
   id: number;
@@ -50,16 +50,14 @@ function generateSampleData(rowCount: number): ISampleData[] {
   return rows.map((x) => generateSampleDataRow(x));
 }
 
-const sampleData = generateSampleData(100);
-
 @Component({
   selector: 'app-table-demo',
   templateUrl: './table-demo.component.html',
   styles: [
     `
       .app-table-demo__settings {
-        display: grid;
-        grid-auto-flow: column;
+        display: flex;
+        flex-wrap: wrap;
         gap: 1em;
 
         margin-bottom: 1em;
@@ -77,14 +75,6 @@ export class TableDemoComponent {
   public show = true;
   @ViewChild(PsTableComponent) public table: PsTableComponent;
 
-  public clientSampleDataSource = new PsTableDataSource<ISampleData>(() => {
-    return of(sampleData);
-  }, 'client');
-  public emptyDataSource = new PsTableDataSource<any>(() => of([]));
-  public loadingDataSource = new PsTableDataSource<any>(() => NEVER);
-  public errorDataSource = new PsTableDataSource<any>(() => {
-    return throwError(new Error('Error while loading the data.'));
-  });
   public pageEvent: PageEvent;
 
   public caption = 'table caption';
@@ -94,9 +84,93 @@ export class TableDemoComponent {
   public layout: 'card' | 'border' | 'flat' = 'card';
   public striped = true;
   public sortDefinitions = true;
-  public pageDebounce = 1000;
-  public dataSourceType: 'client' | 'loading' | 'error' | 'empty' = 'client';
-  public dataSource: PsTableDataSource<ISampleData> = this.clientSampleDataSource;
+  public pageDebounce = 0;
+  public dataSourceType: 'client' | 'loading' | 'error' | 'actions' | 'empty' = 'actions';
+
+  public dsThrowError = false;
+  public dsDataCount = 100;
+  public dsData = generateSampleData(this.dsDataCount);
+  public dsLoadDelay = 1000;
+  public dataSource = new PsTableDataSource<ISampleData>({
+    mode: 'server',
+    loadTrigger$: of(null),
+    loadDataFn: (filter) =>
+      timer(this.dsLoadDelay).pipe(
+        first(),
+        map(() => {
+          if (this.dsThrowError) {
+            throw new Error('Error while loading the data.');
+          }
+          const start = filter.currentPage * filter.pageSize;
+          return {
+            items: this.dsData.slice(start, start + filter.pageSize),
+            totalItems: this.dsData.length,
+          };
+        })
+      ),
+    actions: [
+      {
+        label: 'rowAction 1',
+        icon: 'check',
+        iconColor: 'green',
+        actionFn: () => of(),
+        scope: PsTableActionScope.row,
+      },
+      {
+        label: 'rowAction 2',
+        icon: 'cancel',
+        actionFn: () => of(),
+        scope: PsTableActionScope.row,
+        isHiddenFn: () => Math.random() > 0.5,
+      },
+      {
+        label: 'listAction 1',
+        icon: 'cancel',
+        actionFn: () => of(),
+        scope: PsTableActionScope.list,
+      },
+      {
+        label: 'listAction 2',
+        icon: 'cancel',
+        actionFn: () => of(),
+        scope: PsTableActionScope.list,
+        isDisabledFn: () => true,
+      },
+      {
+        label: 'listAction 3',
+        icon: 'cancel',
+        actionFn: () => of(),
+        scope: PsTableActionScope.list,
+        isHiddenFn: () => Math.random() > 0.5,
+      },
+      {
+        label: 'allAction',
+        icon: 'cancel',
+        scope: PsTableActionScope.all,
+        children: [
+          {
+            label: 'allChildAction 1',
+            icon: 'cancel',
+            actionFn: () => of(),
+            scope: PsTableActionScope.list,
+          },
+          {
+            label: 'allChildAction 2',
+            icon: 'cancel',
+            scope: PsTableActionScope.list,
+            children: [
+              {
+                label: 'allChildAction 2 Child 1',
+                icon: 'cancel',
+                actionFn: () => of(),
+                scope: PsTableActionScope.list,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
 
   public columnHeaderTemplate = false;
   public columnColumnTemplate = true;
@@ -121,21 +195,13 @@ export class TableDemoComponent {
 
   constructor(private cd: ChangeDetectorRef) {}
 
-  public onDataSourceTypeChanged(event: MatSelectChange) {
-    switch (event.value) {
-      case 'loading':
-        this.dataSource = this.loadingDataSource;
-        break;
-      case 'error':
-        this.dataSource = this.errorDataSource;
-        break;
-      case 'empty':
-        this.dataSource = this.emptyDataSource;
-        break;
-      default:
-        this.dataSource = this.clientSampleDataSource;
-        break;
-    }
+  public rebuildSampleData() {
+    this.dsData = generateSampleData(this.dsDataCount);
+    this.reloadTable();
+  }
+
+  public reloadTable() {
+    this.dataSource.updateData();
   }
 
   public rebuildTable() {

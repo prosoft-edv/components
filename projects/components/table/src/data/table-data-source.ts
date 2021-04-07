@@ -3,8 +3,7 @@ import { TrackByFunction } from '@angular/core';
 import { BehaviorSubject, NEVER, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, finalize, map, take, tap } from 'rxjs/operators';
 import { _isNumberValue } from '../helper/table.helper';
-import { IExtendedPsTableUpdateDataInfo, IPsTableUpdateDataInfo } from '../models';
-
+import { IExtendedPsTableUpdateDataInfo, IPsTableAction, IPsTableUpdateDataInfo, PsTableActionScope } from '../models';
 /**
  * Corresponds to `Number.MAX_SAFE_INTEGER`. Moved out into a variable here due to
  * flaky browser support and the value not being defined in Closure's typings.
@@ -14,7 +13,9 @@ const MAX_SAFE_INTEGER = 9007199254740991;
 export interface PsTableDataSourceOptions<TData, TTrigger = any> {
   loadTrigger$?: Observable<TTrigger>;
   loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<TData[] | IPsTableFilterResult<TData>>;
+  actions?: IPsTableAction<TData>[];
   mode?: PsTableMode;
+  moreMenuThreshold?: number;
 }
 
 export interface IPsTableFilterResult<T> {
@@ -84,6 +85,14 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   /** Controls if the data sould be paged, filtered and sorted on the client or the server */
   public readonly mode: PsTableMode;
 
+  /** List of actions which can be executed for a single row */
+  public readonly rowActions: IPsTableAction<T>[];
+
+  /** List of actions which can be executed for a selection of rows */
+  public readonly listActions: IPsTableAction<T>[];
+
+  public readonly moreMenuThreshold: number;
+
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _updateDataTrigger$: Observable<any>;
 
@@ -116,6 +125,9 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   private _renderChangesSubscription = Subscription.EMPTY;
 
   constructor(options: PsTableDataSourceOptions<T, TTrigger>);
+  /**
+   * @deprecated Please use {options: PsTableDataSourceOptions<T, TTrigger>}
+   */
   constructor(
     loadDataFn: (updateInfo: IExtendedPsTableUpdateDataInfo<TTrigger>) => Observable<T[] | IPsTableFilterResult<T>>,
     mode?: PsTableMode
@@ -128,13 +140,16 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
   ) {
     super();
     const options: PsTableDataSourceOptions<T, TTrigger> =
-      'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, mode: mode };
+      'loadDataFn' in optionsOrLoadDataFn ? optionsOrLoadDataFn : { loadDataFn: optionsOrLoadDataFn, actions: [], mode: mode };
 
     this.mode = options.mode || 'client';
+    // tslint:disable-next-line:no-bitwise
+    this.rowActions = options.actions?.filter((a) => a.scope & PsTableActionScope.row) || [];
+    // tslint:disable-next-line:no-bitwise
+    this.listActions = options.actions?.filter((a) => a.scope & PsTableActionScope.list) || [];
     this._updateDataTrigger$ = options.loadTrigger$ || NEVER;
     this._loadData = options.loadDataFn;
-
-    this._initDataChangeSubscription();
+    this.moreMenuThreshold = options.moreMenuThreshold ?? 3;
   }
 
   /**
@@ -143,7 +158,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
    * on its data relative to the function to know if a row should be added/removed/moved.
    * Accepts a function that takes two parameters, index and item.
    */
-  public trackBy: TrackByFunction<T> = (_index, item) => item;
+  public trackBy: TrackByFunction<T> = (i) => i; // index is more performant than item reference when paginating
 
   /**
    * Returns the names of the property that should be used in filterPredicate.
@@ -296,7 +311,6 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
       this._loadDataSubscription.unsubscribe();
       this.error = null;
       this.loading = true;
-      this._renderData.next([]);
       this._internalDetectChanges.next();
 
       const updateInfo = this.getUpdateDataInfo(true);
@@ -352,6 +366,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
    * @docs-private
    */
   public connect() {
+    this._initDataChangeSubscription();
     this._updateDataTriggerSub = this._updateDataTrigger$.subscribe((data) => {
       this._lastLoadTriggerData = data;
       this.updateData();
@@ -364,6 +379,7 @@ export class PsTableDataSource<T, TTrigger = any> extends DataSource<T> {
    * @docs-private
    */
   public disconnect() {
+    this._renderChangesSubscription.unsubscribe();
     this._updateDataTriggerSub.unsubscribe();
     this._loadDataSubscription.unsubscribe();
   }

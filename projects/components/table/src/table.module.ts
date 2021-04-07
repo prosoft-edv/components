@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PsBlockUiModule } from '@prosoft/components/block-ui';
 import { PsFlipContainerModule } from '@prosoft/components/flip-container';
 import { PsSavebarModule } from '@prosoft/components/savebar';
 import {
@@ -26,9 +27,12 @@ import {
   PsTableRowDetailTemplateDirective,
   PsTableTopButtonSectionDirective,
 } from './directives/table.directives';
+import { PsTableActionsToRenderPipe } from './pipes/table-actions-to-render.pipe';
+import { PsTableActionsComponent } from './subcomponents/table-actions.component';
 import { PsTableDataComponent } from './subcomponents/table-data.component';
 import { PsTableHeaderComponent } from './subcomponents/table-header.component';
 import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
+import { PsTableRowActionsComponent } from './subcomponents/table-row-actions.component';
 import { TableRowDetailComponent } from './subcomponents/table-row-detail.component';
 import { PsTableSearchComponent } from './subcomponents/table-search.component';
 import { PsTableSettingsComponent } from './subcomponents/table-settings.component';
@@ -45,6 +49,8 @@ import { PsTableComponent } from './table.component';
     PsTableSearchComponent,
     TableRowDetailComponent,
     PsTablePaginationComponent,
+    PsTableActionsComponent,
+    PsTableRowActionsComponent,
     PsTableColumnDirective,
     PsTableColumnTemplateDirective,
     PsTableColumnHeaderTemplateDirective,
@@ -55,6 +61,7 @@ import { PsTableComponent } from './table.component';
     PsTableRowDetailDirective,
     PsTableRowDetailTemplateDirective,
     PsTableCustomSettingsDirective,
+    PsTableActionsToRenderPipe,
   ],
   imports: [
     CommonModule,
@@ -70,9 +77,10 @@ import { PsTableComponent } from './table.component';
     MatSortModule,
     MatInputModule,
     MatCardModule,
-    MatProgressSpinnerModule,
+    MatTooltipModule,
     PsFlipContainerModule,
     PsSavebarModule,
+    PsBlockUiModule,
   ],
   exports: [
     PsTableComponent,
