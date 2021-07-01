@@ -14,6 +14,7 @@ import { IPsTableIntlTexts } from '@prosoft/components/core';
 import { PsTableDataSource } from '../data/table-data-source';
 import { PsTableColumnDirective, PsTableRowDetailDirective } from '../directives/table.directives';
 import { Subscription } from 'rxjs';
+import { PsTableActionScope } from '../models';
 
 @Component({
   selector: 'ps-table-data',
@@ -41,6 +42,8 @@ export class PsTableDataComponent implements OnChanges {
    * @deprecated Please use the action definition in PsTableDataSource
    */
   @Input() public listActions: TemplateRef<any> | null = null;
+
+  public psTableActionScopes = PsTableActionScope;
 
   @Output() public showSettingsClicked = new EventEmitter<void>();
   @Output() public refreshDataClicked = new EventEmitter<void>();

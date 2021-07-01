@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { PsTableComponent, PsTableDataSource } from '@prosoft/components/table';
-import { PsTableActionScope } from '@prosoft/components/table/src/models';
+import { IPsTableAction, PsTableActionScope } from '@prosoft/components/table/src/models';
 import { of, timer } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { delay, first, map } from 'rxjs/operators';
 
 interface ISampleData {
   id: number;
@@ -168,6 +168,55 @@ export class TableDemoComponent {
             ],
           },
         ],
+      },
+      {
+        label: 'async table actions',
+        icon: 'angular',
+        isSvgIcon: true,
+        scope: PsTableActionScope.all,
+        children: of([
+          {
+            label: 'async table action 1',
+            icon: 'cancel',
+            scope: PsTableActionScope.all,
+          },
+          {
+            label: 'async table action 2',
+            icon: 'cancel',
+            scope: PsTableActionScope.all,
+          },
+          {
+            label: 'async table action 3',
+            icon: 'cancel',
+            scope: PsTableActionScope.all,
+            children: of([
+              {
+                label: 'sub async table action 1',
+                icon: 'cancel',
+                scope: PsTableActionScope.row,
+              },
+              {
+                label: 'sub async table action 2',
+                icon: 'cancel',
+                scope: PsTableActionScope.all,
+              },
+              {
+                label: 'sub async table action 3',
+                icon: 'cancel',
+                scope: PsTableActionScope.all,
+              },
+            ]).pipe(delay(400)),
+          },
+          {
+            label: 'router link',
+            icon: 'cancel',
+            scope: PsTableActionScope.row,
+            routerLink: (item: ISampleData) => ['..', item.id],
+            routerLinkQueryParams: (item: ISampleData) => ({
+              a: item.string,
+            }),
+          },
+        ] as IPsTableAction<ISampleData>[]).pipe(delay(500)),
       },
     ],
   });

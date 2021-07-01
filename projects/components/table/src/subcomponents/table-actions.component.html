@@ -5,21 +5,40 @@
 <mat-menu #menu>
   <ng-template matMenuContent>
     <ng-container *ngFor="let action of actions">
-      <button
-        *ngIf="!action.children; else branch"
-        mat-menu-item
-        [disabled]="action.isDisabledFn && action.isDisabledFn(items)"
-        (click)="action.actionFn(items)"
-      >
-        <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
-        {{ action.label }}
-      </button>
+      <ng-container *ngIf="action.isLoading || !action.hasChildren; else branch">
+        <a
+          *ngIf="action.routerLink && scope === psTableActionScopes.row; else actionButton"
+          mat-menu-item
+          [disabled]="action.isLoading || (action.isDisabledFn && action.isDisabledFn(items))"
+          [routerLink]="action.routerLink(items[0])"
+          [queryParams]="(action.routerLinkQueryParams && action.routerLinkQueryParams(items[0])) || undefined"
+        >
+          <ng-container [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-container>
+          {{ action.label }}
+        </a>
+        <ng-template #actionButton>
+          <button
+            *ngIf="action.isLoading || !action.hasChildren; else branch"
+            mat-menu-item
+            [disabled]="action.isLoading || (action.isDisabledFn && action.isDisabledFn(items))"
+            (click)="action.actionFn && action.actionFn(items)"
+          >
+            <ng-container [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-container>
+            {{ action.label }}
+          </button>
+        </ng-template>
+      </ng-container>
       <ng-template #branch>
         <button mat-menu-item [matMenuTriggerFor]="innerPanel.menu">
-          <mat-icon [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
+          <ng-container [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-container>
           {{ action.label }}
         </button>
-        <ps-table-actions #innerPanel [actions]="action.children | psTableActionsToRender: items" [items]="items"></ps-table-actions>
+        <ps-table-actions
+          #innerPanel
+          [actions]="action.children$ | async | psTableActionsToRender: items"
+          [items]="items"
+          [scope]="scope"
+        ></ps-table-actions>
       </ng-template>
     </ng-container>
     <!-- ng-content is deprecated here, as it doesn't work correctly, if it contains a mat-menu-item with a child met-menu -->
@@ -34,3 +53,11 @@
     </button>
   </ng-template>
 </mat-menu>
+
+<ng-template #actionIcon let-action>
+  <mat-icon *ngIf="!action.isLoading && !action.isSvgIcon" [style.color]="action.iconColor">{{ action.icon }}</mat-icon>
+  <mat-icon *ngIf="!action.isLoading && action.isSvgIcon" [style.color]="action.iconColor" [svgIcon]="action.icon"></mat-icon>
+  <mat-icon *ngIf="action.isLoading">
+    <mat-spinner mode="indeterminate" diameter="24"></mat-spinner>
+  </mat-icon>
+</ng-template>

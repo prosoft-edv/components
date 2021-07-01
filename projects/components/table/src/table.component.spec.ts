@@ -3,16 +3,21 @@ import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Injectable, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { IconType, MatIconHarness } from '@angular/material/icon/testing';
+import { MatMenuItemHarness } from '@angular/material/menu/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, convertToParamMap, ParamMap, Params, Router } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, ParamMap, Params, RouterLinkWithHref } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { IPsTableIntlTexts, PsIntlService, PsIntlServiceEn } from '@prosoft/components/core';
 import { filterAsync } from '@prosoft/components/utils/src/array';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { PsTableDataSource } from './data/table-data-source';
 import { PsTableColumnDirective } from './directives/table.directives';
 import { PsTableMemoryStateManager } from './helper/state-manager';
-import { IPsTableSortDefinition, PsTableActionScope } from './models';
+import { IPsTableAction, IPsTableSortDefinition, PsTableActionScope } from './models';
 import { IPsTableSetting, PsTableSettingsService } from './services/table-settings.service';
 import { PsTablePaginationComponent } from './subcomponents/table-pagination.component';
 import { PsTableComponent } from './table.component';
@@ -40,6 +45,7 @@ class TestSettingsService extends PsTableSettingsService {
 
 const router: any = {
   navigate: (_route: any, _options: any) => {},
+  navigateByUrl: (_urltree: any, _extras: any) => {},
 };
 
 const queryParams$ = new BehaviorSubject<ParamMap>(convertToParamMap({ other: 'value' }));
@@ -103,20 +109,14 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
         </ng-container>
       </ps-table-column>
 
-      <div *psTableCustomHeader>
-        custom header
-      </div>
+      <div *psTableCustomHeader>custom header</div>
 
       <div *psTableCustomSettings="let settings">custom settings {{ settings.pageSize }}</div>
 
-      <div *psTableTopButtonSection>
-        custom button section
-      </div>
+      <div *psTableTopButtonSection>custom button section</div>
 
       <ng-container *psTableListActions="let selection">
-        <button type="button" mat-menu-item (click)="onCustomListActionClick(selection)">
-          custom list actions
-        </button>
+        <button type="button" mat-menu-item (click)="onCustomListActionClick(selection)">custom list actions</button>
       </ng-container>
 
       <ng-container *psTableRowActions="let item">
@@ -483,16 +483,12 @@ describe('PsTableComponent', () => {
     }
 
     beforeEach(async () => {
-      queryParams$.next(convertToParamMap({}));
-
       await TestBed.configureTestingModule({
-        imports: [NoopAnimationsModule, CommonModule, PsTableModule],
+        imports: [NoopAnimationsModule, CommonModule, PsTableModule, RouterTestingModule],
         declarations: [TestComponent],
         providers: [
           { provide: PsTableSettingsService, useClass: TestSettingsService },
           { provide: PsIntlService, useClass: PsIntlServiceEn },
-          { provide: ActivatedRoute, useValue: route },
-          { provide: Router, useValue: router },
         ],
       });
 
@@ -782,6 +778,182 @@ describe('PsTableComponent', () => {
 
       const firstRowSecondPage = (await table.getRows())[0];
       expect(await (await firstRowSecondPage.getCells({ columnName: 'str' }))[0].getText()).toEqual('item 15');
+    });
+
+    describe('table actions', () => {
+      beforeEach(async () => {
+        await initTestComponent(
+          new PsTableDataSource({
+            loadDataFn: () =>
+              of([
+                { id: 1, str: 'item 1' },
+                { id: 2, str: 'item 2' },
+                { id: 3, str: 'item 3' },
+              ]),
+            mode: 'client',
+            actions: [
+              {
+                label: 'custom action 1',
+                icon: 'list',
+                scope: PsTableActionScope.all,
+                actionFn: (selection) => component.onListActionExecute(selection),
+              },
+              {
+                label: 'custom action 2',
+                icon: 'angular',
+                isSvgIcon: true,
+                scope: PsTableActionScope.all,
+                actionFn: (selection) => component.onListActionExecute(selection),
+              },
+              {
+                label: 'custom list action 1',
+                icon: 'list',
+                scope: PsTableActionScope.list,
+                actionFn: () => {},
+              },
+              {
+                label: 'custom list action 2',
+                icon: 'angular',
+                isSvgIcon: true,
+                scope: PsTableActionScope.list,
+                actionFn: () => {},
+              },
+              {
+                label: 'custom row action 1',
+                icon: 'list',
+                scope: PsTableActionScope.row,
+                routerLink: (item: any) => [item.id],
+                routerLinkQueryParams: (item: any) => ({
+                  a: item.str.replace(' ', '_'),
+                }),
+              },
+              {
+                label: 'custom row action 2',
+                icon: 'angular',
+                isSvgIcon: true,
+                scope: PsTableActionScope.row,
+                actionFn: () => {},
+              },
+            ] as IPsTableAction<any>[],
+          })
+        );
+
+        component.refreshable = false;
+        component.showSettings = false;
+      });
+
+      it('icon and svgIcon should be displayed correctly', async () => {
+        fixture.detectChanges();
+
+        // list actions
+        const listActionButtonHarness = await table.getListActionsButton();
+        await listActionButtonHarness.open();
+        const listActionHarnesses = await listActionButtonHarness.getItems();
+        expect(listActionHarnesses.length).toBe(4);
+        await checkAction$(listActionHarnesses[0], 'list', IconType.FONT, 'custom action 1');
+        await checkAction$(listActionHarnesses[1], 'angular', IconType.SVG, 'custom action 2');
+        await checkAction$(listActionHarnesses[2], 'list', IconType.FONT, 'custom list action 1');
+        await checkAction$(listActionHarnesses[3], 'angular', IconType.SVG, 'custom list action 2');
+
+        // row actions
+        const rowActionButtonHarness = await table.getRowActionsButton(1);
+        await rowActionButtonHarness.open();
+        const rowActionHarnesses = await rowActionButtonHarness.getItems();
+        expect(rowActionHarnesses.length).toBe(4);
+
+        await checkAction$(rowActionHarnesses[0], 'list', IconType.FONT, 'custom action 1');
+        await checkAction$(rowActionHarnesses[1], 'angular', IconType.SVG, 'custom action 2');
+        await checkAction$(rowActionHarnesses[2], 'list', IconType.FONT, 'custom row action 1');
+        await checkAction$(rowActionHarnesses[3], 'angular', IconType.SVG, 'custom row action 2');
+      });
+
+      it('routerlinks should be displayed correctly', async () => {
+        fixture.detectChanges();
+
+        const rowActionButtonHarness = await table.getRowActionsButton(1);
+        await rowActionButtonHarness.open();
+        const rowActionHarnesses = await rowActionButtonHarness.getItems();
+        expect(rowActionHarnesses.length).toBe(4);
+
+        const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
+        expect(links.length).toEqual(1);
+        expect(links[0].attributes['href']).toEqual('/1?a=item_1');
+      });
+
+      async function checkAction$(
+        menuItemHarness: MatMenuItemHarness,
+        expectedIcon: string,
+        expectedIconType: IconType,
+        expectedText: string
+      ): Promise<void> {
+        expect(menuItemHarness).toBeTruthy();
+
+        const iconHarness = await menuItemHarness.getHarness(MatIconHarness);
+        expect(iconHarness).toBeTruthy();
+        expect(await iconHarness.getName()).toEqual(expectedIcon);
+        expect(await iconHarness.getType()).toEqual(expectedIconType);
+
+        // we use toContain here, because getText() includes the icon name as well
+        expect(await menuItemHarness.getText()).toContain(expectedText);
+      }
+    });
+
+    describe('async table actions', () => {
+      beforeEach(async () => {
+        await initTestComponent(
+          new PsTableDataSource({
+            loadDataFn: () =>
+              of([
+                { id: 1, str: 'item 1' },
+                { id: 2, str: 'item 2' },
+                { id: 3, str: 'item 3' },
+              ]),
+            mode: 'client',
+            actions: of([
+              {
+                label: 'custom action',
+                icon: '',
+                scope: PsTableActionScope.all,
+                actionFn: (selection) => component.onListActionExecute(selection),
+              },
+              {
+                label: 'custom list action',
+                icon: '',
+                scope: PsTableActionScope.list,
+                actionFn: () => {},
+              },
+              {
+                label: 'custom row action',
+                icon: '',
+                scope: PsTableActionScope.row,
+                actionFn: () => {},
+              },
+            ]),
+          })
+        );
+      });
+
+      it('async list actions should work', async () => {
+        component.refreshable = false;
+        fixture.detectChanges();
+        const listActionsButtonHarness = await table.getListActionsButton();
+        await listActionsButtonHarness.open();
+        const listActions = await listActionsButtonHarness.getItems();
+        expect(listActions.length).toEqual(2);
+        expect(await listActions[0].getText()).toEqual('custom action');
+        expect(await listActions[1].getText()).toEqual('custom list action');
+      });
+
+      it('async row actions should work', async () => {
+        component.refreshable = false;
+        fixture.detectChanges();
+        const rowActionsButtonHarness = await table.getRowActionsButton(1);
+        await rowActionsButtonHarness.open();
+        const rowActions = await rowActionsButtonHarness.getItems();
+        expect(rowActions.length).toEqual(2);
+        expect(await rowActions[0].getText()).toEqual('custom action');
+        expect(await rowActions[1].getText()).toEqual('custom row action');
+      });
     });
   });
 });
