@@ -12,11 +12,7 @@
           [disabled]="action.isDisabledFn && action.isDisabledFn(items)"
           (click)="action.actionFn(items)"
         >
-          <ng-template
-            *ngIf="showIcon || action.icon"
-            [ngTemplateOutlet]="actionIcon"
-            [ngTemplateOutletContext]="{ $implicit: action }"
-          ></ng-template>
+          <ng-template *ngIf="showIcon" [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-template>
           {{ action.label }}
         </button>
         <a
@@ -25,20 +21,12 @@
           [routerLink]="action.routerLink(items).path"
           [queryParams]="action.routerLink(items).queryParams"
         >
-          <ng-template
-            *ngIf="showIcon || action.icon"
-            [ngTemplateOutlet]="actionIcon"
-            [ngTemplateOutletContext]="{ $implicit: action }"
-          ></ng-template>
+          <ng-template *ngIf="showIcon" [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-template>
           {{ action.label }}
         </a>
         <ng-container *ngSwitchCase="'menu'">
           <button mat-menu-item [matMenuTriggerFor]="innerPanel.menu">
-            <ng-template
-              *ngIf="showIcon || action.icon"
-              [ngTemplateOutlet]="actionIcon"
-              [ngTemplateOutletContext]="{ $implicit: action }"
-            ></ng-template>
+            <ng-template *ngIf="showIcon" [ngTemplateOutlet]="actionIcon" [ngTemplateOutletContext]="{ $implicit: action }"></ng-template>
             {{ action.label }}
           </button>
           <ps-table-actions
