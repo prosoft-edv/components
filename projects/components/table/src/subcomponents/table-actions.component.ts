@@ -10,6 +10,7 @@ import { IPsTableAction } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsTableActionsComponent {
+  @Input() public isRoot = true;
   @Input() public actions: IPsTableAction<unknown>[];
   @Input() public items: unknown[];
   @Input() public refreshable: boolean;
@@ -20,4 +21,8 @@ export class PsTableActionsComponent {
   @Output() public showSettings = new EventEmitter<void>();
 
   @ViewChild('menu', { static: true }) menu: MatMenu;
+
+  public get showIcon(): boolean {
+    return this.isRoot || this.actions.some((x) => x.icon);
+  }
 }
