@@ -1,5 +1,5 @@
 //==========================================
-@use '~@angular/material' as mat;
+@use '@angular/material' as mat;
 //= Font Import
 //==========================================
 // Ohne das ":light,regular,medium,thin,italic,mediumitalic,bold" ist die Schrift teils unscharf
@@ -8,7 +8,7 @@
 // ==========================================
 // = Material Theme Generierung
 // ==========================================
-@import '~@angular/material/theming';
+@import '@angular/material/theming';
 
 // Define the typography map
 // Name             CSS classes                         Description
