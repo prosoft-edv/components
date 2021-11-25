@@ -5,19 +5,17 @@ const { JSDOM } = jsdom;
 
 const touchedFiles: string[] = [];
 
-export default function (): Rule {
-  return (tree: Tree, context: SchematicContext) => {
-    context.logger.info('"ps-table: replace [cardLayout] with [layout]" started...');
-    traverseDirectory(tree.root, tree, context);
-    if (touchedFiles.length) {
-      context.logger.info(`Modified files: ${touchedFiles.join(', ')}`);
-    } else {
-      context.logger.info('No modifications required.');
-    }
-    context.logger.info('"ps-table: replace [cardLayout] with [layout]" finished');
-    return tree;
-  };
-}
+export default (): Rule => (tree: Tree, context: SchematicContext) => {
+  context.logger.info('"ps-table: replace [cardLayout] with [layout]" started...');
+  traverseDirectory(tree.root, tree, context);
+  if (touchedFiles.length) {
+    context.logger.info(`Modified files: ${touchedFiles.join(', ')}`);
+  } else {
+    context.logger.info('No modifications required.');
+  }
+  context.logger.info('"ps-table: replace [cardLayout] with [layout]" finished');
+  return tree;
+};
 
 function traverseDirectory(directory: DirEntry, tree: Tree, _context: SchematicContext) {
   const dirPath = directory.path;
