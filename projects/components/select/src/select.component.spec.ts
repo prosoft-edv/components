@@ -197,7 +197,7 @@ export class TestWithFormFieldComponent {
 @Injectable()
 export class TestPsSelectService extends DefaultPsSelectService {
   static calledwith: { dataSource: any; control: AbstractControl }[] = [];
-  public createDataSource<T>(dataSource: PsSelectData<T>, control: AbstractControl | null): PsSelectDataSource<T> {
+  public override createDataSource<T>(dataSource: PsSelectData<T>, control: AbstractControl | null): PsSelectDataSource<T> {
     TestPsSelectService.calledwith.push({ dataSource: dataSource, control: control });
     return super.createDataSource(dataSource, control);
   }

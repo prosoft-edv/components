@@ -27,14 +27,14 @@ import { PsTableHarness } from './testing/table.harness';
 @Injectable()
 class TestSettingsService extends PsTableSettingsService {
   public settings$ = new BehaviorSubject<{ [id: string]: IPsTableSetting }>({});
-  public pageSizeOptions = [1, 5, 25, 50];
-  public settingsEnabled = false;
+  public override pageSizeOptions = [1, 5, 25, 50];
+  public override settingsEnabled = false;
 
-  public getStream(tableId: string, _: boolean): Observable<IPsTableSetting> {
+  public override getStream(tableId: string, _: boolean): Observable<IPsTableSetting> {
     return this.settings$.pipe(map((settings) => settings[tableId]));
   }
 
-  public save(id: string, settings: IPsTableSetting): Observable<void> {
+  public override save(id: string, settings: IPsTableSetting): Observable<void> {
     const currentSettings = this.settings$.getValue();
     currentSettings[id] = settings;
     this.settings$.next(currentSettings);

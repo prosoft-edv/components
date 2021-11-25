@@ -70,8 +70,10 @@ const _PsNumberInputMixinBase = mixinErrorState(PsNumberInputBase);
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PsNumberInputComponent extends _PsNumberInputMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<any>, OnChanges, OnDestroy, OnInit, DoCheck, CanUpdateErrorState {
+export class PsNumberInputComponent
+  extends _PsNumberInputMixinBase
+  implements ControlValueAccessor, MatFormFieldControl<any>, OnChanges, OnDestroy, OnInit, DoCheck, CanUpdateErrorState
+{
   /** Mininum boundary value. */
   @Input() min: number;
 
@@ -109,7 +111,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  readonly stateChanges: Subject<void> = new Subject<void>();
+  override readonly stateChanges: Subject<void> = new Subject<void>();
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -175,7 +177,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
   protected _required = false;
 
   /** An object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  @Input() override errorStateMatcher: ErrorStateMatcher;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -241,7 +243,7 @@ export class PsNumberInputComponent extends _PsNumberInputMixinBase
 
   constructor(
     /** @docs-private */
-    @Optional() @Self() public ngControl: NgControl,
+    @Optional() @Self() public override ngControl: NgControl,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
     _defaultErrorStateMatcher: ErrorStateMatcher,

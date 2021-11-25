@@ -51,8 +51,10 @@ export const _PsSliderMixinBase = mixinErrorState(PsSliderBase);
     '[attr.aria-required]': 'required.toString()',
   },
 })
-export class PsSliderComponent extends _PsSliderMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<number | number[]>, OnInit, OnChanges, DoCheck {
+export class PsSliderComponent
+  extends _PsSliderMixinBase
+  implements ControlValueAccessor, MatFormFieldControl<number | number[]>, OnInit, OnChanges, DoCheck
+{
   public static nextId = 0;
 
   /**
@@ -237,7 +239,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
   constructor(
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
-    @Optional() @Self() public ngControl: NgControl,
+    @Optional() @Self() public override ngControl: NgControl,
     _defaultErrorStateMatcher: ErrorStateMatcher,
     private el: ElementRef,
     private renderer: Renderer2,

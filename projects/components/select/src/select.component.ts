@@ -69,8 +69,10 @@ const _PsSelectMixinBase = mixinDisabled(mixinErrorState(PsSelectBase));
   },
   providers: [{ provide: MatFormFieldControl, useExisting: PsSelectComponent }],
 })
-export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<T>, DoCheck, OnInit, OnDestroy {
+export class PsSelectComponent<T = unknown>
+  extends _PsSelectMixinBase
+  implements ControlValueAccessor, MatFormFieldControl<T>, DoCheck, OnInit, OnDestroy
+{
   public static nextId = 0;
   @HostBinding() public id = `ps-select-${PsSelectComponent.nextId++}`;
 
@@ -131,7 +133,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
 
   @Input() public multiple = false;
 
-  @Input() public errorStateMatcher: ErrorStateMatcher = null;
+  @Input() public override errorStateMatcher: ErrorStateMatcher = null;
 
   @Input() public panelClass: string | string[] | Set<string> | { [key: string]: any } = null;
 
@@ -257,7 +259,7 @@ export class PsSelectComponent<T = unknown> extends _PsSelectMixinBase
     private cd: ChangeDetectorRef,
     @Optional() parentForm: NgForm,
     @Optional() parentFormGroup: FormGroupDirective,
-    @Optional() @Self() public ngControl: NgControl
+    @Optional() @Self() public override ngControl: NgControl
   ) {
     super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 

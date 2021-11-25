@@ -9,7 +9,7 @@ export class CustomPsSelectService extends DefaultPsSelectService {
     super();
   }
 
-  public createDataSource<T>(data: PsSelectData | string, control: AbstractControl): PsSelectDataSource<T> {
+  public override createDataSource<T>(data: PsSelectData | string, control: AbstractControl): PsSelectDataSource<T> {
     if (typeof data === 'string') {
       data = getLookupData(data);
     }
@@ -58,7 +58,7 @@ export class CustomPsSelectService extends DefaultPsSelectService {
 })
 export class SelectWithCustomSelectServiceComponent {
   public items$: Observable<ILookup[]> = of(
-    Array.from(Array(50).keys()).map(i => ({
+    Array.from(Array(50).keys()).map((i) => ({
       Id: `id${i}`,
       Name: `Item ${i}`,
     }))
@@ -84,7 +84,7 @@ function getLookupData(lookup: string): PsSelectData<ILookup> {
 
   const entityName = lookup.split(':')[1];
   const data$: Observable<ILookup[]> = of(
-    Array.from(Array(50).keys()).map(i => ({
+    Array.from(Array(50).keys()).map((i) => ({
       Id: `${entityName}${i}`,
       Name: `${entityName} ${i}`,
     }))

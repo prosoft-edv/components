@@ -41,17 +41,23 @@ class DemoPsFormDataSource<TParams, TData> implements IPsFormDataSource {
   private _loadParams: TParams = null;
   public _scrollToError: () => void;
 
-  private buttonDefs: { [key: string]: IPsButton } = {
-    scrollToError: { type: 'icon', icon: 'error_outline', color: 'warn', click: () => this._scrollToError() },
-    edit: { label: 'bearbeiten', type: 'raised', color: 'primary', disabled: () => this.contentBlocked, click: () => this.edit() },
+  private buttonDefs = {
+    scrollToError: { type: 'icon', icon: 'error_outline', color: 'warn', click: () => this._scrollToError() } as IPsButton,
+    edit: {
+      label: 'bearbeiten',
+      type: 'raised',
+      color: 'primary',
+      disabled: () => this.contentBlocked,
+      click: () => this.edit(),
+    } as IPsButton,
     save: {
       label: 'speichern',
       type: 'raised',
       color: 'primary',
       disabled: () => this.contentBlocked || !this.form.valid,
       click: () => this.save(),
-    },
-    cancel: { label: 'cancel', type: 'stroked', color: null, disabled: () => false, click: () => this.reset() },
+    } as IPsButton,
+    cancel: { label: 'cancel', type: 'stroked', color: null, disabled: () => false, click: () => this.reset() } as IPsButton,
   };
 
   private _loadingSub = Subscription.EMPTY;
