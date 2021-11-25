@@ -60,7 +60,7 @@ export class DefaultPsSelectDataSource<T = any> extends PsSelectDataSource<T> {
   private _isPanelOpen$ = new BehaviorSubject<boolean>(false);
   private _searchText$ = new BehaviorSubject<string>('');
   private _currentValues$ = new BehaviorSubject<T[]>([]);
-  private _ngUnsubscribe$ = new Subject<string>();
+  private _ngUnsubscribe$ = new Subject<void>();
   private _loadData: () => Observable<PsSelectItem<T>[]>;
 
   constructor(options: PsSelectDataSourceOptions) {
