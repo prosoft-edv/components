@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { API } from 'nouislider';
 import { PsSliderComponent } from './slider.component';
 import { PsSliderModule } from './slider.module';
 
@@ -318,7 +319,7 @@ describe('PsSlider', () => {
   });
 });
 
-function getNoUiSlider(psSlider: PsSliderComponent): noUiSlider.noUiSlider {
+function getNoUiSlider(psSlider: PsSliderComponent): API {
   return (psSlider as any)._slider;
 }
 

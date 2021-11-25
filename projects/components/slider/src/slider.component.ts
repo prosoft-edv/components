@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { API, create, Options } from 'noUiSlider';
+import { API, create, Options } from 'nouislider';
 import { DefaultFormatter } from './formatter';
 
 declare type PsSliderConnect = boolean | boolean[];
