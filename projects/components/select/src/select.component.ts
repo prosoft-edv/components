@@ -18,14 +18,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import {
-  CanDisableCtor,
-  CanUpdateErrorStateCtor,
-  ErrorStateMatcher,
-  MatOption,
-  mixinDisabled,
-  mixinErrorState,
-} from '@angular/material/core';
+import { ErrorStateMatcher, MatOption, mixinDisabled, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
@@ -55,7 +48,7 @@ class PsSelectBase {
     public ngControl: NgControl
   ) {}
 }
-const _PsSelectMixinBase: CanDisableCtor & CanUpdateErrorStateCtor & typeof PsSelectBase = mixinDisabled(mixinErrorState(PsSelectBase));
+const _PsSelectMixinBase = mixinDisabled(mixinErrorState(PsSelectBase));
 
 @Component({
   selector: 'ps-select',

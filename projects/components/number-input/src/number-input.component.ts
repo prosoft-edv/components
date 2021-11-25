@@ -7,6 +7,7 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { getLocaleNumberSymbol, NumberSymbol } from '@angular/common';
+import type { ElementRef } from '@angular/core';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -26,12 +27,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorState, CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
+import { CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { replaceAll } from '@prosoft/components/utils';
 import { Subject } from 'rxjs';
-
-import type { ElementRef } from '@angular/core';
 
 let nextUniqueId = 0;
 
@@ -46,7 +45,7 @@ class PsNumberInputBase {
     public ngControl: NgControl
   ) {}
 }
-const _PsNumberInputMixinBase: CanUpdateErrorStateCtor & typeof PsNumberInputBase = mixinErrorState(PsNumberInputBase);
+const _PsNumberInputMixinBase = mixinErrorState(PsNumberInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
 // tslint:disable-next-line: no-conflicting-lifecycle
@@ -71,10 +70,8 @@ const _PsNumberInputMixinBase: CanUpdateErrorStateCtor & typeof PsNumberInputBas
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class PsNumberInputComponent
-  extends _PsNumberInputMixinBase
-  implements ControlValueAccessor, MatFormFieldControl<any>, OnChanges, OnDestroy, OnInit, DoCheck, CanUpdateErrorState
-{
+export class PsNumberInputComponent extends _PsNumberInputMixinBase
+  implements ControlValueAccessor, MatFormFieldControl<any>, OnChanges, OnDestroy, OnInit, DoCheck, CanUpdateErrorState {
   /** Mininum boundary value. */
   @Input() min: number;
 

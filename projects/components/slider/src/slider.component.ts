@@ -1,4 +1,4 @@
-import { coerceNumberProperty, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectorRef,
   Component,
@@ -16,7 +16,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
+import { ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import * as noUiSlider from 'nouislider';
 import { DefaultFormatter } from './formatter';
@@ -33,14 +33,12 @@ export class PsSliderBase {
     public ngControl: NgControl
   ) {}
 }
-export const _PsSliderMixinBase: CanUpdateErrorStateCtor & typeof PsSliderBase = mixinErrorState(PsSliderBase);
+export const _PsSliderMixinBase = mixinErrorState(PsSliderBase);
 
 // tslint:disable-next-line: no-conflicting-lifecycle
 @Component({
   selector: 'ps-slider',
-  template: `
-    <div></div>
-  `,
+  template: ` <div></div> `,
   styleUrls: ['./slider.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: MatFormFieldControl, useExisting: PsSliderComponent }],
