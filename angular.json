@@ -22,10 +22,15 @@
             "main": "projects/prosoft-components-demo/src/main.ts",
             "polyfills": "projects/prosoft-components-demo/src/polyfills.ts",
             "tsConfig": "projects/prosoft-components-demo/tsconfig.app.json",
-            "aot": true,
             "assets": ["projects/prosoft-components-demo/src/favicon.ico", "projects/prosoft-components-demo/src/assets"],
             "styles": ["projects/prosoft-components-demo/src/styles.scss"],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -54,7 +59,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
