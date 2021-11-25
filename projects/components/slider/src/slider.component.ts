@@ -18,7 +18,7 @@ import {
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import * as noUiSlider from 'nouislider';
+import { API, create, Options } from 'noUiSlider';
 import { DefaultFormatter } from './formatter';
 
 declare type PsSliderConnect = boolean | boolean[];
@@ -232,7 +232,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
   public _ariaDescribedby: string;
 
   private _formatter = new DefaultFormatter();
-  private _slider: noUiSlider.noUiSlider;
+  private _slider: API;
 
   constructor(
     @Optional() _parentForm: NgForm,
@@ -251,7 +251,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
   }
 
   public ngOnInit(): void {
-    const inputsConfig: noUiSlider.Options = {
+    const inputsConfig: Options = {
       start: this.value,
       step: this.stepSize,
       range: { min: this.min, max: this.max },
@@ -260,7 +260,7 @@ export class PsSliderComponent extends _PsSliderMixinBase
       connect: this.connect || !!this.isRange,
     };
 
-    this._slider = noUiSlider.create(this.el.nativeElement.querySelector('div'), inputsConfig);
+    this._slider = create(this.el.nativeElement.querySelector('div'), inputsConfig);
     this._slider.on('change', () => {
       const value = this._slider.get();
       this.value = Array.isArray(value) ? value.map(Number) : +value;
@@ -276,14 +276,16 @@ export class PsSliderComponent extends _PsSliderMixinBase
       // So we set the _rawProvidedValue here again to fix that
       this.value = this._rawProvidedValue;
     }
-    if (this._slider && (changes.isRange || changes.min || changes.max || changes.stepSize || changes.showTooltip || changes.connect)) {
-      this._slider.updateOptions({
-        start: this.value,
-        step: this.stepSize,
-        range: { min: this.min, max: this.max },
-        tooltips: this.showTooltip,
-        connect: this.connect,
-      });
+    if (this._slider && (changes.isRange || changes.min || changes.max || changes.stepSize || changes.showTooltip)) {
+      this._slider.updateOptions(
+        {
+          start: this.value,
+          step: this.stepSize,
+          range: { min: this.min, max: this.max },
+          tooltips: this.showTooltip,
+        },
+        false
+      );
     }
   }
 
