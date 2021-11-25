@@ -103,6 +103,12 @@
               "devServerTarget": "prosoft-components-demo:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/prosoft-components-demo/**/*.ts", "projects/prosoft-components-demo/**/*.html"]
+          }
         }
       }
     },
@@ -131,12 +137,19 @@
             "tsConfig": "projects/components/tsconfig.spec.json",
             "karmaConfig": "projects/components/karma.conf.js"
           }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["projects/components/**/*.ts", "projects/components/**/*.html"]
+          }
         }
       }
     }
   },
   "defaultProject": "prosoft-components-demo",
   "cli": {
-    "analytics": false
+    "analytics": false,
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

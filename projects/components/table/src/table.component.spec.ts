@@ -1,7 +1,7 @@
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Injectable, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injectable, QueryList, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { IconType, MatIconHarness, MatIconTestingModule } from '@angular/material/icon/testing';
 import { MatMenuItemHarness } from '@angular/material/menu/testing';
@@ -127,6 +127,8 @@ function createColDef(data: { property?: string; header?: string; sortable?: boo
       </ps-table-row-detail>
     </ps-table>
   `,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TestComponent {
   public caption = 'title';
@@ -634,9 +636,7 @@ describe('PsTableComponent', () => {
         const dataRows = await table.getRows();
         expect(dataRows.length).toEqual(6); // 3 rows with 3x row detail per row
 
-        const data = await filterAsync(dataRows, async (row) => {
-          return await (await row.host()).hasClass('ps-table-data__row');
-        });
+        const data = await filterAsync(dataRows, async (row) => await (await row.host()).hasClass('ps-table-data__row'));
 
         expect(data.length).toEqual(3);
 
@@ -645,9 +645,7 @@ describe('PsTableComponent', () => {
         expect(await strDataCell[0].getText()).toEqual('item 1');
         expect(await (await strDataCell[0].host()).getCssValue('color')).toEqual('rgb(0, 0, 255)');
 
-        const detail = await filterAsync(dataRows, async (row) => {
-          return await (await row.host()).hasClass('ps-table-data__detail-row');
-        });
+        const detail = await filterAsync(dataRows, async (row) => await (await row.host()).hasClass('ps-table-data__detail-row'));
 
         expect(detail.every(async (d) => (await (await d.host()).getCssValue('height')) === '0')).toEqual(true);
 

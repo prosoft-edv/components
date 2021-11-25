@@ -285,9 +285,8 @@ export class FormDataSourceDemoComponent {
       input2: new FormControl('b'),
     },
     [
-      (formGroup: AbstractControl) => {
-        return formGroup.value.input1 === formGroup.value.input2 ? null : { equal: 'input1 and input2 must be equal' };
-      },
+      (formGroup: AbstractControl) =>
+        formGroup.value.input1 === formGroup.value.input2 ? null : { equal: 'input1 and input2 must be equal' },
     ]
   );
   public counter = 0;

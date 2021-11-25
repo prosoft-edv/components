@@ -44,9 +44,9 @@ function updateTemplate(file: FileEntry, tree: Tree, _context: SchematicContext)
   }
   // the includeLocations flag is very important so that .nodeLocation() works down the line
   const dom = new JSDOM(content, { includeNodeLocations: true });
-  const elements: HTMLElement[] = Array.from(
-    <HTMLCollectionOf<HTMLElement>>dom.window.document.getElementsByTagName('ps-table')
-  ).filter((x: HTMLElement) => x.hasAttribute('[cardLayout]'));
+  const elements: HTMLElement[] = Array.from(<HTMLCollectionOf<HTMLElement>>dom.window.document.getElementsByTagName('ps-table')).filter(
+    (x: HTMLElement) => x.hasAttribute('[cardLayout]')
+  );
   if (elements.length) {
     const recorder = tree.beginUpdate(file.path);
     for (const element of elements) {

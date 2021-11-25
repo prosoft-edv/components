@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DebugElement, Injectable, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DebugElement, Injectable, ViewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -49,6 +49,8 @@ class TestPsFormService extends BasePsFormService {
       <input type="text" />
     </ps-form-field>
   `,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TestNoFormComponent {
   @ViewChild('f1', { static: true }) formField: PsFormFieldComponent;
@@ -64,6 +66,8 @@ export class TestNoFormComponent {
       <input type="text" [(ngModel)]="value" matInput />
     </ps-form-field>
   `,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TestNgModelComponent {
   value: any = null;
@@ -81,6 +85,8 @@ export class TestNgModelComponent {
       <input type="text" [formControl]="formControl" matInput />
     </ps-form-field>
   `,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TestFormComponent {
   formControl = new FormControl('', [Validators.pattern('pattern'), Validators.minLength(5)]);
@@ -104,6 +110,8 @@ export class TestFormComponent {
       <mat-checkbox [formControl]="formControl"></mat-checkbox>
     </ps-form-field>
   `,
+  // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TestCheckboxComponent {
   public asyncLabel$ = of('async label');

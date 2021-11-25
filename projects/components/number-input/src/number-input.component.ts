@@ -1,3 +1,4 @@
+/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -45,15 +46,15 @@ class PsNumberInputBase {
     public ngControl: NgControl
   ) {}
 }
-const _PsNumberInputMixinBase = mixinErrorState(PsNumberInputBase);
+const psNumberInputMixinBase = mixinErrorState(PsNumberInputBase);
 
 /** Directive that allows a native input to work inside a `MatFormField`. */
-// tslint:disable-next-line: no-conflicting-lifecycle
+// eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
 @Component({
   selector: 'ps-number-input',
   templateUrl: './number-input.component.html',
   styleUrls: ['./number-input.component.scss'],
-  // tslint:disable-next-line: no-host-metadata-property
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
@@ -71,7 +72,7 @@ const _PsNumberInputMixinBase = mixinErrorState(PsNumberInputBase);
   encapsulation: ViewEncapsulation.None,
 })
 export class PsNumberInputComponent
-  extends _PsNumberInputMixinBase
+  extends psNumberInputMixinBase
   implements ControlValueAccessor, MatFormFieldControl<any>, OnChanges, OnDestroy, OnInit, DoCheck, CanUpdateErrorState
 {
   /** Mininum boundary value. */
@@ -103,30 +104,35 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   focused = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   override readonly stateChanges: Subject<void> = new Subject<void>();
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   controlType = 'ps-number-input';
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   autofilled = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -145,6 +151,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -158,12 +165,14 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input() placeholder: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -181,6 +190,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -196,7 +206,7 @@ export class PsNumberInputComponent
   }
   _value: number = null;
 
-  @Output() public valueChange = new EventEmitter<number>();
+  @Output() public readonly valueChange = new EventEmitter<number>();
 
   /** Whether the element is readonly. */
   @Input()
@@ -211,6 +221,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   get empty(): boolean {
@@ -219,6 +230,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   get shouldLabelFloat(): boolean {
@@ -285,6 +297,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
@@ -293,6 +306,7 @@ export class PsNumberInputComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   onContainerClick() {
@@ -348,8 +362,6 @@ export class PsNumberInputComponent
   }
 
   _parseValue(val: string): number {
-    let value: number;
-
     val = val.trim();
     if (val === '') {
       return null;
@@ -358,8 +370,7 @@ export class PsNumberInputComponent
     val = replaceAll(val, this._thousandSeparator, '');
     val = replaceAll(val, this._decimalSeparator, '.');
 
-    value = this._fixNumber(parseFloat(val));
-
+    const value = this._fixNumber(parseFloat(val));
     return value;
   }
 
@@ -450,12 +461,12 @@ export class PsNumberInputComponent
   }
 
   _onInputKeydown(event: KeyboardEvent) {
-    // tslint:disable-next-line: deprecation
+    // eslint-disable-next-line import/no-deprecated
     if (event.which === 38) {
       this._spin(event, 1);
       event.preventDefault();
     }
-    // tslint:disable-next-line: deprecation
+    // eslint-disable-next-line import/no-deprecated
     else if (event.which === 40) {
       this._spin(event, -1);
       event.preventDefault();

@@ -1,5 +1,7 @@
+/* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DoCheck,
@@ -33,16 +35,17 @@ export class PsSliderBase {
     public ngControl: NgControl
   ) {}
 }
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const _PsSliderMixinBase = mixinErrorState(PsSliderBase);
 
-// tslint:disable-next-line: no-conflicting-lifecycle
+// eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
 @Component({
   selector: 'ps-slider',
   template: ` <div></div> `,
   styleUrls: ['./slider.component.scss'],
   encapsulation: ViewEncapsulation.None,
   providers: [{ provide: MatFormFieldControl, useExisting: PsSliderComponent }],
-  // tslint:disable-next-line: no-host-metadata-property
+  // eslint-disable-next-line @angular-eslint/no-host-metadata-property
   host: {
     '[attr.id]': 'id',
     '[class.ps-slider-invalid]': 'errorState',
@@ -50,6 +53,7 @@ export const _PsSliderMixinBase = mixinErrorState(PsSliderBase);
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-required]': 'required.toString()',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PsSliderComponent
   extends _PsSliderMixinBase
@@ -86,18 +90,21 @@ export class PsSliderComponent
 
   /**
    * Implemented as part of PsFormFieldControl.
+   *
    * @docs-private
    */
   public shouldLabelFloat = true;
 
   /**
    * Implemented as part of PsFormFieldControl.
+   *
    * @docs-private
    */
   public noUnderline = true;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -112,29 +119,34 @@ export class PsSliderComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   public placeholder: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   public focused = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   public controlType = 'ps-slider';
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   public autofilled?: boolean;
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -149,6 +161,7 @@ export class PsSliderComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -189,6 +202,7 @@ export class PsSliderComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   @Input()
@@ -220,10 +234,11 @@ export class PsSliderComponent
   private _value: number | number[];
   private _rawProvidedValue: any = null;
 
-  @Output() public valueChange = new EventEmitter<number | number[]>();
+  @Output() public readonly valueChange = new EventEmitter<number | number[]>();
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   public get empty() {
@@ -321,6 +336,7 @@ export class PsSliderComponent
 
   /**
    * Implemented as part of MatFormFieldControl.
+   *
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
