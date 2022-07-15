@@ -1,0 +1,20 @@
+<mat-toolbar color="primary" style="display: flex; justify-content: space-between;">
+  <a style="color: white;" [routerLink]="['/']">@prosoft/components</a>
+  <div>
+    <span style="font-size: 14px; margin-right: 1em; vertical-align: text-bottom;">Current version: {{ currentVersion }}</span>
+    <a style="color: white;" href="https://github.com/prosoft-edv/components">
+      <img [src]="'assets/github-light.png'" />
+      <span style="margin-left: 0.5em; vertical-align: text-bottom;">GitHub</span>
+    </a>
+  </div>
+</mat-toolbar>
+<mat-sidenav-container style="height: calc(100% - 64px);">
+  <mat-sidenav mode="side" opened style="width: 200px;">
+    <mat-nav-list role="list">
+      <a mat-list-item *ngFor="let component of components" [routerLink]="component.routerLink">{{ component.name }}</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content style="padding: 1em; box-sizing: border-box;">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
